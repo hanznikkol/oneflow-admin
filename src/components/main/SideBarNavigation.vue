@@ -20,7 +20,7 @@
 
             <!-- Queue Fill -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="announcement"
+                <RouterLink to="/announcement"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
@@ -35,7 +35,7 @@
 
             <!-- Statistics -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="statistics"
+                <RouterLink to="/statistics"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
@@ -64,17 +64,17 @@
 
 <script setup>
 
-    //Icons
-    import IconHome from '../icons/main_icons/sidenavigation/IconHome.vue';
-    import IconAnnouncement from '../icons/main_icons/sidenavigation/IconAnnouncement.vue';
-    import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vue';
-    import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
+//Icons
+import IconHome from '../icons/main_icons/sidenavigation/IconHome.vue';
+import IconAnnouncement from '../icons/main_icons/sidenavigation/IconAnnouncement.vue';
+import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vue';
+import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
 
-    import { useRoute } from 'vue-router';
-    //Active State based on route link
-    const route = useRoute()
-    
-    const isActive = (path) => {
-        return route.path === path
-    }
+import { useRoute } from 'vue-router';
+//Active State based on route link
+const route = useRoute()
+
+const isActive = (path) => {
+    return route.path === path || route.path.startsWith(path + '/');
+}
 </script>

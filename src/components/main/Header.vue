@@ -29,15 +29,17 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 const headerText = computed(() => {
-    switch(route.path){
-        case '/':
-            return 'Glad to have you here!'
-        case '/announcement':
-            return 'Annoucement'
-        case '/statistics':
-            return 'Statistics'
+    // Define header texts for different routes
+    switch (true) {
+        case route.path === '/':
+            return 'Glad to see you here!';
+        case route.path === '/announcement':
+            return 'Announcement';
+        case route.path.startsWith('/statistics'):
+            return 'Statistics';
         default:
-            'Hello, Have a Good Day!'
+            return 'Welcome!';
     }
-})
+});
+
 </script>
