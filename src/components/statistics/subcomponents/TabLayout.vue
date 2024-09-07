@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex-1 flex flex-row justify-center items-center gap-4">
+    <div class="w-full flex-1 flex flex-row justify-start items-center gap-4">
         <div class="w-auto h-auto group cursor-pointer"
             :class="{
                 'p-2 bg-accent rounded-lg text-primary': isActive('/statistics/servingtime'),
