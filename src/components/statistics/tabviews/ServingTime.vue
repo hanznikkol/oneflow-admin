@@ -1,3 +1,5 @@
 <template>
-    <h1>Serving Time</h1>
+    <div>
+        
+    </div>
 </template>

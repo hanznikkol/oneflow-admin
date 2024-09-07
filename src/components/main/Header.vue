@@ -9,7 +9,7 @@
         </div>
         <!-- Header Text -->
         <div class="flex-1">
-            <h1 class="text-base md:text-2xl font-bold">{{ headerText }}</h1>
+            <h1 class="text-base md:text-lg font-bold">{{ headerText }}</h1>
         </div>  
         <!-- User Profile -->
         <div class="p-2 w-12 h-12 md:w-14 md:h-14 flex justify-center items-center">

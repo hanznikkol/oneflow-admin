@@ -1,16 +1,18 @@
 <template>
-    <div @click="toggleDropdown" class="relative cursor-pointer flex items-center justify-between gap-3 rounded-lg w-full lg:w-96 h-10 px-2 border border-[#ddd] duration-200 hover:border-[#aaaeb7]  focus:border-[#aaaeb7]">
+    <div @click="toggleDropdown" class="relative cursor-pointer flex items-center justify-between gap-3 rounded-lg lg:w-96 h-10 px-2 border border-[#ddd] duration-200 hover:border-[#aaaeb7]  focus:border-[#aaaeb7]"
+        :class="dropdownProps.size"
+    >
         <!-- Icon or Prefix -->
         <div v-if="dropdownProps.prefix || dropdownProps.icon">
             <!-- Prefix -->
             <p v-if="dropdownProps.prefix" class="text-xs md:text-sm lg:text-base text-label-gray">{{ dropdownProps.prefix }}</p>
             <!-- Icon -->
-            <component class="w-2 h-2 lg:w-6 lg:h-6" v-if="IconComponents" :is="IconComponents"/>
+            <component class="w-3 h-3 lg:w-4 lg:h-4" v-if="IconComponents" :is="IconComponents"/>
         </div>
 
         <!-- Text -->
         <div class="flex-1">
-            <p class="text-base text-primary">{{ dropdownProps.modelValue }}</p>
+            <p class="text-sm text-primary">{{ dropdownProps.modelValue }}</p>
         </div>
 
         <!-- Dropdown Icon -->
@@ -52,6 +54,7 @@ import { ref, computed } from 'vue';
 //Icon
 import IconArrowDown from '../../icons/statistics_icons/IconArrowDown.vue';
 import IconCalendar from '../../icons/statistics_icons/IconCalendar.vue';
+import IconAdmin from '../../icons/statistics_icons/IconAdmin.vue';
 
 /*Props*/
 const dropdownProps = defineProps({
@@ -62,6 +65,10 @@ const dropdownProps = defineProps({
     icon: {
         type: String,
         default: null
+    },
+    size: {
+        type: String,
+        default: "w-full"
     },
     modelValue: {
         type: String,
@@ -77,7 +84,8 @@ const emit = defineEmits(['updateSelectedOption'])
 
 /* Icons */
 const Icons = {
-    IconCalendar
+    IconCalendar,
+    IconAdmin
 }
 const IconComponents = computed(() => {
     return Icons[dropdownProps.icon] || null

@@ -1,53 +1,49 @@
 <template>
-    <div class="w-full flex-1 flex flex-row justify-start items-center gap-4">
-        <div class="w-auto h-auto group cursor-pointer"
+    <div class="w-full flex-1 flex flex-row justify-center lg:justify-start items-center gap-4 ">
+        
+        <!-- Serving Time -->
+        <RouterLink 
+            to="/statistics/servingtime" 
+            class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'p-2 bg-accent rounded-lg text-primary': isActive('/statistics/servingtime'),
+                'bg-accent rounded-lg text-primary': isActive('/statistics/servingtime'),
             }"
         >
-            <RouterLink 
-                to="/statistics/servingtime" 
-                class="transition-all duration-100 rounded-lg"
-            >
-                Serving Time
-            </RouterLink>
-        </div>
-        <div class="w-auto h-auto group cursor-pointer"
+            Serving Time
+        </RouterLink>
+
+        <!-- Customer Journey -->
+        <RouterLink 
+            to="/statistics/customerjourney" 
+            class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'p-2 bg-accent rounded-lg text-primary': isActive('/statistics/customerjourney'),
+                'bg-accent rounded-lg text-primary': isActive('/statistics/customerjourney'),
             }"
         >
-            <RouterLink 
-                to="/statistics/customerjourney" 
-                class="transition-all duration-100 rounded-lg"
-            >
-                Customer Journey
-            </RouterLink>
-        </div>
-        <div class="w-auto h-auto group cursor-pointer"
+            Customer Journey
+        </RouterLink>
+
+        <!-- Counter Performance -->
+        <RouterLink 
+            to="/statistics/counterperformance" 
+            class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'p-2 bg-accent rounded-lg text-primary': isActive('/statistics/counterperformance'),
+                'bg-accent rounded-lg text-primary': isActive('/statistics/counterperformance'),
             }"
         >
-            <RouterLink 
-                to="/statistics/counterperformance" 
-                class="transition-all duration-100 rounded-lg"
-            >
-                Counter Performance
-            </RouterLink>
-        </div>
-        <div class="w-auto h-auto group cursor-pointer"
+            Counter Performance
+        </RouterLink>
+        
+        <!-- Graph Report -->
+        <RouterLink 
+            to="/statistics/graphreport" 
+            class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'p-2 bg-accent rounded-lg text-primary': isActive('/statistics/graphreport'),
+                'bg-accent rounded-lg text-primary': isActive('/statistics/graphreport'),
             }"
         >
-            <RouterLink 
-                to="/statistics/graphreport" 
-                class="transition-all duration-100 rounded-lg"
-            >
-                Graph Report
-            </RouterLink>
-        </div>
+            Graph Report
+        </RouterLink>
     </div>
 </template>
 
