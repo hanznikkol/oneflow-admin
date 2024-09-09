@@ -12,8 +12,8 @@
                 <DropdownBox
                     icon = "IconAdmin"
                     v-if = "isGraphReportActive"                   
-                    v-model="selectedOption"
-                    :options = "sections.map(section => section.label)"
+                    v-model="selectedAdmissionOption"
+                    :options = "listAdmission"
                 />
                 <!-- Dropdown (For Graph) -->
                 <DropdownBox
@@ -69,6 +69,13 @@ const isGraphReportActive = computed (() => {
     return route.path === '/statistics/graphreport';
 })
 
+const listAdmission = ref([
+    'Cashier',
+    'Registrar'
+])
+
+const selectedAdmissionOption = ref('Select Admission')
+
 //Props
 const props = defineProps({
     sections: {
@@ -87,6 +94,8 @@ onMounted(() => {
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
     selectedDate.value = [startDate, endDate];
 })
+
+
 
 </script>
 

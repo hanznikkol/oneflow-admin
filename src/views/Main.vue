@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-svh md:min-h-screen w-full flex flex-col px-4 py-2 md:py-1">
+    <div class="min-h-svh md:min-h-screen w-full flex flex-col p-2">
         <!-- Header -->
         <Header></Header>
 
