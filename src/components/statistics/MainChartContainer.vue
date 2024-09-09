@@ -12,7 +12,7 @@
                 <DropdownBox
                     icon = "IconAdmin"
                     v-if = "isGraphReportActive"                   
-                    v-model="selectedAdmissionOption"
+                    v-model= "selectedAdmissionOption"
                     :options = "listAdmission"
                 />
                 <!-- Dropdown (For Graph) -->
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Charts -->
-        <div class="w-full min-h-svh lg:min-h-full lg:flex-[2] bg-accent">
+        <div class="w-full min-h-svh lg:min-h-full lg:flex-[2] ">
             <RouterView/>
         </div>
 

@@ -6,12 +6,12 @@
                 <tr class="flex">
                     <!-- Table Headers -->
                     <th v-for="headers in header" :key="headers" 
-                    class="flex-1 text-left text-sm p-4 cursor-default" 
+                    class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
                     >
                         {{ headers }}
                     </th>
                     <!-- Checkbox -->
-                    <th class="w-24 text-center text-sm p-4 flex items-center justify-center">
+                    <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                        <CheckboxSelector
                             v-model:checked = "headerChecked"
                             @update:checked = "toggleSelectAll"
@@ -29,12 +29,12 @@
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in header" :key="hIndex"
-                    class="flex-1 text-left text-sm p-4 cursor-default" 
+                    class="flex-1 text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
                     >
                         {{ item[header] }}
                     </td>
                     <!-- Checkbox -->
-                    <td class="w-24 text-center text-sm p-4 flex items-center justify-center">
+                    <td class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                        <CheckboxSelector
                             :checked ="item.selected"
                             @update:checked = "(checked) => toggleSelectItem(index, checked)"
