@@ -1,21 +1,24 @@
 <template>
-    <div class="max-h-96 overflow-y-auto rounded-lg border border-gray">
+    <div class="max-h-[26rem] overflow-y-auto rounded-b-lg border border-gray">
         <table class="min-w-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
-                <tr class="flex">
+                <tr class="flex items-center">
                     <!-- Table Headers -->
-                    <th v-for="headers in header" :key="headers" 
-                    class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
+                    <th 
+                        v-for= "(headers, index) in header" 
+                        :key = "index" 
+                        :class= "index === 0 ? 'w-20' : 'flex-1'"
+                        class=" text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
                     >
                         {{ headers }}
                     </th>
                     <!-- Checkbox -->
                     <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
-                       <CheckboxSelector
+                        <CheckboxSelector
                             v-model:checked = "headerChecked"
                             @update:checked = "toggleSelectAll"
-                       />
+                        />
                     </th>
                 </tr>
             </thead>
@@ -24,12 +27,13 @@
             <tbody>
                 <!-- Table Row -->
                 <tr v-for="(item, index) in items" :key="index" 
-                    class="flex"
+                    class="flex items-center"
                     :class="{'bg-light-accent': item.selected }"
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in header" :key="hIndex"
-                    class="flex-1 text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
+                        :class= "hIndex === 0 ? 'w-20' : 'flex-1'"
+                        class=" text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
                     >
                         {{ item[header] }}
                     </td>
@@ -51,11 +55,10 @@
 import { ref, watch } from 'vue';
 import CheckboxSelector from '../../main/subcomponents/CheckboxSelector.vue';
 
-
-const header = ref(['ID', 'Type', 'Message', 'Enabled'])
+const header = ref(['ID', 'Announced To', 'Message', 'Enabled'])
 const items = ref([
-    { ID: 'Cashier', Type: 'Info', Message: 'Example message 1', Enabled: 'True', selected: false },
-    { ID: 'Registrar', Type: 'Warning', Message: 'Example message 2', Enabled: 'False', selected: false },
+    { ID: 1, 'Announced To': 'Registrar', Message: 'Example message 1', Enabled: 'True', selected: false },
+    { ID: 2, 'Announced To': 'Cashier', Message: 'Example message 2', Enabled: 'False', selected: false },
 ])
 
 const emit = defineEmits(['selection:changed']);

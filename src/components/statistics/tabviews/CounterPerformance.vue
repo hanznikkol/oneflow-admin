@@ -1,5 +1,8 @@
 <template>
-    <TableLayout :headers = "headerCounterPerformance" :items = "itemList" />
+    <div class="w-full flex flex-grow">
+        <TableLayout :headers = "headerCounterPerformance" :items = "itemList" />
+    </div>
+    
 </template>
 
 <script setup>

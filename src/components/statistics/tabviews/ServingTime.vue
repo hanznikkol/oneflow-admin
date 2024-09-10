@@ -1,5 +1,7 @@
 <template>
-    <TableLayout :headers = "headerServingTime" :items = "itemList"/>
+    <div class="w-full flex flex-grow">   
+        <TableLayout :headers = "headerServingTime" :items = "itemList"/>
+    </div>
 </template>
 
 <script setup>

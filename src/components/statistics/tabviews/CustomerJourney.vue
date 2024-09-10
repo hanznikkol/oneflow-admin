@@ -1,10 +1,13 @@
 <template>
-    <TableLayout 
+    <div class="w-full flex flex-grow">
+        <TableLayout 
         :headers = "headerCustomerJourney" 
         :items="itemList" 
         status-column="Status"
         :status-classes="statusClasses"
         />
+    </div>
+    
 </template>
 
 <script setup>
@@ -53,7 +56,7 @@ const itemList = ref([
 ]);
 
 const statusClasses = ref({
-    Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-start justify-center',
-    Pending: 'bg-red-400 text-black p-1 rounded w-16 h-auto flex items-start justify-center',
+    Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Pending: 'bg-red-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 </script>

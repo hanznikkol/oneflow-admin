@@ -1,36 +1,34 @@
 <template>
-    <!-- Top Container (Filter Section) -->
-    <div class="w-full h-[12%] bg-pure-white rounded-xl p-2 flex flex-row justify-between items-center gap-2">
-        <!-- Dropdown -->
-        <div class="w-full h-full">
-            <DropdownBox
-                :options = "rowOptions"
-                v-model= "selectedRows"
-                size = "w-full md:w-48 lg:w-48"
-            />
-        </div>
+    <!-- Top Container (Table) -->
+    <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
-        <div class="w-full h-full flex-[2] justify-end items-center">
-
+        <div class="w-full h-[12%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
+            <div class="w-auto h-auto">
+                <DropdownBox
+                    :options = "rowOptions"
+                    v-model= "selectedRows"
+                    size = "w-full md:w-36 lg:w-36 h-9"
+                />
+            </div>
             <!-- Create/Add Item -->
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
                     v-if = "!showActionButton"
                     text="Create"
                     textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-24 h-9 px-2"
+                    sizeClass = "w-full lg:w-24 h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconAdd'
                 />
             </div>
             
             <!-- Selected Item -->
-            <div v-if="showActionButton" class="flex flex-row w-auto h-full justify-around items-center gap-2">
+            <div v-if="showActionButton" class="  flex flex-row w-auto h-full justify-around items-center gap-2">
                 <ButtonContainer
                     text="Delete"
                     textClass = "text-xs lg:text-sm font-bold text-white"
                     bgColorClass = "bg-custom-red hover:bg-[#9f202f]"
-                    sizeClass = "w-24 h-9 px-2"
+                    sizeClass = "w-full lg:w-24 h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconDelete'
                 />
@@ -38,18 +36,30 @@
                     v-if = "!isAllSelected"
                     text="Edit"
                     textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-24 h-9 px-2"
+                    sizeClass = "w-full lg:w-24 h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconEdit'
                 />
             </div>
         </div>
+        <!-- Table -->
+        <div class="w-full flex-grow">
+            <TableAnnoucement @selection:changed = "handleSelectionChanged"/>
+        </div>
     </div>
-    <!-- Bottom Container (Tables) -->
-    <div class="w-full h-full rounded-xl">
-        <TableAnnoucement @selection:changed = "handleSelectionChanged"/>
+    
+    <!-- Bottom Container -->
+    <div class="bg-pure-white w-full h-[10%] p-2 rounded-lg">
+        <div class="w-full h-full flex justify-end items-center">
+            <ButtonContainer
+                text="Next"
+                textClass = "text-xs lg:text-sm font-bold"
+                sizeClass = "w-24 h-9 px-2"
+                buttonRadius = "rounded-lg"
+            />
+        </div>
+        
     </div>
-
 </template>
 
 <script setup>

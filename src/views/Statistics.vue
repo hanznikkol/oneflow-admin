@@ -1,14 +1,10 @@
 <template>
-  <div class=" w-full min-h-screen md:min-h-full flex gap-2 flex-col">
-      <!-- Text Statistics -->
-      <FilterContainer/>
-      <!-- Graphs -->
-      <MainChartContainer :sections = "sections"/>
-  </div>      
+<div class="w-full h-full flex gap-2 flex-col">
+    <MainChartContainer :sections = "sections"/>
+</div>      
  
 </template>
 <script setup>
-import FilterContainer from '../components/statistics/FilterContainer.vue';
 import MainChartContainer from '../components/statistics/MainChartContainer.vue';
 import { ref } from 'vue';
 

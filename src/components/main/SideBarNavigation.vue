@@ -71,6 +71,7 @@ import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vu
 import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
 
 import { useRoute } from 'vue-router';
+
 //Active State based on route link
 const route = useRoute()
 
