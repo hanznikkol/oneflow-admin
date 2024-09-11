@@ -1,5 +1,5 @@
 <template>
-    <!-- Top Container (Table) -->
+    <!-- Announcement Main Content -->
     <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
         <div class="w-full h-[12%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
@@ -7,16 +7,16 @@
                 <DropdownBox
                     :options = "rowOptions"
                     v-model= "selectedRows"
-                    size = "w-full md:w-36 lg:w-36 h-9"
+                    size = "w-full lg:w-36 h-9"
                 />
             </div>
             <!-- Create/Add Item -->
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
                     v-if = "!showActionButton"
-                    text="Create"
+                    text="Add Video"
                     textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-full lg:w-24 h-8 px-2"
+                    sizeClass = "w-full lg:w-auto h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconAdd'
                 />
@@ -44,10 +44,10 @@
         </div>
         <!-- Table -->
         <div class="w-full flex-grow">
-            <TableAnnoucement @selection:changed = "handleSelectionChanged"/>
+            <TableVideos @selection:changed = "handleSelectionChanged"/>
         </div>
     </div>
-    
+
     <!-- Bottom Container -->
     <div class="bg-pure-white w-full h-[10%] p-2 rounded-lg">
         <div class="w-full h-full flex justify-end items-center">
@@ -58,7 +58,6 @@
                 buttonRadius = "rounded-lg"
             />
         </div>
-        
     </div>
 </template>
 
@@ -66,9 +65,9 @@
 import { ref } from 'vue';
 
 //Components
+import TableVideos from './subcomponents/TableVideos.vue';
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import DropdownBox from '../statistics/subcomponents/DropdownBox.vue';
-import TableAnnoucement from './subcomponents/TableAnnoucement.vue';
 
 //Icons
 import IconEdit from '../icons/announcement_icons/IconEdit.vue';

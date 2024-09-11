@@ -7,7 +7,7 @@
                     <tr class="flex items-center" >
                         <!-- Table Headers -->
                         <th v-for="header in headers" :key="header" 
-                        class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
+                        class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default " 
                         >
                             {{ header }}
                         </th>

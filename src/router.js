@@ -7,6 +7,7 @@ import Dashboard from './views/Dashboard.vue'
 import Announcement from './views/Announcement.vue'
 import Statistics from './views/Statistics.vue'
 import Main from './views/Main.vue'
+import Videos from './views/Videos.vue'
 //Tab Layouts (Statistics)
 import ServingTime from './components/statistics/tabviews/ServingTime.vue'
 import CustomerJourney from './components/statistics/tabviews/CustomerJourney.vue'
@@ -24,6 +25,7 @@ const routes = [
             {path: 'counterperformance', component: CounterPerformance},
             {path: 'graphreport', component: GraphReport},
         ]},
+        {path: 'videos', component: Videos},
     ]},
 ]
 

@@ -10,19 +10,21 @@
             />
             <!-- PDF -->
             <ButtonContainer
+                bgColorClass = "bg-pdf-red hover:bg-[#C53A38]"
                 text="PDF"
-                textClass = "text-xs lg:text-sm font-bold"
+                textClass = "text-xs lg:text-sm font-bold text-white"
                 sizeClass = "w-full lg:w-24 h-8 px-2"
                 buttonRadius = "rounded-lg"
-                :icon = 'IconAdd'
+                :icon = 'IconPDF'
             />
             <!-- Excel -->
             <ButtonContainer
+                bgColorClass = "bg-excel-green hover:bg-[#207848]"
                 text="Excel"
-                textClass = "text-xs lg:text-sm font-bold"
+                textClass = "text-xs lg:text-sm font-bold text-white"
                 sizeClass = "w-full lg:w-24 h-8 px-2"
                 buttonRadius = "rounded-lg"
-                :icon = 'IconAdd'
+                :icon = 'IconExcel'
             />
         </div>
     </div>
@@ -95,7 +97,10 @@ import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import TabLayout from './subcomponents/TabLayout.vue';
 import DropdownBox from './subcomponents/DropdownBox.vue';
 import InputSearch from './subcomponents/InputSearch.vue';
-
+//Button Icons
+import IconPDF from '../icons/statistics_icons/export_icons/IconPDF.vue';
+import IconExcel from '../icons/statistics_icons/export_icons/IconExcel.vue';
+//
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
