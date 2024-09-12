@@ -24,7 +24,7 @@
             </div>
             
             <!-- Selected Item -->
-            <div v-if="showActionButton" class="  flex flex-row w-auto h-full justify-around items-center gap-2">
+            <div v-if="showActionButton" class=" flex flex-row w-auto h-full justify-around items-center gap-2">
                 <ButtonContainer
                     text="Delete"
                     textClass = "text-xs lg:text-sm font-bold text-white"
