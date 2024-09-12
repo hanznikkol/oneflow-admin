@@ -3,7 +3,7 @@
     <div class="w-full h-[10%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-lg">
         <!-- Dropdown and Download Buttons -->
         <div class="w-full h-auto flex flex-row items-center gap-2">
-            <DropdownBox
+            <DropdownBoxContainer
                 :options = "rowOptions"
                 v-model= "selectedRows"
                 size = "w-full lg:w-36 h-9"
@@ -38,14 +38,14 @@
             <!-- Header Controls -->
             <div class=" flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
                 <!-- Select Admin -->
-                <DropdownBox
+                <DropdownBoxContainer
                     icon = "IconAdmin"
                     v-if = "isGraphReportActive"                   
                     v-model= "selectedAdmissionOption"
                     :options = "listAdmission"
                 />
                 <!-- Dropdown (For Graph) -->
-                <DropdownBox
+                <DropdownBoxContainer
                     v-if = "isGraphReportActive"                   
                     v-model="selectedOption"
                     :options = "sections.map(section => section.label)"
@@ -95,7 +95,7 @@ import { useRoute } from 'vue-router';
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import TabLayout from './subcomponents/TabLayout.vue';
-import DropdownBox from './subcomponents/DropdownBox.vue';
+import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import InputSearch from './subcomponents/InputSearch.vue';
 //Button Icons
 import IconPDF from '../icons/statistics_icons/export_icons/IconPDF.vue';
