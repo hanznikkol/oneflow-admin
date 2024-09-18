@@ -34,4 +34,14 @@
 
 <script setup>
 
+const tableProps = defineProps({
+    header: {
+        type: Array,
+        required: true,
+    },
+    items: {
+        type: Array,
+        required: true
+    }
+})
 </script>
