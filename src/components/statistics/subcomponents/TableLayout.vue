@@ -6,10 +6,10 @@
                 <thead class="bg-accent">
                     <tr class="flex items-center" >
                         <!-- Table Headers -->
-                        <th v-for="header in headers" :key="header" 
+                        <th v-for="headers in header" :key="headers" 
                         class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default " 
                         >
-                            {{ header }}
+                            {{ headers }}
                         </th>
                     </tr>
                 </thead>
@@ -22,12 +22,19 @@
                         @click="toggleRow(index)"
                     >
                         <!-- Table Items -->
-                        <td v-for="header in headers" :key="header"
-                            :class="getCellClass(header, item)"
-                            class="flex-1 text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
-                        >
-                            <span :class="getTextClass(header, item)">
-                                {{ item[header] }}
+                        <td v-for="headers in header" :key="headers"
+                            :class="getCellClass(headers, item)"
+                            class="flex-1 text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap">
+                            <span :class="getTextClass(headers, item)">
+                                <!-- Special handling for the status column -->
+                                <template v-if="headers === statusColumn">
+                                    <span :class="statusClasses[item[statusColumn]]">
+                                        {{ item[statusColumn] }}
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    {{ item[headers] }}
+                                </template>
                             </span>
                         </td>
                     </tr>
@@ -48,6 +55,34 @@ const tableProps = defineProps({
     items: {
         type: Array,
         required: true
-    }
+    },
+    statusColumn: {
+        type: String,
+        required: false,
+        default: 'Status',
+    },
+    statusClasses: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+    },
 })
+
+// State to track selected index
+const selectedIndex = ref(null);
+
+// Define methods
+const toggleRow = (index) => {
+    selectedIndex.value = selectedIndex.value === index ? null : index;
+};
+
+const getCellClass = (header, item) => {
+    // Add logic for cell-specific classes, for example:
+    return item[header] === 'SomeCondition' ? 'text-red-500' : '';
+};
+
+const getTextClass = (header, item) => {
+    // Add logic for text-specific classes if necessary
+    return '';
+};
 </script>

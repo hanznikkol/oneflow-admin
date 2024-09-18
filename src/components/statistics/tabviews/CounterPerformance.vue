@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-grow">
-        <TableLayout :headers = "headerCounterPerformance" :items = "itemList" />
+        <TableLayout :header = "headerCounterPerformance" :items = "itemList" />
     </div>
     
 </template>

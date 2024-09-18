@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-grow">   
-        <TableLayout :headers = "headerServingTime" :items = "itemList"/>
+        <TableLayout :header = "headerServingTime" :items = "itemList"/>
     </div>
 </template>
 

@@ -1,9 +1,9 @@
 <template>
     <div class="w-full flex flex-grow">
         <TableLayout 
-        :headers = "headerCustomerJourney" 
+        :header = "headerCustomerJourney" 
         :items="itemList" 
-        status-column="Status"
+        :status-column= "Status"
         :status-classes="statusClasses"
         />
     </div>

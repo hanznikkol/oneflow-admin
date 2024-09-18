@@ -47,11 +47,12 @@
         <!-- Table -->
         <div class="w-full flex-grow">
             <TableAnnoucement 
-                :headers = "tableHeaders"
-                :items = "paginatedItems"
-                :currentPage = "currentPage"
-                :itemsPerPage = "itemsPerPage"
-                @selection:changed = "handleSelectionChanged"/>
+                :headers="tableHeaders"
+                :items="paginatedItems"
+                :currentPage="currentPage"
+                :itemsPerPage="itemsPerPage"
+                @selection:changed="handleSelectionChanged"
+            />
         </div>
     </div>
     
@@ -61,7 +62,7 @@
             :itemsPerPage = "itemsPerPage"
             :currentPage = "currentPage"
             :totalItems = "totalItems"
-            @update:currentChange = "handlePageChange"
+            @update:currentPage = "handlePageChange"
         />
     </div>
 
@@ -74,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
@@ -120,16 +121,7 @@ const tableItems = ref([
     // Repeat pattern for remaining items up to 99
 ]);
 
-// Add remaining items up to 99
-for (let i = 21; i <= 99; i++) {
-    tableItems.value.push({
-        ID: i,
-        'Announced To': i % 3 === 0 ? 'Faculty' : i % 2 === 0 ? 'Cashier' : 'Registrar',
-        Message: `Example message ${i}`,
-        Enabled: i % 2 === 0 ? 'True' : 'False',
-        selected: false
-    });
-}
+
 
 //Add Announcement Dialogbox
 const isAnnouncementVisible = ref(false)
@@ -170,4 +162,10 @@ const handlePageChange = (page) => {
     currentPage.value = page;
     // Fetch new data or update table based on new page
 };
+
+watch(selectedRows, (newValue) => {
+    itemsPerPage.value = parseInt(newValue.split(' ')[0], 10);
+    currentPage.value = 1; // Reset to the first page
+});
+
 </script>
