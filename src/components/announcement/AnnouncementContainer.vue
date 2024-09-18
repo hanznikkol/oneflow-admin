@@ -46,21 +46,25 @@
         </div>
         <!-- Table -->
         <div class="w-full flex-grow">
-            <TableAnnoucement @selection:changed = "handleSelectionChanged"/>
+            <TableAnnoucement 
+                :headers = "tableHeaders"
+                :items = "paginatedItems"
+                :currentPage = "currentPage"
+                :itemsPerPage = "itemsPerPage"
+                @selection:changed = "handleSelectionChanged"/>
         </div>
     </div>
     
-    <!-- Bottom Container -->
-    <div class="bg-pure-white w-full h-[10%] p-2 rounded-lg">
-        <div class="w-full h-full flex justify-end items-center">
-            <ButtonContainer
-                text="Next"
-                textClass = "text-xs lg:text-sm font-bold"
-                sizeClass = "w-24 h-9 px-2"
-                buttonRadius = "rounded-lg"
-            />
-        </div>
+    <!-- Pagination -->
+    <div class="bg-pure-white w-full h-[10%] px-2 rounded-lg flex items-center">
+        <Pagination 
+            :itemsPerPage = "itemsPerPage"
+            :currentPage = "currentPage"
+            :totalItems = "totalItems"
+            @update:currentChange = "handlePageChange"
+        />
     </div>
+
     <!-- Show Dialog Box -->
     <DialogBoxAnnouncement 
         v-if="isAnnouncementVisible"  
@@ -70,12 +74,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import TableAnnoucement from './subcomponents/TableAnnoucement.vue';
+import Pagination from '../pagination/Pagination.vue';
 
 //Dialog Box
 import DialogBoxAnnouncement from '../dialogbox/DialogBoxAnnouncement.vue';
@@ -88,6 +93,44 @@ import IconAdd from '../icons/announcement_icons/IconAdd.vue';
 //Dropdown
 const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
+
+// Table Data
+const tableHeaders = ref(['ID', 'Announced To', 'Message', 'Enabled'])
+const tableItems = ref([
+    { ID: 1, 'Announced To': 'Registrar', Message: 'Example message 1', Enabled: 'True', selected: false },
+    { ID: 2, 'Announced To': 'Cashier', Message: 'Example message 2', Enabled: 'False', selected: false },
+    { ID: 3, 'Announced To': 'Registrar', Message: 'Example message 3', Enabled: 'True', selected: false },
+    { ID: 4, 'Announced To': 'Cashier', Message: 'Example message 4', Enabled: 'True', selected: false },
+    { ID: 5, 'Announced To': 'Faculty', Message: 'Example message 5', Enabled: 'True', selected: false },
+    { ID: 6, 'Announced To': 'Registrar', Message: 'Example message 6', Enabled: 'False', selected: false },
+    { ID: 7, 'Announced To': 'Cashier', Message: 'Example message 7', Enabled: 'False', selected: false },
+    { ID: 8, 'Announced To': 'Faculty', Message: 'Example message 8', Enabled: 'True', selected: false },
+    { ID: 9, 'Announced To': 'Registrar', Message: 'Example message 9', Enabled: 'False', selected: false },
+    { ID: 10, 'Announced To': 'Cashier', Message: 'Example message 10', Enabled: 'True', selected: false },
+    { ID: 11, 'Announced To': 'Faculty', Message: 'Example message 11', Enabled: 'False', selected: false },
+    { ID: 12, 'Announced To': 'Registrar', Message: 'Example message 12', Enabled: 'True', selected: false },
+    { ID: 13, 'Announced To': 'Cashier', Message: 'Example message 13', Enabled: 'False', selected: false },
+    { ID: 14, 'Announced To': 'Faculty', Message: 'Example message 14', Enabled: 'True', selected: false },
+    { ID: 15, 'Announced To': 'Registrar', Message: 'Example message 15', Enabled: 'False', selected: false },
+    { ID: 16, 'Announced To': 'Cashier', Message: 'Example message 16', Enabled: 'True', selected: false },
+    { ID: 17, 'Announced To': 'Faculty', Message: 'Example message 17', Enabled: 'False', selected: false },
+    { ID: 18, 'Announced To': 'Registrar', Message: 'Example message 18', Enabled: 'True', selected: false },
+    { ID: 19, 'Announced To': 'Cashier', Message: 'Example message 19', Enabled: 'True', selected: false },
+    { ID: 20, 'Announced To': 'Faculty', Message: 'Example message 20', Enabled: 'False', selected: false },
+    // Repeat pattern for remaining items up to 99
+]);
+
+// Add remaining items up to 99
+for (let i = 21; i <= 99; i++) {
+    tableItems.value.push({
+        ID: i,
+        'Announced To': i % 3 === 0 ? 'Faculty' : i % 2 === 0 ? 'Cashier' : 'Registrar',
+        Message: `Example message ${i}`,
+        Enabled: i % 2 === 0 ? 'True' : 'False',
+        selected: false
+    });
+}
+
 //Add Announcement Dialogbox
 const isAnnouncementVisible = ref(false)
 const dialogMode = ref('create')
@@ -104,5 +147,27 @@ const handleSelectionChanged = (selectionStatus) => {
 const openDialog = (mode) => {
     dialogMode.value = mode;
     isAnnouncementVisible.value = true;
+};
+
+// Pagination state
+const currentPage = ref(1);
+const itemsPerPage = ref(parseInt(selectedRows.value.split(' ')[0], 10));
+const totalItems = ref(tableItems.value.length);
+
+// Compute paginated items based on current page and items per page
+const paginatedItems = computed(() => {
+    // Ensure tableItems is an array
+    if (Array.isArray(tableItems.value)) {
+        const start = (currentPage.value - 1) * itemsPerPage.value;
+        const end = start + itemsPerPage.value;
+        return tableItems.value.slice(start, end);
+    }
+    return [];
+});
+
+//Handle Page Changes
+const handlePageChange = (page) => {
+    currentPage.value = page;
+    // Fetch new data or update table based on new page
 };
 </script>
