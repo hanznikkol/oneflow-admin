@@ -10,6 +10,7 @@ export default {
       colors: {
         'primary' : '#00306E',
         'secondary' : '#FEF200',
+        'dark-secondary' : '#FEB019',
         'accent' : '#DEECFF',
         'light-accent': '#F1F7FF',
         'pure-white': '#FFFFFF',
