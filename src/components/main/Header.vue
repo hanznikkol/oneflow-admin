@@ -37,6 +37,8 @@ const headerText = computed(() => {
             return 'Announcement';
         case route.path.startsWith('/statistics'):
             return 'Statistics';
+        case route.path === '/videos':
+        return 'Videos';
         default:
             return 'Welcome!';
     }

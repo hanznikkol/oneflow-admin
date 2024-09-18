@@ -1,7 +1,7 @@
 <template>
     <!-- Side Box -->
     <div class="bg-primary w-full md:w-auto md:h-full rounded-xl px-2 py-3 md:py-4">
-        <div class=" w-full h-full flex justify-around lg:justify-normal lg:flex-col items-center gap-8">
+        <div class=" w-full h-full flex justify-around lg:justify-normal lg:flex-col items-center gap-6">
 
             <!-- Home -->
             <div class=" group hover:cursor-pointer w-auto h-auto">
@@ -29,7 +29,7 @@
                     :is="IconAnnouncement" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
                     :class = "{'text-secondary': isActive('/announcement')}" 
-                    >Annoucement</span>
+                    >Announcement</span>
                 </RouterLink>
             </div>
 
@@ -45,6 +45,21 @@
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
                     :class = "{'text-secondary': isActive('/statistics')}" 
                     >Statistics</span>
+                </RouterLink>
+            </div>
+
+            <!-- Statistics -->
+            <div class="group hover:cursor-pointer w-auto h-auto">
+                <RouterLink to="/videos"
+                    class="flex flex-col items-center group-active:text-secondary"
+                >
+                    <component 
+                    class="object-cover w-6 h-6 fill-current text-pure-white group-hover:text-secondary" 
+                    :class = "{'text-secondary': isActive('/videos')}"
+                    :is="IconVideos" />
+                    <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
+                    :class = "{'text-secondary': isActive('/videos')}" 
+                    >Videos</span>
                 </RouterLink>
             </div>
 
@@ -69,8 +84,10 @@ import IconHome from '../icons/main_icons/sidenavigation/IconHome.vue';
 import IconAnnouncement from '../icons/main_icons/sidenavigation/IconAnnouncement.vue';
 import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vue';
 import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
+import IconVideos from '../icons/main_icons/sidenavigation/IconVideos.vue';
 
 import { useRoute } from 'vue-router';
+
 //Active State based on route link
 const route = useRoute()
 

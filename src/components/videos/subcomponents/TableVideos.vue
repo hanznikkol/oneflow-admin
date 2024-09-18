@@ -6,18 +6,18 @@
                 <tr class="flex items-center">
                     <!-- Table Headers -->
                     <th 
-                        v-for= "(headers, index) in header" 
-                        :key = "index" 
-                        :class= "index === 0 ? 'w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
+                        v-for="(header, index) in header" 
+                        :key="index" 
+                        :class="index === 0 ? 'w-24 lg:w-40' : 'flex-1'"
+                        class="text-left text-[.58rem] py-4 px-2 cursor-default" 
                     >
-                        {{ headers }}
+                        {{ index === 0 ? 'Thumbnail' : header }}
                     </th>
                     <!-- Checkbox -->
                     <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                         <CheckboxSelector
-                            v-model:checked = "headerChecked"
-                            @update:checked = "toggleSelectAll"
+                            v-model:checked="headerChecked"
+                            @update:checked="toggleSelectAll"
                         />
                     </th>
                 </tr>
@@ -32,17 +32,29 @@
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in header" :key="hIndex"
-                        :class= "hIndex === 0 ? 'w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
-                    >
-                        {{ item[header] }}
+                        :class="hIndex === 0 ? 'w-24 lg:w-40' : 'flex-1'"
+                        class="text-left text-[.58rem] px-2 py-4 cursor-default" 
+                    >   
+                        <!-- Show video thumbnail in the first column -->
+                        <template v-if="hIndex === 0">
+                           <!-- Change This to Img -->
+                           <div class="w-16 h-8 bg-label-gray"></div>
+                        </template>
+                        <!-- Show Toggle Switch if the header is Show -->
+                        <template v-if="header === 'Show'">
+                            <ToggleSwitchContainer v-model="item.show" />
+                        </template>
+                        <!-- Default Item -->
+                        <template v-else>
+                            {{ item[header] }}
+                        </template>
                     </td>
                     <!-- Checkbox -->
                     <td class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                        <CheckboxSelector
-                            :checked ="item.selected"
-                            @update:checked = "(checked) => toggleSelectItem(index, checked)"
-                       />
+                            :checked="item.selected"
+                            @update:checked= "checked => toggleSelectItem(index, checked)"
+                        />                        
                     </td>
                 </tr>
             </tbody>
@@ -51,24 +63,27 @@
     </div>
 </template>
 
+
 <script setup>
 import { ref, watch } from 'vue';
 import CheckboxSelector from '../../main/subcomponents/CheckboxSelector.vue';
+import ToggleSwitchContainer from '../../main/subcomponents/ToggleSwitchContainer.vue';
 
-const header = ref(['ID', 'Announced To', 'Message', 'Enabled'])
+// Define the header and items
+const header = ref(['', 'Video ID', 'Title', 'File Name', 'Duration', 'Date Added', 'Show']);
 const items = ref([
-    { ID: 1, 'Announced To': 'Registrar', Message: 'Example message 1', Enabled: 'True', selected: false },
-    { ID: 2, 'Announced To': 'Cashier', Message: 'Example message 2', Enabled: 'False', selected: false },
-])
+    { thumbnail: 'https://example.com/thumbnail1.jpg', 'Video ID': '12345', Title: 'Sample Video 1', 'File Name': 'video1.mp4', Duration: '2:30', 'Date Added': '2024-09-10', show: true, selected: false },
+    { thumbnail: 'https://example.com/thumbnail2.jpg', 'Video ID': '67890', Title: 'Sample Video 2', 'File Name': 'video2.mp4', Duration: '3:45', 'Date Added': '2024-09-11', show: false, selected: false }
+]);
 
 const emit = defineEmits(['selection:changed']);
-const headerChecked = ref(false)
+const headerChecked = ref(false);
 
-//Select All Items
+// Select All Items
 const toggleSelectAll = (isChecked) => {
     items.value.forEach(item => item.selected = isChecked);
-    emit('selection:changed', getSelectionStatus())
-}
+    emit('selection:changed', getSelectionStatus());
+};
 
 // Watch for changes in the headerChecked state to update all items
 watch(headerChecked, (newValue) => {
@@ -87,9 +102,9 @@ const toggleSelectItem = (index, isChecked) => {
         items.value[index].selected = isChecked;
         emit('selection:changed', getSelectionStatus());
     }
-}
+};
 
-//Get the Selection Status
+// Get the Selection Status
 const getSelectionStatus = () => {
     const totalItems = items.value.length;
     const selectedItems = items.value.filter(item => item.selected).length;

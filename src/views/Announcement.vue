@@ -6,6 +6,6 @@
 </template>
 
 <script setup>
-import AnnoucementContainer from '../components/announcement/AnnoucementContainer.vue';
+import AnnoucementContainer from '../components/announcement/AnnouncementContainer.vue';
 
 </script>

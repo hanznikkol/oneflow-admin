@@ -1,5 +1,6 @@
 <template>
-    <div @click="toggleDropdown" class="relative cursor-pointer flex items-center justify-between gap-3 rounded-lg lg:w-96 h-10 px-2 border border-[#ddd] duration-200 hover:border-[#aaaeb7]  focus:border-[#aaaeb7]"
+    <div @click="toggleDropdown" 
+        class="relative cursor-pointer flex items-center justify-between gap-3 rounded-lg h-10 px-2 border border-[#ddd] duration-200 hover:border-[#aaaeb7] focus:border-[#aaaeb7]"
         :class="dropdownProps.size"
     >
         <!-- Icon or Prefix -->

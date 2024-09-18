@@ -1,22 +1,51 @@
 <template>
-    <div class="flex flex-[2] items-center justify-center flex-col bg-pure-white rounded-xl">    
+    <!-- Top Container -->
+    <div class="w-full h-[10%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-lg">
+        <!-- Dropdown and Download Buttons -->
+        <div class="w-full h-auto flex flex-row items-center gap-2">
+            <DropdownBoxContainer
+                :options = "rowOptions"
+                v-model= "selectedRows"
+                size = "w-full lg:w-36 h-9"
+            />
+            <!-- PDF -->
+            <ButtonContainer
+                bgColorClass = "bg-pdf-red hover:bg-[#C53A38]"
+                text="PDF"
+                textClass = "text-xs lg:text-sm font-bold text-white"
+                sizeClass = "w-full lg:w-24 h-8 px-2"
+                buttonRadius = "rounded-lg"
+                :icon = 'IconPDF'
+            />
+            <!-- Excel -->
+            <ButtonContainer
+                bgColorClass = "bg-excel-green hover:bg-[#207848]"
+                text="Excel"
+                textClass = "text-xs lg:text-sm font-bold text-white"
+                sizeClass = "w-full lg:w-24 h-8 px-2"
+                buttonRadius = "rounded-lg"
+                :icon = 'IconExcel'
+            />
+        </div>
+    </div>
+
+    <!-- Middle Container -->
+    <div class="flex flex-1 w-full items-center justify-center flex-col ">
         <!-- Header -->
-        <div class="flex flex-col lg:flex-row flex-wrap gap-2 h-auto w-full items-center justify-between p-2">
-            
+        <div class="rounded-t-lg bg-pure-white flex flex-col lg:flex-row flex-wrap gap-2 h-auto w-full items-center justify-between p-2">  
             <!-- Tab Layout -->
             <TabLayout/>
-
             <!-- Header Controls -->
-            <div class="flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
+            <div class=" flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
                 <!-- Select Admin -->
-                <DropdownBox
+                <DropdownBoxContainer
                     icon = "IconAdmin"
                     v-if = "isGraphReportActive"                   
-                    v-model="selectedAdmissionOption"
+                    v-model= "selectedAdmissionOption"
                     :options = "listAdmission"
                 />
                 <!-- Dropdown (For Graph) -->
-                <DropdownBox
+                <DropdownBoxContainer
                     v-if = "isGraphReportActive"                   
                     v-model="selectedOption"
                     :options = "sections.map(section => section.label)"
@@ -34,16 +63,27 @@
                     :clearable = "true"
                     range 
                 />
-                
+                    
             </div>
-
         </div>
+        
+        <!-- Table and Graphs (Tab Layout) -->
+        <RouterView/>
+    </div>
 
-        <!-- Charts -->
-        <div class="w-full min-h-svh lg:min-h-full lg:flex-[2] bg-accent">
-            <RouterView/>
+    <!-- Bottom Container -->
+    <div 
+        v-if = "!isGraphReportActive"
+        class="bg-pure-white w-full h-[10%] rounded-lg p-1">
+        <div class="w-full h-full flex justify-end items-center">
+            <ButtonContainer
+                text="Next"
+                textClass = "text-xs lg:text-sm font-bold"
+                sizeClass = "w-24 h-9 px-2"
+                buttonRadius = "rounded-lg"
+            />
         </div>
-
+        
     </div>
 </template>
     
@@ -53,28 +93,22 @@ import { RouterView } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 //Components
+import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import TabLayout from './subcomponents/TabLayout.vue';
-import DropdownBox from './subcomponents/DropdownBox.vue';
+import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import InputSearch from './subcomponents/InputSearch.vue';
-
-//Icons
-import IconAdmin from '../icons/statistics_icons/IconAdmin.vue';
-
+//Button Icons
+import IconPDF from '../icons/statistics_icons/export_icons/IconPDF.vue';
+import IconExcel from '../icons/statistics_icons/export_icons/IconExcel.vue';
+//
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
+//Changes the Header Options
 const route = useRoute();
-
 const isGraphReportActive = computed (() => {
     return route.path === '/statistics/graphreport';
 })
-
-const listAdmission = ref([
-    'Cashier',
-    'Registrar'
-])
-
-const selectedAdmissionOption = ref('Select Admission')
 
 //Props
 const props = defineProps({
@@ -83,6 +117,18 @@ const props = defineProps({
         require: true
     }
 })
+
+//Filter Rows
+const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
+const selectedRows = ref(rowOptions[0]);
+
+//List of Admission
+const listAdmission = ref([
+    'Cashier',
+    'Registrar'
+])
+
+const selectedAdmissionOption = ref('Select Admission')
 
 //Date
 const selectedOption = ref('Select an option')
@@ -94,10 +140,8 @@ onMounted(() => {
     const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
     selectedDate.value = [startDate, endDate];
 })
-
-
-
 </script>
+
 
 <style>
 :root {
@@ -117,6 +161,4 @@ onMounted(() => {
     --dp-text-color: #00306E;
     --dp-icon-color: #000000;
 }
-
-
 </style>
