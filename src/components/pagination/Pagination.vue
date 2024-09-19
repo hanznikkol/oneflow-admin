@@ -105,15 +105,21 @@ const totalItems = computed(() => paginationProps.totalItems);
 
 const pageRange = computed(() => {
     const pages = [];
-    const maxPagesBeforeCurrent = 5;
-    const maxPagesAfterCurrent = 2;
-    const startPage = Math.max(1, paginationProps.currentPage - maxPagesBeforeCurrent);
-    const endPage = Math.min(totalPages.value, paginationProps.currentPage + maxPagesAfterCurrent);
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, paginationProps.currentPage - 2);
+    let endPage = Math.min(totalPages.value, paginationProps.currentPage + 2);
+
+    if (endPage - startPage < maxVisiblePages - 1) {
+        if (paginationProps.currentPage < Math.ceil(maxVisiblePages / 2)) {
+            endPage = Math.min(totalPages.value, startPage + (maxVisiblePages - 1));
+        } else if (paginationProps.currentPage > totalPages.value - Math.ceil(maxVisiblePages / 2)) {
+            startPage = Math.max(1, endPage - (maxVisiblePages - 1));
+        }
+    }
 
     for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
     }
-
     return pages;
 });
 
@@ -142,4 +148,5 @@ const goToPage = (page) => {
         emit('update:currentPage', page)
     }
 }
+
 </script>   

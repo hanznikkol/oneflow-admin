@@ -80,12 +80,19 @@ const tableProps = defineProps({
 const emit = defineEmits(['selection:changed']);
 const headerChecked = ref(false)
 
-//Compute paginated items
 const paginatedItems = computed(() => {
-    const start = (tableProps.currentPage - 1) * tableProps.itemsPerPage
-    const end = start + tableProps.itemsPerPage
+    const totalItems = tableProps.items.length;
+    const totalPages = Math.ceil(totalItems / tableProps.itemsPerPage);
+
+    // Make sure we only calculate once and avoid mutating props directly
+    const validPage = Math.min(Math.max(1, tableProps.currentPage), totalPages);
+    
+    const start = (validPage - 1) * tableProps.itemsPerPage;
+    const end = start + tableProps.itemsPerPage;
     return tableProps.items.slice(start, end);
-})
+});
+
+
 //Select All Items
 const toggleSelectAll = (isChecked) => {
     paginatedItems.value.forEach(item => item.selected = isChecked);

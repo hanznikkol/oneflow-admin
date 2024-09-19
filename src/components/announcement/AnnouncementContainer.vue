@@ -121,6 +121,16 @@ const tableItems = ref([
     // Repeat pattern for remaining items up to 99
 ]);
 
+for (let i = 21; i <= 99; i++) {
+    tableItems.value.push({
+        ID: i,
+        'Announced To': i % 3 === 0 ? 'Faculty' : i % 2 === 0 ? 'Cashier' : 'Registrar',
+        Message: `Example message ${i}`,
+        Enabled: i % 2 === 0 ? 'True' : 'False',
+        selected: false
+    });
+}
+
 
 
 //Add Announcement Dialogbox
@@ -148,13 +158,21 @@ const totalItems = ref(tableItems.value.length);
 
 // Compute paginated items based on current page and items per page
 const paginatedItems = computed(() => {
-    // Ensure tableItems is an array
-    if (Array.isArray(tableItems.value)) {
-        const start = (currentPage.value - 1) * itemsPerPage.value;
-        const end = start + itemsPerPage.value;
-        return tableItems.value.slice(start, end);
+    const totalItems = tableItems.value.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage.value);
+
+    // Ensure currentPage is within valid range
+    if (currentPage.value < 1) {
+        currentPage.value = 1;
     }
-    return [];
+    if (currentPage.value > totalPages) {
+        currentPage.value = totalPages;
+    }
+
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+
+    return tableItems.value.slice(start, end);
 });
 
 //Handle Page Changes
@@ -163,9 +181,11 @@ const handlePageChange = (page) => {
     // Fetch new data or update table based on new page
 };
 
+// Watcher for Dropdown Changes
 watch(selectedRows, (newValue) => {
     itemsPerPage.value = parseInt(newValue.split(' ')[0], 10);
-    currentPage.value = 1; // Reset to the first page
+    currentPage.value = 1; // Reset to the first page whenever items per page changes
+    totalItems.value = tableItems.value.length
 });
 
 </script>
