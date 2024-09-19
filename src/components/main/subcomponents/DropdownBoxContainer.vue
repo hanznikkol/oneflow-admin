@@ -103,7 +103,7 @@ const toggleDropdown = () => {
 // Dropdown options
 const selectOption = (option) => {
     emit('update:modelValue', option)
-  isOpen.value = false; // Close dropdown after selection
+    isOpen.value = false; // Close dropdown after selection
 };
 
 
