@@ -77,12 +77,10 @@ const toggleRow = (index) => {
 };
 
 const getCellClass = (header, item) => {
-    // Add logic for cell-specific classes, for example:
     return item[header] === 'SomeCondition' ? 'text-red-500' : '';
 };
 
 const getTextClass = (header, item) => {
-    // Add logic for text-specific classes if necessary
     return '';
 };
 </script>

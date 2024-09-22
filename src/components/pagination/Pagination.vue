@@ -7,10 +7,13 @@
                 <!-- Previous Button -->
                 <button
                     @click = "goPreviousPage"
+                    :class="{'opacity-50 cursor-default': currentPage === 1}"
+                    :disabled="currentPage === 1"
+                    aria-label="Go to Previous Page"
                     class="flex items-center text-sm"
                 >
                     <!-- Icon -->
-                    <component class="w-6 h-6":is = "IconPrevious"/> 
+                    <component class="w-6 h-6" :is = "IconPrevious"/> 
                     Previous
                 </button>
                 
@@ -33,7 +36,7 @@
                         v-for="page in pageRange"
                         :key="page"
                         @click="goToPage(page)"
-                        :class = "{'bg-[#FFFCC6] text-dark-secondary': page === currentPage}"
+                        :class = "{'bg-[#FFFCC6] text-dark-secondary font-bold': page === currentPage}"
                         class="text-sm items-center p-1 rounded-md"
                     >
                         {{ page }}
@@ -56,11 +59,14 @@
                 <!-- Next Button -->
                 <button
                     @click = "goNextPage"
+                    :class="{'opacity-50 cursor-default': currentPage === totalPages}"
+                    :disabled="currentPage === totalPages"
+                    aria-label="Go to Next Page"
                     class="flex items-center text-sm"
                 >   
                     Next
                     <!-- Icon -->
-                    <component class="w-6 h-6":is = "IconNext"/> 
+                    <component class="w-6 h-6" :is = "IconNext"/> 
                 </button>
             </div>
         </div>
@@ -82,15 +88,18 @@ const emit = defineEmits(['update:currentPage'])
 const paginationProps = defineProps({
     currentPage: {
         type: Number,
-        required : true
+        required : true,
+        default: 1
     },
     itemsPerPage: {
         type: Number,
-        required: true
+        required: true,
+        default: 10
     },
     totalItems: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     }
 })
 
@@ -100,7 +109,6 @@ const totalPages = computed(() => Math.ceil(paginationProps.totalItems / paginat
 const startResult = computed(() => (paginationProps.currentPage - 1) * paginationProps.itemsPerPage + 1);
 const endResult = computed(() => Math.min(paginationProps.currentPage * paginationProps.itemsPerPage, paginationProps.totalItems));
 const totalItems = computed(() => paginationProps.totalItems);
-
 
 
 const pageRange = computed(() => {

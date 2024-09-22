@@ -6,18 +6,18 @@
                 <tr class="flex items-center">
                     <!-- Table Headers -->
                     <th 
-                        v-for= "(header, index) in headers" 
-                        :key = "index" 
-                        :class= "index === 0 ? 'w-12 lg:w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
+                        v-for="(header, index) in headers" 
+                        :key="index" 
+                        :class="index === 0 ? 'w-20 lg:w-28' : 'flex-1'"
+                        class="text-left text-[.58rem] py-4 px-2 cursor-default"
                     >
                         {{ header }}
                     </th>
                     <!-- Checkbox -->
                     <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                         <CheckboxSelector
-                            v-model:checked = "headerChecked"
-                            @update:checked = "toggleSelectAll"
+                            v-model:checked="headerChecked"
+                            @update:checked="toggleSelectAll"
                         />
                     </th>
                 </tr>
@@ -28,28 +28,38 @@
                 <!-- Table Row -->
                 <tr v-for="(item, index) in paginatedItems" :key="index" 
                     class="flex items-center"
-                    :class="{'bg-light-accent': item.selected }"
+                    :class="{'bg-light-accent': item.selected}"
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in headers" :key="hIndex"
-                        :class= "hIndex === 0 ? 'w-12 lg:w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
+                        :class="hIndex === 0 ? 'w-20 lg:w-28' : 'flex-1'"
+                        class="text-left text-[.58rem] px-2 py-4 cursor-default"
                     >
-                        {{ item[header] }}
+                        <span :class="getTextClass(header, item)">
+                            <!-- Special handling for the status column -->
+                            <template v-if="header === tableProps.statusColumn"> 
+                                <span :class="tableProps.statusClasses[item[header]]">
+                                    {{ item[header] }}
+                                </span>
+                            </template>
+                            <template v-else>
+                                {{ item[header] }}
+                            </template>
+                        </span>
                     </td>
                     <!-- Checkbox -->
                     <td class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
-                       <CheckboxSelector
-                            :checked ="item.selected"
-                            @update:checked = "(checked) => toggleSelectItem(index, checked)"
-                       />
+                        <CheckboxSelector
+                            :checked="item.selected"
+                            @update:checked= "(checked) => toggleSelectItem(index, checked)" 
+                        />
                     </td>
                 </tr>
             </tbody>
-
         </table>
     </div>
 </template>
+
 
 <script setup>
 import { ref, watch, computed } from 'vue';
@@ -74,7 +84,17 @@ const tableProps = defineProps({
         type: Array,
         required: true,
         default: () => []
-    }
+    },
+    statusColumn: {
+        type: String,
+        required: false,
+        default: 'Status',
+    },
+    statusClasses: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+    },
 })
 
 const emit = defineEmits(['selection:changed']);
@@ -127,4 +147,9 @@ const getSelectionStatus = () => {
         anySelected: selectedItems > 0
     };
 };
+
+const getTextClass = (header, item) => {
+    return '';
+};
+
 </script>

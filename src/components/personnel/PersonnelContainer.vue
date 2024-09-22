@@ -13,18 +13,18 @@
             <!-- Create/Add Item -->
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
-                    @click="openDialog('create')"
+                    @click="openDialog('add')"
                     v-if = "!showActionButton"
-                    text="Create"
+                    text="Add Personnel"
                     textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-full lg:w-24 h-8 px-2"
+                    sizeClass = "w-full lg:w-auto h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconAdd'
                 />
             </div>
             
             <!-- Selected Item -->
-            <div v-if="showActionButton" class=" flex flex-row w-auto h-full justify-around items-center gap-2">
+            <div v-if="showActionButton" class="  flex flex-row w-auto h-full justify-around items-center gap-2">
                 <ButtonContainer
                     text="Delete"
                     textClass = "text-xs lg:text-sm font-bold text-white"
@@ -45,12 +45,14 @@
             </div>
         </div>
         <!-- Table -->
-        <div class="w-full ma">
-            <TableAnnoucement 
+        <div class="w-full flex-grow">
+            <TablePersonnel 
                 :headers="tableHeaders"
                 :items="paginatedItems"
                 :currentPage="currentPage"
                 :itemsPerPage="itemsPerPage"
+                :status-column= "Status"
+                :status-classes="statusClasses"
                 @selection:changed="handleSelectionChanged"
             />
         </div>
@@ -67,73 +69,62 @@
     </div>
 
     <!-- Show Dialog Box -->
-    <DialogBoxAnnouncement 
-        v-if="isAnnouncementVisible"  
-        @close="isAnnouncementVisible = false"
+    <DialogBoxPersonnel 
+        v-if="isPersonnelVisible"  
+        @close="isPersonnelVisible = false"
         :mode ="dialogMode"
     />
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed , watch } from 'vue';
+
+//Icon
+import IconAdd from '../icons/announcement_icons/IconAdd.vue';
+import IconEdit from '../icons/announcement_icons/IconEdit.vue';
+import IconDelete from '../icons/announcement_icons/IconDelete.vue';
 
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
-import TableAnnoucement from './subcomponents/TableAnnoucement.vue';
+import TablePersonnel from './subcomponents/TablePersonnel.vue';
 import Pagination from '../pagination/Pagination.vue';
+import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
 
-//Dialog Box
-import DialogBoxAnnouncement from '../dialogbox/DialogBoxAnnouncement.vue';
+//Sample Data
+const tableHeaders = ref(['Account ID', 'Admin Type', 'Role Name', 'Email', 'First Name', 'Last Name', 'Phone', 'Status' ])
+const tableItems = ref([
+    { ID: 1, 'Account ID': 'A001', 'Admin Type': 'Registrar', 'Role Name': 'Cashier', 'Email': 'john1@example.com', 'First Name': 'John', 'Last Name': 'Doe', 'Phone': '123-456-7890', Status: 'Online' },
+    { ID: 2, 'Account ID': 'A002', 'Admin Type': 'Cashier', 'Role Name': 'Registrar', 'Email': 'jane2@example.com', 'First Name': 'Jane', 'Last Name': 'Smith', 'Phone': '234-567-8901', Status: 'Offline' },
+]);
 
-//Icons
-import IconEdit from '../icons/announcement_icons/IconEdit.vue';
-import IconDelete from '../icons/announcement_icons/IconDelete.vue';
-import IconAdd from '../icons/announcement_icons/IconAdd.vue';
+for (let i = 1; i <= 100; i++) {
+    tableItems.value.push({
+        ID: i,
+        'Account ID': `A00${i}`,
+        'Admin Type': i % 2 === 0 ? 'Cashier' : 'Registrar',
+        'Role Name': i % 2 === 0 ? 'Registrar' : 'Cashier',
+        Email: `user${i}@example.com`,
+        'First Name': `FirstName${i}`,
+        'Last Name': `LastName${i}`,
+        Phone: `123-456-78${i % 100}`,
+        Status: i % 2 === 0 ? 'Offline' : 'Online',
+    });
+}
+
+// Status Classes
+const statusClasses = ref({
+    Online: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Offline: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+});
 
 //Dropdown
 const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
-// Table Data
-const tableHeaders = ref(['ID', 'Announced To', 'Message', 'Enabled'])
-const tableItems = ref([
-    { ID: 1, 'Announced To': 'Registrar', Message: 'Example message 1', Enabled: 'True', selected: false },
-    { ID: 2, 'Announced To': 'Cashier', Message: 'Example message 2', Enabled: 'False', selected: false },
-    { ID: 3, 'Announced To': 'Registrar', Message: 'Example message 3', Enabled: 'True', selected: false },
-    { ID: 4, 'Announced To': 'Cashier', Message: 'Example message 4', Enabled: 'True', selected: false },
-    { ID: 5, 'Announced To': 'Faculty', Message: 'Example message 5', Enabled: 'True', selected: false },
-    { ID: 6, 'Announced To': 'Registrar', Message: 'Example message 6', Enabled: 'False', selected: false },
-    { ID: 7, 'Announced To': 'Cashier', Message: 'Example message 7', Enabled: 'False', selected: false },
-    { ID: 8, 'Announced To': 'Faculty', Message: 'Example message 8', Enabled: 'True', selected: false },
-    { ID: 9, 'Announced To': 'Registrar', Message: 'Example message 9', Enabled: 'False', selected: false },
-    { ID: 10, 'Announced To': 'Cashier', Message: 'Example message 10', Enabled: 'True', selected: false },
-    { ID: 11, 'Announced To': 'Faculty', Message: 'Example message 11', Enabled: 'False', selected: false },
-    { ID: 12, 'Announced To': 'Registrar', Message: 'Example message 12', Enabled: 'True', selected: false },
-    { ID: 13, 'Announced To': 'Cashier', Message: 'Example message 13', Enabled: 'False', selected: false },
-    { ID: 14, 'Announced To': 'Faculty', Message: 'Example message 14', Enabled: 'True', selected: false },
-    { ID: 15, 'Announced To': 'Registrar', Message: 'Example message 15', Enabled: 'False', selected: false },
-    { ID: 16, 'Announced To': 'Cashier', Message: 'Example message 16', Enabled: 'True', selected: false },
-    { ID: 17, 'Announced To': 'Faculty', Message: 'Example message 17', Enabled: 'False', selected: false },
-    { ID: 18, 'Announced To': 'Registrar', Message: 'Example message 18', Enabled: 'True', selected: false },
-    { ID: 19, 'Announced To': 'Cashier', Message: 'Example message 19', Enabled: 'True', selected: false },
-    { ID: 20, 'Announced To': 'Faculty', Message: 'Example message 20', Enabled: 'False', selected: false },
-    // Repeat pattern for remaining items up to 99
-]);
-
-for (let i = 21; i <= 99; i++) {
-    tableItems.value.push({
-        ID: i,
-        'Announced To': i % 3 === 0 ? 'Faculty' : i % 2 === 0 ? 'Cashier' : 'Registrar',
-        Message: `Example message ${i}`,
-        Enabled: i % 2 === 0 ? 'True' : 'False',
-        selected: false
-    });
-}
-
 //Add Announcement Dialogbox
-const isAnnouncementVisible = ref(false)
-const dialogMode = ref('create')
+const isPersonnelVisible = ref(false)
+const dialogMode = ref('add')
 
 //Selection in Table
 const showActionButton = ref(false)
@@ -146,7 +137,7 @@ const handleSelectionChanged = (selectionStatus) => {
 
 const openDialog = (mode) => {
     dialogMode.value = mode;
-    isAnnouncementVisible.value = true;
+    isPersonnelVisible.value = true;
 };
 
 // Pagination state
@@ -185,5 +176,4 @@ watch(selectedRows, (newValue) => {
     currentPage.value = 1; // Reset to the first page whenever items per page changes
     totalItems.value = tableItems.value.length
 });
-
 </script>

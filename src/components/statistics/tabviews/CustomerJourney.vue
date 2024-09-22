@@ -52,11 +52,24 @@ const itemList = ref([
         'Total Time': '30 mins',
         Status: 'Pending'
     },
+    {
+        'Counter': 'Registrar',
+        'Processed By': 'Personel B',
+        'Queue No.': 2,
+        'Created Date': '2024-09-02',
+        'Start Serving': '2024-09-02 11:00',
+        'Waiting Time': '10 mins',
+        'Served Time': '15 mins',
+        'Serving Time Time': '20 mins',
+        'Total Time': '30 mins',
+        Status: 'Abandoned'
+    },
     // Add more items as needed
 ]);
 
 const statusClasses = ref({
     Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Pending: 'bg-red-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Abandoned: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 </script>
