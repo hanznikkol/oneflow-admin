@@ -1,12 +1,36 @@
-<template>
-    <div class="w-full flex flex-grow">   
-        <TableLayout :header = "headerServingTime" :items = "itemList"/>
+<template> 
+    <div class="w-full h-full mb-2">
+        <TableLayout :header = "headerServingTime" :items = "paginatedItems"/>
+    </div>
+    
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+        <Pagination
+            :currentPage="currentPage"
+            :totalItems="totalItems"
+            :itemsPerPage="itemsPerPage"
+            @update:currentPage="handlePageChange"
+        />
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted, watch, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import TableLayout from '../subcomponents/TableLayout.vue';
+import Pagination from '../../pagination/Pagination.vue';
+
+const emit = defineEmits()
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  itemsPerPage: {
+    type: Number,
+    required: true,
+  },
+});
+
 
 const headerServingTime = ref([
     'Counter',
@@ -50,4 +74,48 @@ const itemList = ref([
 
 ]);
 
+for (let i = 1; i <= 50; i++) {
+    itemList.value.push({
+      'Counter': `Counter ${i}`,
+      'Shortest Waiting Time': `${Math.floor(Math.random() * 5) + 1} mins`,
+      'Shortest Serving Time': `${Math.floor(Math.random() * 5) + 2} mins`,
+      'Shortest Total Time': `${Math.floor(Math.random() * 10) + 3} mins`,
+      'Longest Waiting Time': `${Math.floor(Math.random() * 10) + 6} mins`,
+      'Longest Serving Time': `${Math.floor(Math.random() * 8) + 4} mins`,
+      'Longest Total Time': `${Math.floor(Math.random() * 15) + 10} mins`,
+      'Average Waiting Time': `${Math.floor(Math.random() * 6) + 4} mins`,
+      'Average Serving Time': `${(Math.random() * 3 + 3).toFixed(1)} mins`,
+      'Average Total Time': `${(Math.random() * 10 + 8).toFixed(1)} mins`,
+    });
+}
+
+const paginatedItems = computed(() => {
+    const start = (props.currentPage - 1) * props.itemsPerPage;
+    const end = start + props.itemsPerPage;
+    return itemList.value.slice(start, end);
+});
+
+const currentPage = ref(props.currentPage);
+const route = useRoute();
+
+watch(() => props.currentPage, (newVal) => {
+    currentPage.value = newVal;
+});
+
+
+
+const totalItems = computed(() => itemList.value.length);
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage; // Update local current page
+    emit('pageChanged', newPage); // Emit to parent
+};
+
+const fetchData = async () => {
+    // Simulate fetching data. Replace this with your actual data fetching logic.
+};
+
+onMounted(() => {
+    fetchData(); // Call the function to fetch data on component mount
+});
 </script>

@@ -1,5 +1,5 @@
 <template>
-<div class="w-full h-full flex gap-2 flex-col">
+<div class="w-full h-full flex gap-2 flex-col ">
     <MainChartContainer :sections = "sections"/>
 </div>      
  

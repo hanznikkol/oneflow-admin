@@ -1,5 +1,5 @@
 <template>
-    <div class="lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
+    <div class="max-h-[30rem] lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
         <table class="min-w-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
