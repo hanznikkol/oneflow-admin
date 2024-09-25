@@ -1,17 +1,41 @@
 <template>
-    <div class="w-full flex flex-grow">
+    <div class="w-full h-full mb-2">
         <TableLayout 
         :header = "headerCustomerJourney" 
-        :items="itemList" 
+        :items="paginatedItems" 
         :status-classes="statusClasses"
-        />
+    />
     </div>
     
+
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+        <Pagination
+            :currentPage="currentPage"
+            :totalItems="totalItems"
+            :itemsPerPage="itemsPerPage"
+            @update:currentPage="handlePageChange"
+        />
+    </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, computed, onMounted, watch, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import TableLayout from '../subcomponents/TableLayout.vue';
+import Pagination from '../../pagination/Pagination.vue';
+
+const props = defineProps({
+    currentPage: {
+        type: Number,
+        required: true,
+    },
+    itemsPerPage: {
+        type: Number,
+        required: true,
+    },
+});
+
+const emit = defineEmits();
 
 const headerCustomerJourney = ref([
     'Counter',
@@ -26,11 +50,13 @@ const headerCustomerJourney = ref([
     'Status'
 ])
 
+// Initialize itemList
 const itemList = ref([]);
 
 const statusClasses = ref({
     Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Pending: 'bg-red-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center justify-center',
+    Abandoned: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 
 const getStatistics = async() => {
@@ -57,4 +83,26 @@ const getStatistics = async() => {
 onMounted(async()=> {
     itemList.value = await getStatistics()
 })
+
+const paginatedItems = computed(() => {
+    const start = (props.currentPage - 1) * props.itemsPerPage;
+    const end = start + props.itemsPerPage;
+    return itemList.value.slice(start, end);
+});
+
+const currentPage = ref(props.currentPage);
+const route = useRoute();
+
+watch(() => props.currentPage, (newVal) => {
+    currentPage.value = newVal;
+});
+
+
+const totalItems = computed(() => itemList.value.length);
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage; // Update local current page
+    emit('pageChanged', newPage); // Emit to parent
+};
+
 </script>

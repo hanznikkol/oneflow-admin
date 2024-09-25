@@ -18,7 +18,22 @@
                 </RouterLink>
             </div>
 
-            <!-- Queue Fill -->
+            <!-- Personnel -->
+            <div class="group hover:cursor-pointer w-auto h-auto">
+                <RouterLink to="/personnel"
+                    class="flex flex-col items-center group-active:text-secondary"
+                >
+                    <component 
+                    class="object-cover w-6 h-6 stroke-current text-pure-white group-hover:text-secondary"
+                    :class = "{'text-secondary': isActive('/personnel')}"  
+                    :is="IconPersonnel" />
+                    <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
+                    :class = "{'text-secondary': isActive('/personnel')}" 
+                    >Personnel</span>
+                </RouterLink>
+            </div>
+
+            <!-- Annoucement -->
             <div class="group hover:cursor-pointer w-auto h-auto">
                 <RouterLink to="/announcement"
                     class="flex flex-col items-center group-active:text-secondary"
@@ -48,7 +63,7 @@
                 </RouterLink>
             </div>
 
-            <!-- Statistics -->
+            <!-- Videos -->
             <div class="group hover:cursor-pointer w-auto h-auto">
                 <RouterLink to="/videos"
                     class="flex flex-col items-center group-active:text-secondary"
@@ -81,6 +96,7 @@
 
 //Icons
 import IconHome from '../icons/main_icons/sidenavigation/IconHome.vue';
+import IconPersonnel from '../icons/main_icons/sidenavigation/IconPersonnel.vue';
 import IconAnnouncement from '../icons/main_icons/sidenavigation/IconAnnouncement.vue';
 import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vue';
 import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full flex flex-col flex-1 overflow-y-auto rounded-b-lg">
-        <div class="w-full max-h-80 border border-gray rounded-b-lg">
+        <div class="w-full max-h-[26rem] lg:max-h-[21rem] xl:max-h-[23rem] 2xl:max-h-[26rem] border border-gray rounded-b-lg overflow-y-auto">
             <table class="min-w-full bg-pure-white table-fixed rounded-b-lg">
                 <!-- Header -->
                 <thead class="bg-accent">
@@ -77,12 +77,10 @@ const toggleRow = (index) => {
 };
 
 const getCellClass = (header, item) => {
-    // Add logic for cell-specific classes, for example:
     return item[header] === 'SomeCondition' ? 'text-red-500' : '';
 };
 
 const getTextClass = (header, item) => {
-    // Add logic for text-specific classes if necessary
     return '';
 };
 </script>

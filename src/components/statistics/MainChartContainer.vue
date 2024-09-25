@@ -4,9 +4,10 @@
         <!-- Dropdown and Download Buttons -->
         <div class="w-full h-auto flex flex-row items-center gap-2">
             <DropdownBoxContainer
-                :options = "rowOptions"
-                v-model= "selectedRows"
-                size = "w-full lg:w-36 h-9"
+                :options="rowOptions"
+                v-model="selectedRows"
+                size="w-full lg:w-36 h-9"
+                @update:modelValue="onRowsChange"
             />
             <!-- PDF -->
             <ButtonContainer
@@ -30,11 +31,11 @@
     </div>
 
     <!-- Middle Container -->
-    <div class="flex flex-1 w-full items-center justify-center flex-col ">
+    <div class="flex flex-1 w-full items-center justify-center flex-col">
         <!-- Header -->
-        <div class="rounded-t-lg bg-pure-white flex flex-col lg:flex-row flex-wrap gap-2 h-auto w-full items-center justify-between p-2">  
+        <div class="rounded-t-lg bg-pure-white flex flex-col lg:flex-row flex-wrap gap-2 w-full items-center justify-between p-2">  
             <!-- Tab Layout -->
-            <TabLayout/>
+            <TabLayout />
             <!-- Header Controls -->
             <div class=" flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
                 <!-- Select Admin -->
@@ -68,23 +69,13 @@
         </div>
         
         <!-- Table and Graphs (Tab Layout) -->
-        <RouterView/>
+        <RouterView 
+            :current-page="currentPage" 
+            :items-per-page="itemsPerPage" 
+            @pageChanged="handlePageChange"
+        />
     </div>
-
-    <!-- Bottom Container -->
-    <div 
-        v-if = "!isGraphReportActive"
-        class="bg-pure-white w-full h-[10%] rounded-lg p-1">
-        <div class="w-full h-full flex justify-end items-center">
-            <ButtonContainer
-                text="Next"
-                textClass = "text-xs lg:text-sm font-bold"
-                sizeClass = "w-24 h-9 px-2"
-                buttonRadius = "rounded-lg"
-            />
-        </div>
-        
-    </div>
+    
 </template>
     
 <script setup>
@@ -100,7 +91,7 @@ import InputSearch from './subcomponents/InputSearch.vue';
 //Button Icons
 import IconPDF from '../icons/statistics_icons/export_icons/IconPDF.vue';
 import IconExcel from '../icons/statistics_icons/export_icons/IconExcel.vue';
-//
+//Date Picker Library
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import moment from 'moment';
@@ -116,13 +107,29 @@ const isGraphReportActive = computed (() => {
 const props = defineProps({
     sections: {
         type: Array,
-        require: true
+        required: true
     }
 })
 
 //Filter Rows
-const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
-const selectedRows = ref(rowOptions[0]);
+const rowOptions = ref(['10 rows', '20 rows', '50 rows', '100 rows']);
+const selectedRows = ref(rowOptions.value[0]);
+const onRowsChange = (newValue) => {
+    console.log('Selected Rows:', newValue); // Debugging log
+    selectedRows.value = newValue; // Update selected rows
+    itemsPerPage.value = parseInt(newValue.split(' ')[0]); // Update items per page
+};
+
+// Watch tab change to reset rows
+watch(
+    () => route.path, // Watch the route path to detect tab change
+    (newPath) => {
+        console.log('Route path changed:', newPath); // Debugging: see what the new path is
+        console.log('Tab changed, resetting rows to 10');
+        selectedRows.value = rowOptions.value[0]; // Reset to '10 rows'
+        itemsPerPage.value = parseInt(selectedRows.value.split(' ')[0]); // Update items per page
+    }
+);
 
 //List of Counters
 const listCounters = ref([{label: 'All', type: ''}])
@@ -171,6 +178,15 @@ onMounted(async() => {
         selectedOption.value = props.sections.find(option => option.type == route.query.t)
     else selectedOption.value = props.sections[0]
 })
+
+//Pagination Function
+const currentPage = ref(1);
+const itemsPerPage = ref(10); // Initialize with a default
+
+const handlePageChange = (newPage) => {
+    console.log('Current Page Changed:', newPage); // Debugging log
+    currentPage.value = newPage; // Update the current page value
+};
 
 watch([() => route.path, () => selectedCounterOption.value, () => selectedOption.value, () => selectedDate.value], ([path, newCounterOption, newOption, newDate]) => {
     if(!newDate) return

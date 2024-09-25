@@ -33,12 +33,14 @@ const headerText = computed(() => {
     switch (true) {
         case route.path === '/':
             return 'Glad to see you here!';
+        case route.path === '/personnel':
+            return 'Personnel';
         case route.path === '/announcement':
             return 'Announcement';
         case route.path.startsWith('/statistics'):
             return 'Statistics';
         case route.path === '/videos':
-        return 'Videos';
+            return 'Videos';
         default:
             return 'Welcome!';
     }

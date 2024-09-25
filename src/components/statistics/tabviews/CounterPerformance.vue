@@ -1,13 +1,36 @@
 <template>
-    <div class="w-full flex flex-grow">
-        <TableLayout :header = "headerCounterPerformance" :items = "itemList" />
+    <div class="w-full h-full mb-2">
+        <TableLayout :header = "headerCounterPerformance" :items = "paginatedItems" />
+    </div>
+    
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+        <Pagination
+            :currentPage="currentPage"
+            :totalItems="totalItems"
+            :itemsPerPage="itemsPerPage"
+            @update:currentPage="handlePageChange"
+        />
     </div>
     
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, computed, watch, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import TableLayout from '../subcomponents/TableLayout.vue';
+import Pagination from '../../pagination/Pagination.vue';
+
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    required: false,
+  },
+  itemsPerPage: {
+    type: Number,
+    required: false,
+  },
+});
+
 
 const headerCounterPerformance = ref([
     'Counter',
@@ -19,6 +42,13 @@ const headerCounterPerformance = ref([
 ])
 
 const itemList = ref([])
+const emit = defineEmits()
+
+const paginatedItems = computed(() => {
+    const start = (props.currentPage - 1) * props.itemsPerPage;
+    const end = start + props.itemsPerPage;
+    return itemList.value.slice(start, end);
+});
 
 const getStatistics = async() => {
     try {
@@ -44,4 +74,19 @@ const getStatistics = async() => {
 onMounted( async ()=> {
     itemList.value = await getStatistics()
 })
+
+const currentPage = ref(props.currentPage);
+const totalItems = computed(() => itemList.value.length);
+const route = useRoute();
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage; // Update local current page
+    emit('pageChanged', newPage); // Emit to parent
+};
+
+
+watch(() => props.currentPage, (newVal) => {
+    currentPage.value = newVal;
+});
+
 </script>

@@ -1,12 +1,35 @@
-<template>
-    <div class="w-full flex flex-grow">   
-        <TableLayout :header = "headerServingTime" :items = "itemList"/>
+<template> 
+    <div class="w-full h-full mb-2">
+        <TableLayout :header = "headerServingTime" :items = "paginatedItems"/>
+    </div>
+    
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+        <Pagination
+            :currentPage="currentPage"
+            :totalItems="totalItems"
+            :itemsPerPage="itemsPerPage"
+            @update:currentPage="handlePageChange"
+        />
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, computed, onMounted, watch, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import TableLayout from '../subcomponents/TableLayout.vue';
+import Pagination from '../../pagination/Pagination.vue';
+
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    required: true,
+  },
+  itemsPerPage: {
+    type: Number,
+    required: true,
+  },
+});
+
 
 const headerServingTime = ref([
     'Counter',
@@ -50,5 +73,25 @@ const getStatistics = async() => {
 onMounted(async ()=> {
     itemList.value = await getStatistics()
 })
+
+const paginatedItems = computed(() => {
+    const start = (props.currentPage - 1) * props.itemsPerPage;
+    const end = start + props.itemsPerPage;
+    return itemList.value.slice(start, end);
+});
+
+const currentPage = ref(props.currentPage);
+const route = useRoute();
+
+watch(() => props.currentPage, (newVal) => {
+    currentPage.value = newVal;
+});
+
+const totalItems = computed(() => itemList.value.length);
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage; // Update local current page
+    emit('pageChanged', newPage); // Emit to parent
+};
 
 </script>
