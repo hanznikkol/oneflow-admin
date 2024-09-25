@@ -20,10 +20,18 @@ const routes = [
         {path: '', component: Dashboard },
         {path: 'announcement', component: Announcement },
         {path: 'statistics', component: Statistics, children: [
-            {path: 'servingtime', component: ServingTime},
-            {path: 'customerjourney', component: CustomerJourney},
-            {path: 'counterperformance', component: CounterPerformance},
-            {path: 'graphreport', component: GraphReport},
+            {path: 'servingtime', component: ServingTime, 
+                props: route => ({ searchParams: route.query.s, startDate: route.query.sd, endDate: route.query.ed})
+            },
+            {path: 'customerjourney', component: CustomerJourney, 
+                props: route => ({ searchParams: route.query.s, startDate: route.query.sd, endDate: route.query.ed})
+            },
+            {path: 'counterperformance', component: CounterPerformance, 
+                props: route => ({ searchParams: route.query.s, startDate: route.query.sd, endDate: route.query.ed})
+            },
+            {path: 'graphreport', component: GraphReport,
+                props: route => ({ counter: route.query.c, type: route.query.t, startDate: route.query.sd, endDate: route.query.ed})
+            },
         ]},
         {path: 'videos', component: Videos},
     ]},

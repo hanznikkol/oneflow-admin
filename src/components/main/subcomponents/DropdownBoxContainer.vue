@@ -13,7 +13,7 @@
 
         <!-- Text -->
         <div class="flex-1">
-            <p class="text-sm text-primary">{{ dropdownProps.modelValue }}</p>
+            <p class="text-sm text-primary">{{ typeof(dropdownProps.modelValue) === 'string' ? dropdownProps.modelValue : dropdownProps.modelValue ? dropdownProps.modelValue.label : ''}}</p>
         </div>
 
         <!-- Dropdown Icon -->
@@ -40,7 +40,7 @@
                         @click.stop="selectOption(option)"
                         class="cursor-pointer p-2 hover:bg-gray"
                         >
-                        {{ option }}
+                        {{ typeof(option) === 'string' ? option : option.label }}
                         </li>
                     </ul>
                 <slot v-else/>
@@ -72,8 +72,8 @@ const dropdownProps = defineProps({
         default: "w-full"
     },
     modelValue: {
-        type: String,
-        default: 'Select an Option'},
+        type: [Object, String],
+    },
     //Menu Options
     options: {
         type: Array,
@@ -81,7 +81,7 @@ const dropdownProps = defineProps({
     },
 })
 
-const emit = defineEmits(['updateSelectedOption'])
+const emit = defineEmits(['updateSelectedOption', 'update:modelValue'])
 
 /* Icons */
 const Icons = {

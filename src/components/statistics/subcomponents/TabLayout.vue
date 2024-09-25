@@ -54,15 +54,14 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
+const props = defineProps({
+    selectedDate: {
+        type: Array
+    }
+})
+
 const isActive = (path) => {
     return route.path === path || route.path.startsWith(path + '/');
 }
 
-const redirectToDefaultTab = () => {
-    if (route.path === '/statistics') {
-        router.replace('/statistics/servingtime');
-    }
-};
-
-watch(() => route.path, redirectToDefaultTab, { immediate: true });
 </script>

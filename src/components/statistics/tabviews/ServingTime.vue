@@ -5,49 +5,50 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import TableLayout from '../subcomponents/TableLayout.vue';
 
 const headerServingTime = ref([
     'Counter',
     'Shortest Waiting Time',
     'Shortest Serving Time',
-    'Shortest Total Time',
+    'Shortest Resolution Time',
     'Longest Waiting Time',
     'Longest Serving Time',
-    'Longest Total Time',
+    'Longest Resolution Time',
     'Average Waiting Time',
     'Average Serving Time',
-    'Average Total Time'
+    'Average Resolution Time'
 ])
 
-// List of items corresponding to the headers
-const itemList = ref([
-    {
-        'Counter': 'Cashier',
-        'Shortest Waiting Time': '2 mins',
-        'Shortest Serving Time': '3 mins',
-        'Shortest Total Time': '5 mins',
-        'Longest Waiting Time': '10 mins',
-        'Longest Serving Time': '8 mins',
-        'Longest Total Time': '18 mins',
-        'Average Waiting Time': '5 mins',
-        'Average Serving Time': '5.5 mins',
-        'Average Total Time': '10.5 mins'
-    },
-    {
-        'Counter': 'Registrar',
-        'Shortest Waiting Time': '1 min',
-        'Shortest Serving Time': '2 mins',
-        'Shortest Total Time': '3 mins',
-        'Longest Waiting Time': '12 mins',
-        'Longest Serving Time': '9 mins',
-        'Longest Total Time': '21 mins',
-        'Average Waiting Time': '6 mins',
-        'Average Serving Time': '5 mins',
-        'Average Total Time': '11 mins'
-    },
+const emit = defineEmits(['update:counters'])
 
-]);
+// List of items corresponding to the headers
+const itemList = ref([]);
+
+const getStatistics = async() => {
+    try {
+        const token = localStorage.getItem('jwt')
+        const response = await fetch(`/api/statistics?type=all-serving-time`, { 
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+
+        const data = await response.json()
+        if(!response.ok) return alert(`An error occured: ${data.error}`)
+
+        return data.statistics
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+onMounted(async ()=> {
+    itemList.value = await getStatistics()
+})
 
 </script>

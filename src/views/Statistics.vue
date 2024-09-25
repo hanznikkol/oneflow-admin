@@ -10,9 +10,10 @@ import { ref } from 'vue';
 
 // Dynamic Sections
 const sections = ref([
-{ id: 1, label: 'Total Customer', value: '999' },
-{ id: 2, label: 'Avg. Serving Time', value: '3 min' },
-{ id: 3, label: 'Avg. Waiting Time', value: '4 min' },
-{ id: 4, label: 'Total Abandonment', value: '99' }
+    { id: 1, label: 'Ticket Volume', type: 'ticket-volume' },
+    { id: 2, label: 'Avg. Serving Time', type: 'average-serving-time' },
+    { id: 3, label: 'Avg. Waiting Time', type: 'average-waiting-time' },
+    { id: 4, label: 'Avg. Ticket Resolution Time', type: 'average-ticket-resolution-time' },
+    { id: 4, label: 'Abandonment Count', type: 'abandonment-count' }
 ]);
 </script>

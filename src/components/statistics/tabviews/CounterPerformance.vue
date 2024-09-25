@@ -6,34 +6,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import TableLayout from '../subcomponents/TableLayout.vue';
 
 const headerCounterPerformance = ref([
     'Counter',
-    'Counter Personel',
+    'Counter Personnel',
     'Total Served Count',
     'Average Waiting Time',
     'Average Serving Time',
-    'Average Total Time',
+    'Average Resolution Time',
 ])
 
-const itemList = ref([
-    {
-        'Counter': 'Cashier',
-        'Counter Personel': 'Personel A',
-        'Total Served Count': 150,
-        'Average Waiting Time': '5 mins',
-        'Average Serving Time': '10 mins',
-        'Average Total Time': '15 mins',
-    },
-    {
-        Counter: 'Registrar',
-        'Counter Personel': 'Personel B',
-        'Total Served Count': 120,
-        'Average Waiting Time': '4 mins',
-        'Average Serving Time': '9 mins',
-        'Average Total Time': '13 mins',
-    },
-])
+const itemList = ref([])
+
+const getStatistics = async() => {
+    try {
+        const token = localStorage.getItem('jwt')
+        const response = await fetch(`/api/statistics?type=all-counter-performance`, { 
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+
+        const data = await response.json()
+        if(!response.ok) return alert(`An error occured: ${data.error}`)
+
+        return data.statistics
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+onMounted( async ()=> {
+    itemList.value = await getStatistics()
+})
 </script>

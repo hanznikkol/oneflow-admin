@@ -41,14 +41,14 @@
                 <DropdownBoxContainer
                     icon = "IconAdmin"
                     v-if = "isGraphReportActive"                   
-                    v-model= "selectedAdmissionOption"
-                    :options = "listAdmission"
+                    v-model= "selectedCounterOption"
+                    :options = "listCounters"
                 />
                 <!-- Dropdown (For Graph) -->
                 <DropdownBoxContainer
                     v-if = "isGraphReportActive"                   
                     v-model="selectedOption"
-                    :options = "sections.map(section => section.label)"
+                    :options = "sections"
                 />
                 <!-- Input Search (First 3 tabs) -->
                 <InputSearch
@@ -88,8 +88,8 @@
 </template>
     
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { RouterView } from 'vue-router';
+import { ref, onMounted, computed, watch } from 'vue';
+import { RouterView, useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 //Components
@@ -103,11 +103,13 @@ import IconExcel from '../icons/statistics_icons/export_icons/IconExcel.vue';
 //
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import moment from 'moment';
 
 //Changes the Header Options
 const route = useRoute();
+const router = useRouter();
 const isGraphReportActive = computed (() => {
-    return route.path === '/statistics/graphreport';
+    return route.path.includes('/statistics/graphreport');
 })
 
 //Props
@@ -122,23 +124,65 @@ const props = defineProps({
 const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
-//List of Admission
-const listAdmission = ref([
-    'Cashier',
-    'Registrar'
-])
+//List of Counters
+const listCounters = ref([{label: 'All', type: ''}])
 
-const selectedAdmissionOption = ref('Select Admission')
+const selectedCounterOption = ref()
 
 //Date
-const selectedOption = ref('Select an option')
+const selectedOption = ref({})
 const selectedDate = ref('')
 const dateFormat = 'MMM. d yyyy';
 
-onMounted(() => {
-    const startDate = new Date();
-    const endDate = new Date(new Date().setDate(startDate.getDate() + 7));
+const formatStartEndDate = (date) => {
+    const startDate = moment(date[0]).format('YYYY-MM-DD')
+    const endDate = moment(date[1]).format('YYYY-MM-DD')
+    return [startDate, endDate]
+}
+
+const getCounters = async () => {
+    const token = localStorage.getItem('jwt')
+    const response = await fetch(`/api/counters`, { 
+        method: 'GET', 
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+    const data = await response.json()
+    if(!response.ok) return alert(`An error occured: ${data.error}`)
+
+    const counters = data.counters.map(row=> ({label: row.Counter, type: row.adminType}))
+    return counters
+}
+
+onMounted(async() => {
+    const counters = await getCounters()
+    listCounters.value = listCounters.value.concat(counters)
+    if(listCounters.value.length > 0) 
+        selectedCounterOption.value = listCounters.value[0]
+    //set default date and option
+    const endDate = new Date();
+    const startDate = new Date(new Date().setDate(endDate.getDate() - 30));
     selectedDate.value = [startDate, endDate];
+
+    // if query has a value for type, set it as the selected option
+    if(route.query.t) 
+        selectedOption.value = props.sections.find(option => option.type == route.query.t)
+    else selectedOption.value = props.sections[0]
+})
+
+watch([() => route.path, () => selectedCounterOption.value, () => selectedOption.value, () => selectedDate.value], ([path, newCounterOption, newOption, newDate]) => {
+    if(!newDate) return
+    const formattedDate = formatStartEndDate(newDate)
+    let newPath = `${path}?sd=${formattedDate[0]}&ed=${formattedDate[1]}`
+    if (route.path === '/statistics') {
+        return router.replace('/statistics/servingtime');
+    }
+    else if(route.path === '/statistics/graphreport') {
+        newPath += `&c=${newCounterOption.type}&t=${newOption.type}`
+    }
+    router.replace(newPath)
 })
 </script>
 
