@@ -75,6 +75,9 @@ onMounted(async ()=> {
 })
 
 const paginatedItems = computed(() => {
+    if (!itemList.value || itemList.value.length === 0) {
+        return []; // Return an empty array if itemList is not available
+    }
     const start = (props.currentPage - 1) * props.itemsPerPage;
     const end = start + props.itemsPerPage;
     return itemList.value.slice(start, end);

@@ -41,6 +41,8 @@ const headerText = computed(() => {
             return 'Statistics';
         case route.path === '/videos':
             return 'Videos';
+        case route.path === '/feedback':
+            return 'Feedback';
         default:
             return 'Welcome!';
     }

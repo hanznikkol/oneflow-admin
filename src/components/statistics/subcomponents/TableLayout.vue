@@ -1,18 +1,23 @@
 <template>
     <div class="w-full flex flex-col flex-1 overflow-y-auto rounded-b-lg">
         <div class="w-full max-h-[26rem] lg:max-h-[21rem] xl:max-h-[23rem] 2xl:max-h-[26rem] border border-gray rounded-b-lg overflow-y-auto">
+            
             <table class="min-w-full bg-pure-white table-fixed rounded-b-lg">
                 <!-- Header -->
                 <thead class="bg-accent">
                     <tr class="flex items-center" >
                         <!-- Table Headers -->
-                        <th v-for="headers in header" :key="headers" 
-                        class="flex-1 text-left text-[.58rem] py-4 px-2 cursor-default " 
+                        <th
+                            v-for="(headers,index) in header" 
+                            :key="index"
+                            :class="index === 0 ? 'w-20 lg:w-28' : 'flex-1'" 
+                            class="text-left text-[.58rem] py-4 px-2 cursor-default " 
                         >
                             {{ headers }}
                         </th>
                     </tr>
                 </thead>
+                
                 <!-- Content -->
                 <tbody>
                     <!-- Table Row -->
@@ -22,9 +27,12 @@
                         @click="toggleRow(index)"
                     >
                         <!-- Table Items -->
-                        <td v-for="headers in header" :key="headers"
-                            :class="getCellClass(headers, item)"
-                            class="flex-1 text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap">
+                        <td v-for="(headers, hIndex) in header" :key="headers"
+                            :class="[
+                                getCellClass(headers, item),
+                                hIndex === 0 ? 'w-20 lg:w-28' : 'flex-1', 
+                                'text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap'
+                            ]">
                             <span :class="getTextClass(headers, item)">
                                 <!-- Special handling for the status column -->
                                 <template v-if="headers === statusColumn">
@@ -39,7 +47,9 @@
                         </td>
                     </tr>
                 </tbody>
+                
             </table>
+
         </div>
     </div>
 </template>

@@ -3,15 +3,15 @@
         <!-- Background Overlay -->
         <div class="absolute inset-0 bg-black opacity-50 transition-opacity duration-200" ></div>
 
-        <!-- Confirm Dialog Box -->
+        <!-- Dialog Box -->
         <div class="flex flex-col relative bg-pure-white w-[55%] h-auto rounded-lg">
             <!-- Exit Button -->
             <div class="absolute top-3 right-4 p-2">
                 <button 
-                    class="rounded-sm w-8 h-8 flex justify-center items-center outline outline-1 outline-gray hover:bg-light-gray shadow-sm duration-200 active:scale-110"
+                    class="rounded-sm w-6 h-6 lg:w-8 lg:h-8 flex justify-center items-center outline outline-1 outline-gray hover:bg-light-gray shadow-sm duration-200 active:scale-110"
                     @click="emitClose"
                 >
-                    <IconCancel class="w-8 h-8"/>
+                    <IconCancel class="w-6 h-6 lg:w-8 lg:h-8"/>
                 </button>
             </div>
 

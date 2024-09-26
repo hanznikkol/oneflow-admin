@@ -56,7 +56,7 @@ const itemList = ref([]);
 const statusClasses = ref({
     Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
     Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Abandoned: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+    Abandoned: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 
 const getStatistics = async() => {
@@ -85,6 +85,9 @@ onMounted(async()=> {
 })
 
 const paginatedItems = computed(() => {
+    if (!itemList.value || itemList.value.length === 0) {
+        return []; // Return an empty array if itemList is not available
+    }
     const start = (props.currentPage - 1) * props.itemsPerPage;
     const end = start + props.itemsPerPage;
     return itemList.value.slice(start, end);
