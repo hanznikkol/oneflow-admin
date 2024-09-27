@@ -9,6 +9,7 @@ import Announcement from './views/Announcement.vue'
 import Statistics from './views/Statistics.vue'
 import Main from './views/Main.vue'
 import Videos from './views/Videos.vue'
+import Feedback from './views/Feedback.vue'
 //Tab Layouts (Statistics)
 import ServingTime from './components/statistics/tabviews/ServingTime.vue'
 import CustomerJourney from './components/statistics/tabviews/CustomerJourney.vue'
@@ -36,6 +37,7 @@ const routes = [
             },
         ]},
         {path: 'videos', component: Videos},
+        {path: 'feedback', component: Feedback},
     ]},
 ]
 

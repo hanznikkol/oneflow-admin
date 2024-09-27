@@ -92,10 +92,10 @@ import Pagination from '../pagination/Pagination.vue';
 import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
 
 //Sample Data
-const tableHeaders = ref(['Account ID', 'Admin Type', 'Role Name', 'Email', 'First Name', 'Last Name', 'Phone', 'Status' ])
+const tableHeaders = ref(['Account ID', 'Admin Type', 'Role Name', 'Email', 'First Name', 'Last Name', 'Middle Initial', 'Phone', 'Status' ])
 const tableItems = ref([
-    { ID: 1, 'Account ID': 'A001', 'Admin Type': 'Registrar', 'Role Name': 'Cashier', 'Email': 'john1@example.com', 'First Name': 'John', 'Last Name': 'Doe', 'Phone': '123-456-7890', Status: 'Online' },
-    { ID: 2, 'Account ID': 'A002', 'Admin Type': 'Cashier', 'Role Name': 'Registrar', 'Email': 'jane2@example.com', 'First Name': 'Jane', 'Last Name': 'Smith', 'Phone': '234-567-8901', Status: 'Offline' },
+    { ID: 1, 'Account ID': 'A001', 'Admin Type': 'Registrar', 'Role Name': 'Cashier', 'Email': 'john1@example.com', 'First Name': 'John', 'Last Name': 'Doe', 'Middle Initial': 'P', 'Phone': '123-456-7890', Status: 'Online' },
+    { ID: 2, 'Account ID': 'A002', 'Admin Type': 'Cashier', 'Role Name': 'Registrar', 'Email': 'jane2@example.com', 'First Name': 'Jane', 'Last Name': 'Smith','Middle Initial': 'B', 'Phone': '234-567-8901', Status: 'Offline' },
 ]);
 
 for (let i = 1; i <= 100; i++) {
@@ -107,6 +107,7 @@ for (let i = 1; i <= 100; i++) {
         Email: `user${i}@example.com`,
         'First Name': `FirstName${i}`,
         'Last Name': `LastName${i}`,
+        'Middle Initial': `MiddleInitial${i}`,
         Phone: `123-456-78${i % 100}`,
         Status: i % 2 === 0 ? 'Offline' : 'Online',
     });
@@ -115,7 +116,7 @@ for (let i = 1; i <= 100; i++) {
 // Status Classes
 const statusClasses = ref({
     Online: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Offline: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+    Offline: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 
 //Dropdown

@@ -45,7 +45,7 @@
             </div>
         </div>
         <!-- Table -->
-        <div class="w-full ma">
+        <div class="w-full">
             <TableAnnoucement 
                 :headers="tableHeaders"
                 :items="paginatedItems"

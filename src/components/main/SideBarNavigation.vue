@@ -9,7 +9,7 @@
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
-                        class="object-cover w-6 h-6 stroke-current text-pure-white group-hover:text-secondary"
+                        class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-secondary"
                         :class = "{'text-secondary': isActive('/')}" 
                         :is="IconHome" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
@@ -24,7 +24,7 @@
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
-                    class="object-cover w-6 h-6 stroke-current text-pure-white group-hover:text-secondary"
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-secondary"
                     :class = "{'text-secondary': isActive('/personnel')}"  
                     :is="IconPersonnel" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
@@ -39,7 +39,7 @@
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
-                    class="object-cover w-6 h-6 fill-current text-pure-white group-hover:text-secondary"
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary"
                     :class = "{'text-secondary': isActive('/announcement')}"  
                     :is="IconAnnouncement" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
@@ -54,7 +54,7 @@
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
-                    class="object-cover w-6 h-6 fill-current text-pure-white group-hover:text-secondary" 
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
                     :class = "{'text-secondary': isActive('/statistics')}"
                     :is="IconStatistics" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
@@ -69,7 +69,7 @@
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
-                    class="object-cover w-6 h-6 fill-current text-pure-white group-hover:text-secondary" 
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
                     :class = "{'text-secondary': isActive('/videos')}"
                     :is="IconVideos" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
@@ -78,10 +78,25 @@
                 </RouterLink>
             </div>
 
+            <!-- Feedback -->
+            <div class="group hover:cursor-pointer w-auto h-auto">
+                <RouterLink to="/feedback"
+                    class="flex flex-col items-center group-active:text-secondary"
+                >
+                    <component 
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
+                    :class = "{'text-secondary': isActive('/feedback')}"
+                    :is="IconFeedback" />
+                    <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
+                    :class = "{'text-secondary': isActive('/feedback')}" 
+                    >Feedback</span>
+                </RouterLink>
+            </div>
+
             <!-- Log Out -->
             <div class="flex flex-col lg:flex-1 lg:justify-end">
                 <div class="group hover:cursor-pointer w-auto h-auto flex flex-col justify-center items-center">
-                    <component class="object-cover w-6 h-6 stroke-current text-pure-white group-hover:text-custom-red" 
+                    <component class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-custom-red" 
                     :is="IconLogout" />
 
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-custom-red items-center">Logout</span>
@@ -101,6 +116,7 @@ import IconAnnouncement from '../icons/main_icons/sidenavigation/IconAnnouncemen
 import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vue';
 import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
 import IconVideos from '../icons/main_icons/sidenavigation/IconVideos.vue';
+import IconFeedback from '../icons/main_icons/sidenavigation/IconFeedback.vue';
 
 import { useRoute } from 'vue-router';
 

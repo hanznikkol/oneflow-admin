@@ -3,7 +3,7 @@
         <!-- Background Overlay -->
         <div class="absolute inset-0 bg-black opacity-50 transition-opacity duration-200" ></div>
 
-        <!-- Confirm Dialog Box -->
+        <!-- Dialog Box -->
         <div class="flex flex-col relative bg-pure-white w-[80%] lg:w-[55%] max-h-[90svh] lg:h-auto rounded-lg ">
           
             <!-- Main Content -->

@@ -6,7 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-
       colors: {
         'primary' : '#00306E',
         'secondary' : '#FEF200',
@@ -22,7 +21,14 @@ export default {
         'label-gray': '#5A5A5A',
         'custom-red' : '#B62335',
         'pdf-red': '#A32724',
-        'excel-green': '#185C37'
+        'excel-green': '#185C37',
+        'custom-orange': '#FEB019',
+        //Reactions
+        'very-bad': '#FF0000',
+        'bad': '#FE6B19',
+        'neutral': '#FEB019',
+        'good': '#D0FE19',
+        'very-good': '#39FE19'
       },
 
       fontFamily: {
