@@ -11,7 +11,6 @@ import LineGraph from '../subcomponents/LineGraph.vue';
 
 const chartStatistics = ref({})
 
-
 const props = defineProps({
     counter: {
         type: String

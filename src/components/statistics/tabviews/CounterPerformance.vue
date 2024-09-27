@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full mb-2">
+    <div class="relative w-full flex flex-col h-full mb-2">
         <TableLayout :header = "headerCounterPerformance" :items = "paginatedItems" />
     </div>
     
@@ -29,6 +29,16 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  startDate: {
+        type: String
+    },
+    endDate: {
+        type: String
+    },
+    search: {
+        type: String,
+        required: true
+    }
 });
 
 
@@ -42,18 +52,30 @@ const headerCounterPerformance = ref([
 ])
 
 const itemList = ref([])
-const emit = defineEmits()
+const emit = defineEmits(['pageChanged'])
+
+// Filter Search
+const filteredData = computed(() => {
+  if (!props.search) return itemList.value;
+
+  return itemList.value.filter((item) => {
+    // Convert each item to a single string of all values and check if it includes the search query
+    return Object.values(item).some(value =>
+      value.toString().toLowerCase().includes(props.search.toLowerCase())
+    );
+  });
+});
 
 const paginatedItems = computed(() => {
     const start = (props.currentPage - 1) * props.itemsPerPage;
     const end = start + props.itemsPerPage;
-    return itemList.value.slice(start, end);
+    return filteredData.value.slice(start, end);
 });
 
-const getStatistics = async() => {
+const getStatistics = async(startDate, endDate) => {
     try {
         const token = localStorage.getItem('jwt')
-        const response = await fetch(`/api/statistics?type=all-counter-performance`, { 
+        const response = await fetch(`/api/statistics?start=${startDate}&end=${endDate}&type=all-counter-performance`, { 
             method: 'GET', 
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -71,12 +93,8 @@ const getStatistics = async() => {
     }
 }
 
-onMounted( async ()=> {
-    itemList.value = await getStatistics()
-})
-
 const currentPage = ref(props.currentPage);
-const totalItems = computed(() => itemList.value.length);
+const totalItems = computed(() => filteredData.value.length);
 const route = useRoute();
 
 const handlePageChange = (newPage) => {
@@ -88,5 +106,10 @@ const handlePageChange = (newPage) => {
 watch(() => props.currentPage, (newVal) => {
     currentPage.value = newVal;
 });
+
+watch([() => props.startDate, () => props.endDate], async ([newStartDate, newEndDate]) => {
+    if(!newStartDate && !newEndDate) return
+    itemList.value = await getStatistics(newStartDate, newEndDate)
+}, {immediate: true})
 
 </script>

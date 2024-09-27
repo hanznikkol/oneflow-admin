@@ -7,7 +7,6 @@
                 :options="rowOptions"
                 v-model="selectedRows"
                 size="w-full lg:w-36 h-9"
-                @update:modelValue="onRowsChange"
             />
             <!-- PDF -->
             <ButtonContainer
@@ -37,7 +36,7 @@
             <!-- Tab Layout -->
             <TabLayout />
             <!-- Header Controls -->
-            <div class=" flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
+            <div class="flex-col md:flex-row flex flex-1 w-full items-center justify-end gap-2">
                 <!-- Select Admin -->
                 <DropdownBoxContainer
                     icon = "IconAdmin"
@@ -53,6 +52,7 @@
                 />
                 <!-- Input Search (First 3 tabs) -->
                 <InputSearch
+                    v-model="searchQuery"
                     v-else
                 />
                 <!-- Date Picker -->
@@ -62,6 +62,7 @@
                     :multi-calendars="{solo: true}"
                     :format = "dateFormat"
                     :clearable = "true"
+                    :enable-time-picker="false"
                     range 
                 />
                     
@@ -70,6 +71,7 @@
         
         <!-- Table and Graphs (Tab Layout) -->
         <RouterView 
+            :search="searchQuery"
             :current-page="currentPage" 
             :items-per-page="itemsPerPage" 
             @pageChanged="handlePageChange"
@@ -111,25 +113,19 @@ const props = defineProps({
     }
 })
 
+//Filter Search
+const searchQuery = ref('')
 //Filter Rows
 const rowOptions = ref(['10 rows', '20 rows', '50 rows', '100 rows']);
 const selectedRows = ref(rowOptions.value[0]);
 const onRowsChange = (newValue) => {
     console.log('Selected Rows:', newValue); // Debugging log
     selectedRows.value = newValue; // Update selected rows
+    currentPage.value  = 1
     itemsPerPage.value = parseInt(newValue.split(' ')[0]); // Update items per page
 };
 
-// Watch tab change to reset rows
-watch(
-    () => route.path, // Watch the route path to detect tab change
-    (newPath) => {
-        console.log('Route path changed:', newPath); // Debugging: see what the new path is
-        console.log('Tab changed, resetting rows to 10');
-        selectedRows.value = rowOptions.value[0]; // Reset to '10 rows'
-        itemsPerPage.value = parseInt(selectedRows.value.split(' ')[0]); // Update items per page
-    }
-);
+watch(() => selectedRows.value, onRowsChange)
 
 //List of Counters
 const listCounters = ref([{label: 'All', type: ''}])
@@ -168,15 +164,21 @@ onMounted(async() => {
     listCounters.value = listCounters.value.concat(counters)
     if(listCounters.value.length > 0) 
         selectedCounterOption.value = listCounters.value[0]
-    //set default date and option
-    const endDate = new Date();
-    const startDate = new Date(new Date().setDate(endDate.getDate() - 30));
-    selectedDate.value = [startDate, endDate];
 
     // if query has a value for type, set it as the selected option
     if(route.query.t) 
         selectedOption.value = props.sections.find(option => option.type == route.query.t)
     else selectedOption.value = props.sections[0]
+
+    // if query has a selected value, set it as the selectedDate
+    if(route.query.sd && route.query.ed) 
+        selectedDate.value = [route.query.sd, route.query.ed]
+    else {
+        //set default date and option
+        const endDate = new Date();
+        const startDate = new Date(new Date().setDate(endDate.getDate() - 30));
+        selectedDate.value = [startDate, endDate];
+    }
 })
 
 //Pagination Function
@@ -189,7 +191,7 @@ const handlePageChange = (newPage) => {
 };
 
 watch([() => route.path, () => selectedCounterOption.value, () => selectedOption.value, () => selectedDate.value], ([path, newCounterOption, newOption, newDate]) => {
-    if(!newDate) return
+    if(!newDate || newDate.length == 0) return
     const formattedDate = formatStartEndDate(newDate)
     let newPath = `${path}?sd=${formattedDate[0]}&ed=${formattedDate[1]}`
     if (route.path === '/statistics') {
@@ -198,8 +200,13 @@ watch([() => route.path, () => selectedCounterOption.value, () => selectedOption
     else if(route.path === '/statistics/graphreport') {
         newPath += `&c=${newCounterOption.type}&t=${newOption.type}`
     }
-    router.replace(newPath)
+    router.replace(newPath) // replace the url with filters
+
+    currentPage.value = 1
+    selectedRows.value = rowOptions.value[0]; // Reset to '10 rows'
+    itemsPerPage.value = parseInt(selectedRows.value.split(' ')[0]);
 })
+
 </script>
 
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex-grow"> <!-- Adjust the container with Tailwind classes -->
+  <div class="w-full h-0 flex-grow"> <!-- Adjust the container with Tailwind classes -->
     <canvas ref="lineChart" id="lineChart"></canvas>
   </div>
 </template>

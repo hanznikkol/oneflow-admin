@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full mb-2">
+    <div class="relative w-full flex flex-col h-full mb-2">
         <TableLayout 
         :header = "headerCustomerJourney" 
         :items="paginatedItems" 
@@ -8,7 +8,7 @@
     </div>
     
 
-    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+    <div class="bg-pure-white bg- w-full h-auto p-2 rounded-lg flex items-center">
         <Pagination
             :currentPage="currentPage"
             :totalItems="totalItems"
@@ -33,9 +33,19 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    startDate: {
+        type: String
+    },
+    endDate: {
+        type: String
+    },
+    search: {
+        type: String,
+        required: true
+    }
 });
 
-const emit = defineEmits();
+const emit = defineEmits(['pageChanged'])
 
 const headerCustomerJourney = ref([
     'Counter',
@@ -53,16 +63,29 @@ const headerCustomerJourney = ref([
 // Initialize itemList
 const itemList = ref([]);
 
+// Filter Search
+const filteredData = computed(() => {
+  if (!props.search) return itemList.value;
+
+  return itemList.value.filter((item) => {
+    // Convert each item to a single string of all values and check if it includes the search query
+    return Object.values(item).some(value =>
+      value.toString().toLowerCase().includes(props.search.toLowerCase())
+    );
+  });
+});
+
 const statusClasses = ref({
     Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
     Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center justify-center',
     Abandoned: 'bg-red-800 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+    Hold: 'bg-slate-400 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
 });
 
-const getStatistics = async() => {
+const getStatistics = async(startDate, endDate) => {
     try {
         const token = localStorage.getItem('jwt')
-        const response = await fetch(`/api/statistics?type=all-customer-journey`, { 
+        const response = await fetch(`/api/statistics?start=${startDate}&end=${endDate}&type=all-customer-journey`, { 
             method: 'GET', 
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -80,14 +103,10 @@ const getStatistics = async() => {
     }
 }
 
-onMounted(async()=> {
-    itemList.value = await getStatistics()
-})
-
 const paginatedItems = computed(() => {
     const start = (props.currentPage - 1) * props.itemsPerPage;
     const end = start + props.itemsPerPage;
-    return itemList.value.slice(start, end);
+    return filteredData.value.slice(start, end);
 });
 
 const currentPage = ref(props.currentPage);
@@ -98,11 +117,17 @@ watch(() => props.currentPage, (newVal) => {
 });
 
 
-const totalItems = computed(() => itemList.value.length);
+const totalItems = computed(() => filteredData.value.length);
 
 const handlePageChange = (newPage) => {
     currentPage.value = newPage; // Update local current page
     emit('pageChanged', newPage); // Emit to parent
 };
+
+
+watch([() => props.startDate, () => props.endDate], async ([newStartDate, newEndDate]) => {
+    if(!newStartDate && !newEndDate) return
+    itemList.value = await getStatistics(newStartDate, newEndDate)
+}, {immediate: true})
 
 </script>

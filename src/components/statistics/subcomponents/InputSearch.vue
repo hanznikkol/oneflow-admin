@@ -3,7 +3,8 @@
         <component class="w-4 h-4" :is = "IconSearch"/>
 
         <input
-            v-model = "searchQuery"
+            @input="updateValue($event)"
+            :value="modelValue"
             type="text"
             placeholder="Search"
             class="flex flex-1 outline-none"
@@ -21,14 +22,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 //Icon Search
 import IconSearch from '../../icons/statistics_icons/IconSearch.vue';
 import IconClear from '../../icons/statistics_icons/IconClear.vue';
 
-const searchQuery = ref('');
+const emit = defineEmits(['update:modelValue'])
+
+const props = defineProps({
+    modelValue: {
+        type: String
+    }
+})
+
+const searchQuery = ref('')
 
 const clearSearch = () => {
-    searchQuery.value = '';
+    emit('update:modelValue', '')
 };
+
+const updateValue = (event) => {
+    emit('update:modelValue', event.target.value)
+}
+
+watch(() => props.modelValue, (newQuery) => {
+    searchQuery.value = newQuery
+})
 </script>

@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full flex flex-col flex-1 overflow-y-auto rounded-b-lg">
-        <div class="w-full max-h-[26rem] lg:max-h-[21rem] xl:max-h-[23rem] 2xl:max-h-[26rem] border border-gray rounded-b-lg overflow-y-auto">
-            <table class="min-w-full bg-pure-white table-fixed rounded-b-lg">
+    <div :class="itemClass">
+        <div class="w-full h-full border border-gray rounded-b-lg overflow-y-auto">
+            <table class="min-w-full h-full bg-pure-white table-fixed rounded-b-lg">
                 <!-- Header -->
                 <thead class="bg-accent">
                     <tr class="flex items-center" >
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const tableProps = defineProps({
     header: {
@@ -67,6 +67,13 @@ const tableProps = defineProps({
         default: () => ({}),
     },
 })
+
+ // Computed class binding
+ const itemClass = computed(() => {
+      return tableProps.items.length > 6
+        ? 'w-full h-0 flex-grow' // Grows if items are more
+        : 'w-full flex-shrink';  // Shrinks and takes minimal space if items are few
+    });
 
 // State to track selected index
 const selectedIndex = ref(null);
