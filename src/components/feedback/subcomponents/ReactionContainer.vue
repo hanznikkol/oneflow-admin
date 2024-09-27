@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full flex flex-row justify-start items-center gap-4">
+    <div class="w-full h-full flex flex-row justify-start items-center gap-2 lg:gap-4">
       <!-- (Very Bad) -->
       <div class="transition-colors duration-300 ">
         <component

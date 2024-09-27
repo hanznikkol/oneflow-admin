@@ -16,7 +16,7 @@
             </div>
 
             <!-- Main Content -->
-            <div class="w-full gap-4 flex-1 flex flex-row justify-center p-4 overflow-hidden">
+            <div class="w-full gap-4 flex-1 flex flex-row justify-center p-8 overflow-hidden">
                 <div class="w-full lg:w-[50%] h-full flex flex-col gap-4 z-40">
                     <h3 class=" font-semibold text-base lg:text-xl text-custom-orange">
                         Customers Feedback
@@ -46,27 +46,6 @@
                     <component class="w-64 h-64 lg:w-80 lg:h-80 absolute -top-8 -right-4 overflow-hidden" :is="IconQuotation"/>
                 </div>
                 
-            </div>
-            
-            <!-- Buttons -->
-            <div class="flex-1 flex gap-4 w-full px-6 h-auto py-4 bg-gray">
-                <DialogButtonContainer
-                    text = "Cancel"
-                    textClass = "text-base font-bold"
-                    sizeClass = "p-2 w-full"
-                    bgColorClass = "bg-pure-white hover:bg-light-gray"
-                    buttonRadius = "rounded-md"
-                    shadowClass = "shadow-2xl"
-                    @click="emitClose"
-                />
-
-                <DialogButtonContainer
-                    :text ="mode === 'edit' ? 'Save' : 'Create'"
-                    textClass = "text-base text-black font-bold"
-                    sizeClass = "p-2 w-full"
-                    buttonRadius = "rounded-md"
-                    shadowClass = "shadow-2xl"
-                />
             </div>
                 
         </div>

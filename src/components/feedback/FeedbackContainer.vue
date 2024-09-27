@@ -18,6 +18,7 @@
                 :currentPage="currentPage"
                 :itemsPerPage="itemsPerPage"
                 @selection:changed="handleSelectionChanged"
+                @showFeedback="showFeedbackDialog"
             />
         </div>
     </div>
@@ -34,8 +35,8 @@
 
      <!-- Show Dialog Box -->
      <DialogBoxFeedback 
-        v-if="isAnnouncementVisible"  
-        @close="isAnnouncementVisible = false"
+        v-if="isFeedbackVisible"  
+        @close="isFeedbackVisible = false"
     />
 </template>
 
@@ -49,14 +50,20 @@ import DialogBoxFeedback from '../dialogbox/DialogBoxFeedback.vue';
 const rowOptions = ref(['10 rows', '20 rows', '50 rows', '100 rows'])
 const selectedRows = ref(rowOptions.value[0]);
 
+//Show Feedback dialog
+const isFeedbackVisible = ref(false)
+const showFeedbackDialog = (item) => {
+    console.log("Item received for feedback:", item); // Optional: Use the item
+    isFeedbackVisible.value = true;  // Make dialog visible
+};
 
-const tableHeaders = ref(['Message', 'Date', 'Reaction', 'Phone'])
+const tableHeaders = ref(['Message', 'Date', 'Reaction', 'Phone', ' '])
 const tableItems = ref([
     { 
         Message: 'The kiosk was incredibly easy to use! I checked in within minutes and received my ticket promptly.', 
         Date: '2024-09-01', 
         Reaction: 'Very Good', 
-        Phone: '555-0101' 
+        Phone: '555-0101',
     },
     { 
         Message: 'The check-in process was good, but I had to wait too long after that.', 
