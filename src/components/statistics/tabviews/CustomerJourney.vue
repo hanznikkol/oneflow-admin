@@ -57,6 +57,7 @@ const headerCustomerJourney = ref([
     'Serving Time',
     'Served Time',
     'Resolution Time',
+    'Services',
     'Status'
 ])
 
