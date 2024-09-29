@@ -9,7 +9,7 @@
                         v-for= "(header, index) in headers" 
                         :key = "index" 
                         :class= "index === 0 ? 'w-12 lg:w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap" 
+                        class=" text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap" 
                     >
                         {{ header }}
                     </th>
@@ -33,7 +33,7 @@
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in headers" :key="hIndex"
                         :class= "hIndex === 0 ? 'w-12 lg:w-20' : 'flex-1'"
-                        class=" text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap" 
+                        class=" text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap" 
                     >
                         {{ item[header] }}
                     </td>

@@ -54,6 +54,7 @@
                 :status-column= "Status"
                 :status-classes="statusClasses"
                 @selection:changed="handleSelectionChanged"
+                @edit:item = "handleEditItem"
             />
         </div>
     </div>
@@ -73,6 +74,7 @@
         v-if="isPersonnelVisible"  
         @close="isPersonnelVisible = false"
         :mode ="dialogMode"
+        :item="selectedItem" 
     />
 </template>
 
@@ -92,8 +94,30 @@ import Pagination from '../pagination/Pagination.vue';
 import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
 
 //Sample Data
+<<<<<<< HEAD
 const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status'])
 const tableItems = ref([]);
+=======
+const tableHeaders = ref(['Account ID', 'Admin Type', 'Counter No', 'Email', 'First Name', 'Last Name', 'Phone', 'Status', ' '])
+const tableItems = ref([
+    { ID: 1, 'Account ID': 'A001', 'Admin Type': 'Registrar', 'Counter No': '213123', 'Email': 'john1@example.com', 'First Name': 'John', 'Last Name': 'Doe', 'Phone': '123-456-7890', Status: 'Online' },
+    { ID: 2, 'Account ID': 'A002', 'Admin Type': 'Cashier', 'Counter No': '123123', 'Email': 'jane2@example.com', 'First Name': 'Jane', 'Last Name': 'Smith', 'Phone': '234-567-8901', Status: 'Offline' },
+]);
+
+for (let i = 1; i <= 100; i++) {
+    tableItems.value.push({
+        ID: i,
+        'Account ID': `A00${i}`,
+        'Admin Type': i % 2 === 0 ? 'Cashier' : 'Registrar',
+        'Counter No': i % 2 === 0 ? '20398192' : '129319283',
+        Email: `user${i}@example.com`,
+        'First Name': `FirstName${i}`,
+        'Last Name': `LastName${i}`,
+        Phone: `123-456-78${i % 100}`,
+        Status: i % 2 === 0 ? 'Offline' : 'Online',
+    });
+}
+>>>>>>> 2ced9e82e967b0985ed515547fda94dada15b1b3
 
 // Status Classes
 const statusClasses = ref({
@@ -108,14 +132,12 @@ const selectedRows = ref(rowOptions[0]);
 //Add Announcement Dialogbox
 const isPersonnelVisible = ref(false)
 const dialogMode = ref('add')
+const selectedItem = ref(null);
 
-//Selection in Table
-const showActionButton = ref(false)
-const isAllSelected = ref(false)
-
-const handleSelectionChanged = (selectionStatus) => {
-    showActionButton.value = selectionStatus.anySelected;
-    isAllSelected.value = selectionStatus.allSelected;
+const handleEditItem = (item) => {
+    selectedItem.value = item;  // Set the selected item to be edited
+    dialogMode.value = 'edit';
+    isPersonnelVisible.value = true;  // Show the dialog
 };
 
 const openDialog = (mode) => {

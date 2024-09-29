@@ -9,16 +9,9 @@
                         v-for="(header, index) in headers" 
                         :key="index" 
                         :class="index === 0 ? 'w-20 lg:w-28' : 'flex-1'"
-                        class="text-left text-[.58rem] py-4 px-2 cursor-default"
+                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default"
                     >
                         {{ header }}
-                    </th>
-                    <!-- Checkbox -->
-                    <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
-                        <CheckboxSelector
-                            v-model:checked="headerChecked"
-                            @update:checked="toggleSelectAll"
-                        />
                     </th>
                 </tr>
             </thead>
@@ -28,12 +21,11 @@
                 <!-- Table Row -->
                 <tr v-for="(item, index) in paginatedItems" :key="index" 
                     class="flex items-center"
-                    :class="{'bg-light-accent': item.selected}"
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in headers" :key="hIndex"
                         :class="hIndex === 0 ? 'w-20 lg:w-28' : 'flex-1'"
-                        class="text-left text-[.58rem] px-2 py-4 cursor-default"
+                        class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default"
                     >
                         <span :class="getTextClass(header, item)">
                             <!-- Special handling for the status column -->
@@ -42,17 +34,25 @@
                                     {{ item[header] }}
                                 </span>
                             </template>
+
+                            <!-- Check for the last column -->
+                            <template v-else-if="header === ' '">
+                                <td class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm py-4 px-2 flex items-center justify-end ml-auto">
+                                    <ButtonContainer
+                                        text="Edit"
+                                        textClass="text-white text-xs"
+                                        sizeClass="w-full h-full"
+                                        buttonRadius="rounded-lg"
+                                        bgColorClass="bg-[#138FCD]"
+                                        @click="handleEditClick(item)"
+                                    />
+                                </td>
+                            </template>
+
                             <template v-else>
                                 {{ item[header] }}
                             </template>
                         </span>
-                    </td>
-                    <!-- Checkbox -->
-                    <td class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
-                        <CheckboxSelector
-                            :checked="item.selected"
-                            @update:checked= "(checked) => toggleSelectItem(index, checked)" 
-                        />
                     </td>
                 </tr>
             </tbody>
@@ -60,10 +60,9 @@
     </div>
 </template>
 
-
 <script setup>
 import { ref, watch, computed } from 'vue';
-import CheckboxSelector from '../../main/subcomponents/CheckboxSelector.vue';
+import ButtonContainer from '../../main/subcomponents/ButtonContainer.vue';
 
 const tableProps = defineProps({
     headers: {
@@ -98,13 +97,17 @@ const tableProps = defineProps({
 })
 
 const emit = defineEmits(['selection:changed']);
+
+const handleEditClick = (item) => {
+    emit('edit:item', item);  // Emit the item that was clicked for editing
+};
 const headerChecked = ref(false)
 
 const paginatedItems = computed(() => {
     const totalItems = tableProps.items.length;
     const totalPages = Math.ceil(totalItems / tableProps.itemsPerPage);
 
-    // Make sure we only calculate once and avoid mutating props directly
+    // Ensure valid page number
     const validPage = Math.min(Math.max(1, tableProps.currentPage), totalPages);
     
     const start = (validPage - 1) * tableProps.itemsPerPage;
@@ -112,8 +115,7 @@ const paginatedItems = computed(() => {
     return tableProps.items.slice(start, end);
 });
 
-
-//Select All Items
+// Select All Items
 const toggleSelectAll = (isChecked) => {
     paginatedItems.value.forEach(item => item.selected = isChecked);
     emit('selection:changed', getSelectionStatus())
@@ -130,15 +132,7 @@ watch(() => tableProps.items, () => {
     headerChecked.value = allSelected;
 }, { deep: true });
 
-// Select Specific Items
-const toggleSelectItem = (index, isChecked) => {
-    if (tableProps.items[index]) {
-        tableProps.items[index].selected = isChecked;
-        emit('selection:changed', getSelectionStatus());
-    }
-}
-
-//Get the Selection Status
+// Get the Selection Status
 const getSelectionStatus = () => {
     const totalItems = tableProps.items.length;
     const selectedItems = tableProps.items.filter(item => item.selected).length;
