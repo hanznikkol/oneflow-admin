@@ -8,7 +8,7 @@
     </div>
     
 
-    <div class="bg-pure-white bg- w-full h-auto p-2 rounded-lg flex items-center">
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
         <Pagination
             :currentPage="currentPage"
             :totalItems="totalItems"
@@ -78,10 +78,10 @@ const filteredData = computed(() => {
 });
 
 const statusClasses = ref({
-    Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Hold: 'bg-slate-400 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
-    Abandoned: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+    Completed: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center text-[.60rem] justify-center',
+    Pending: 'bg-secondary text-black p-1 rounded w-16 h-auto flex items-center text-[.60rem] justify-center',
+    Hold: 'bg-slate-400 text-white p-1 rounded w-16 h-auto flex items-center text-[.60rem] justify-center',
+    Abandoned: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center text-[.60rem] justify-center',
 });
 
 const getStatistics = async(startDate, endDate) => {

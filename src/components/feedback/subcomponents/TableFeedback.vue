@@ -8,7 +8,7 @@
                     <th 
                         v-for="(header, index) in headers" 
                         :key="index" 
-                        class="text-left text-[.58rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
+                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
                     >
                         {{ header }}
                     </th>
@@ -22,13 +22,13 @@
                     <template v-for="(header, hIndex) in headers" :key="hIndex">
                         <!-- Reaction Column -->
                         <td v-if="header === 'Reaction'" 
-                            class="text-left text-[.58rem] px-2 py-4 cursor-default w-1/6"
+                            class="text-left px-2 py-4 cursor-default w-1/6"
                         >
                             <ReactionContainer :reaction="item.Reaction" />
                         </td>
 
                         <!-- Button at the end (View Feedback) -->
-                        <td v-else-if ="header === ' '" class="w-16 h-14 lg:w-24 lg:h-14 text-center text-sm py-4 px-2 flex items-center justify-end ml-auto">
+                        <td v-else-if ="header === ' '" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm py-4 px-2 flex items-center justify-end ml-auto">
                             <ButtonContainer
                                 text="View"
                                 textClass="text-white text-xs"
@@ -40,13 +40,11 @@
                         </td>
                         <!-- Other Columns -->
                         <td v-else 
-                            class="text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]"
+                            class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]"
                         >
                             {{ item[header] }}
                         </td>
                     </template>
-
-                    
                 </tr>
             </tbody>
         </table>
