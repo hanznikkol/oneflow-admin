@@ -21,9 +21,19 @@
 </template>
 
 <script setup>
+import { onMounted, watch } from 'vue';
 import Header from '../components/main/Header.vue';
 import SideBarNavigation from '../components/main/SideBarNavigation.vue';
 
-import { RouterView } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+const router = useRouter()
+
+onMounted(() => {
+    if(route.path == '/admin' || route.path == '/admin/')
+        router.replace('/admin/home')
+})
 </script>
     

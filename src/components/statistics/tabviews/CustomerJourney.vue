@@ -69,9 +69,10 @@ const filteredData = computed(() => {
 
   return itemList.value.filter((item) => {
     // Convert each item to a single string of all values and check if it includes the search query
-    return Object.values(item).some(value =>
-      value.toString().toLowerCase().includes(props.search.toLowerCase())
-    );
+    return Object.values(item).some(value => {
+      if(value != null)
+        return value.toString().toLowerCase().includes(props.search.toLowerCase())
+    });
   });
 });
 

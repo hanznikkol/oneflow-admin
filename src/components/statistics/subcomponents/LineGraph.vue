@@ -5,13 +5,10 @@
 </template>
 
 <script setup>
-import { Chart } from 'chart.js';
-import { Line } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, PointElement, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Chart as ChartJS, LineController, Title, Tooltip, Legend, LineElement, PointElement, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import moment from 'moment';
-import { data } from 'autoprefixer';
-ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, LineController, Legend, PointElement, LineElement, BarElement, CategoryScale, LinearScale)
 
 const props = defineProps({
   chartStatistics: {
@@ -128,13 +125,13 @@ const chartOptions = ref({
 const lineChart = ref(null);
 
 const initChart = () => {
-  new Chart(lineChart.value, { type: "line", options: chartOptions.value, data: chartData.value })
+  new ChartJS(lineChart.value, { type: "line", options: chartOptions.value, data: chartData.value })
 }
 
 // Function to force chart resize
 const resizeChart = () => {
   if (lineChart.value) {
-    const chartInstance = Chart.getChart(lineChart.value)
+    const chartInstance = ChartJS.getChart(lineChart.value)
     if (chartInstance) {
       chartInstance.destroy()
       initChart()
@@ -173,7 +170,7 @@ watch(() => props.chartStatistics, (newStatistics) => {
       }
     ))
     
-    const chartInstance = Chart.getChart(lineChart.value)
+    const chartInstance = ChartJS.getChart(lineChart.value)
     chartInstance.update()
   }
 });

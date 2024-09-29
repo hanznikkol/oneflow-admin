@@ -3,10 +3,10 @@
         
         <!-- Serving Time -->
         <RouterLink 
-            to="/statistics/servingtime" 
+            to="/admin/statistics/servingtime" 
             class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'bg-accent rounded-lg text-primary': isActive('/statistics/servingtime'),
+                'bg-accent rounded-lg text-primary': isActive('/admin/statistics/servingtime'),
             }"
         >
             Serving Time
@@ -14,10 +14,10 @@
 
         <!-- Customer Journey -->
         <RouterLink 
-            to="/statistics/customerjourney" 
+            to="/admin/statistics/customerjourney" 
             class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'bg-accent rounded-lg text-primary': isActive('/statistics/customerjourney'),
+                'bg-accent rounded-lg text-primary': isActive('/admin/statistics/customerjourney'),
             }"
         >
             Customer Journey
@@ -25,10 +25,10 @@
 
         <!-- Counter Performance -->
         <RouterLink 
-            to="/statistics/counterperformance" 
+            to="/admin/statistics/counterperformance" 
             class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'bg-accent rounded-lg text-primary': isActive('/statistics/counterperformance'),
+                'bg-accent rounded-lg text-primary': isActive('/admin/statistics/counterperformance'),
             }"
         >
             Counter Performance
@@ -36,10 +36,10 @@
         
         <!-- Graph Report -->
         <RouterLink 
-            to="/statistics/graphreport" 
+            to="/admin/statistics/graphreport" 
             class="w-auto h-auto group cursor-pointer p-2 transition-all duration-100 rounded-lg text-xs lg:text-sm lg:whitespace-nowrap"
             :class="{
-                'bg-accent rounded-lg text-primary': isActive('/statistics/graphreport'),
+                'bg-accent rounded-lg text-primary': isActive('/admin/statistics/graphreport'),
             }"
         >
             Graph Report

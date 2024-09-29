@@ -194,10 +194,10 @@ watch([() => route.path, () => selectedCounterOption.value, () => selectedOption
     if(!newDate || newDate.length == 0) return
     const formattedDate = formatStartEndDate(newDate)
     let newPath = `${path}?sd=${formattedDate[0]}&ed=${formattedDate[1]}`
-    if (route.path === '/statistics') {
-        return router.replace('/statistics/servingtime');
+    if (route.path === '/admin/statistics') {
+        return router.replace('/admin/statistics/servingtime');
     }
-    else if(route.path === '/statistics/graphreport') {
+    else if(route.path === '/admin/statistics/graphreport') {
         newPath += `&c=${newCounterOption.type}&t=${newOption.type}`
     }
     router.replace(newPath) // replace the url with filters

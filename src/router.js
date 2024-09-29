@@ -17,9 +17,9 @@ import CounterPerformance from './components/statistics/tabviews/CounterPerforma
 import GraphReport from './components/statistics/tabviews/GraphReport.vue'
 
 const routes = [
-    {path: '/login', component: Login},
-    {path: '/', component: Main, children: [
-        {path: '', component: Dashboard },
+    {path: '/admin/login', component: Login},
+    {path: '/admin', component: Main, children: [
+        {path: 'home', component: Dashboard },
         {path: 'personnel', component: Personnel },
         {path: 'announcement', component: Announcement },
         {path: 'statistics', component: Statistics, children: [

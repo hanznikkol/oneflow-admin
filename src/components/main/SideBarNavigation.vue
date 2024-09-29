@@ -5,90 +5,90 @@
 
             <!-- Home -->
             <div class=" group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/"
+                <RouterLink to="/admin/home"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                         class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-secondary"
-                        :class = "{'text-secondary': isActive('/')}" 
+                        :class = "{'text-secondary': isActive('/admin/home')}" 
                         :is="IconHome" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/')}" 
+                    :class = "{'text-secondary': isActive('/admin/home')}" 
                     >Home</span>
                 </RouterLink>
             </div>
 
             <!-- Personnel -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/personnel"
+                <RouterLink to="/admin/personnel"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                     class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-secondary"
-                    :class = "{'text-secondary': isActive('/personnel')}"  
+                    :class = "{'text-secondary': isActive('/admin/personnel')}"  
                     :is="IconPersonnel" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/personnel')}" 
+                    :class = "{'text-secondary': isActive('/admin/personnel')}" 
                     >Personnel</span>
                 </RouterLink>
             </div>
 
             <!-- Annoucement -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/announcement"
+                <RouterLink to="/admin/announcement"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                     class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary"
-                    :class = "{'text-secondary': isActive('/announcement')}"  
+                    :class = "{'text-secondary': isActive('/admin/announcement')}"  
                     :is="IconAnnouncement" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/announcement')}" 
+                    :class = "{'text-secondary': isActive('/admin/announcement')}" 
                     >Announcement</span>
                 </RouterLink>
             </div>
 
             <!-- Statistics -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/statistics"
+                <RouterLink to="/admin/statistics"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                     class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
-                    :class = "{'text-secondary': isActive('/statistics')}"
+                    :class = "{'text-secondary': isActive('/admin/statistics')}"
                     :is="IconStatistics" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/statistics')}" 
+                    :class = "{'text-secondary': isActive('/admin/statistics')}" 
                     >Statistics</span>
                 </RouterLink>
             </div>
 
             <!-- Videos -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/videos"
+                <RouterLink to="/admin/videos"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                     class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
-                    :class = "{'text-secondary': isActive('/videos')}"
+                    :class = "{'text-secondary': isActive('/admin/videos')}"
                     :is="IconVideos" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/videos')}" 
+                    :class = "{'text-secondary': isActive('/admin/videos')}" 
                     >Videos</span>
                 </RouterLink>
             </div>
 
             <!-- Feedback -->
             <div class="group hover:cursor-pointer w-auto h-auto">
-                <RouterLink to="/feedback"
+                <RouterLink to="/admin/feedback"
                     class="flex flex-col items-center group-active:text-secondary"
                 >
                     <component 
                     class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
-                    :class = "{'text-secondary': isActive('/feedback')}"
+                    :class = "{'text-secondary': isActive('/admin/feedback')}"
                     :is="IconFeedback" />
                     <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
-                    :class = "{'text-secondary': isActive('/feedback')}" 
+                    :class = "{'text-secondary': isActive('/admin/feedback')}" 
                     >Feedback</span>
                 </RouterLink>
             </div>

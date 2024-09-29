@@ -46,6 +46,7 @@ const headerCounterPerformance = ref([
     'Counter',
     'Counter Personnel',
     'Total Served Count',
+    'Abandonment Count',
     'Average Waiting Time',
     'Average Serving Time',
     'Average Resolution Time',

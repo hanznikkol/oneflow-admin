@@ -31,17 +31,17 @@ const route = useRoute();
 const headerText = computed(() => {
     // Define header texts for different routes
     switch (true) {
-        case route.path === '/':
+        case route.path === '/admin/home':
             return 'Glad to see you here!';
-        case route.path === '/personnel':
+        case route.path === '/admin/personnel':
             return 'Personnel';
-        case route.path === '/announcement':
+        case route.path === '/admin/announcement':
             return 'Announcement';
-        case route.path.startsWith('/statistics'):
+        case route.path.startsWith('/admin/statistics'):
             return 'Statistics';
-        case route.path === '/videos':
+        case route.path === '/admin/videos':
             return 'Videos';
-        case route.path === '/feedback':
+        case route.path === '/admin/feedback':
             return 'Feedback';
         default:
             return 'Welcome!';
