@@ -30,7 +30,7 @@
                             :class="[
                                 getCellClass(headers, item),
                                 hIndex === 0 ? 'w-20 lg:w-28' : 'flex-1', 
-                                'text-left text-[.58rem] px-2 py-4 cursor-default whitespace-nowrap'
+                                'text-left text-[.58rem] px-2 py-4 break-words cursor-default whitespace-normal'
                             ]">
                             <span :class="getTextClass(headers, item)">
                                 <!-- Special handling for the status column -->
