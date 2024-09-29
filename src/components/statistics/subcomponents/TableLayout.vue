@@ -81,7 +81,7 @@ const tableProps = defineProps({
  const itemClass = computed(() => {
       return tableProps.items.length > 6
         ? 'w-full h-0 flex-grow' // Grows if items are more
-        : 'w-full flex-shrink';  // Shrinks and takes minimal space if items are few
+        : 'w-full';  // Shrinks and takes minimal space if items are few
     });
 
 // State to track selected index

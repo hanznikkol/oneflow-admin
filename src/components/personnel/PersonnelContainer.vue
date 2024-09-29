@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed , watch } from 'vue';
+import { ref, computed , watch, onMounted } from 'vue';
 
 //Icon
 import IconAdd from '../icons/announcement_icons/IconAdd.vue';
@@ -92,26 +92,8 @@ import Pagination from '../pagination/Pagination.vue';
 import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
 
 //Sample Data
-const tableHeaders = ref(['Account ID', 'Admin Type', 'Role Name', 'Email', 'First Name', 'Last Name', 'Middle Initial', 'Phone', 'Status' ])
-const tableItems = ref([
-    { ID: 1, 'Account ID': 'A001', 'Admin Type': 'Registrar', 'Role Name': 'Cashier', 'Email': 'john1@example.com', 'First Name': 'John', 'Last Name': 'Doe', 'Middle Initial': 'P', 'Phone': '123-456-7890', Status: 'Online' },
-    { ID: 2, 'Account ID': 'A002', 'Admin Type': 'Cashier', 'Role Name': 'Registrar', 'Email': 'jane2@example.com', 'First Name': 'Jane', 'Last Name': 'Smith','Middle Initial': 'B', 'Phone': '234-567-8901', Status: 'Offline' },
-]);
-
-for (let i = 1; i <= 100; i++) {
-    tableItems.value.push({
-        ID: i,
-        'Account ID': `A00${i}`,
-        'Admin Type': i % 2 === 0 ? 'Cashier' : 'Registrar',
-        'Role Name': i % 2 === 0 ? 'Registrar' : 'Cashier',
-        Email: `user${i}@example.com`,
-        'First Name': `FirstName${i}`,
-        'Last Name': `LastName${i}`,
-        'Middle Initial': `MiddleInitial${i}`,
-        Phone: `123-456-78${i % 100}`,
-        Status: i % 2 === 0 ? 'Offline' : 'Online',
-    });
-}
+const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status'])
+const tableItems = ref([]);
 
 // Status Classes
 const statusClasses = ref({
@@ -143,8 +125,8 @@ const openDialog = (mode) => {
 
 // Pagination state
 const currentPage = ref(1);
-const itemsPerPage = ref(parseInt(selectedRows.value.split(' ')[0], 10));
-const totalItems = ref(tableItems.value.length);
+const itemsPerPage = computed(()=>parseInt(selectedRows.value.split(' ')[0], 10));
+const totalItems = computed(()=>tableItems.value.length);
 
 // Compute paginated items based on current page and items per page
 const paginatedItems = computed(() => {
@@ -170,6 +152,32 @@ const handlePageChange = (page) => {
     currentPage.value = page;
     // Fetch new data or update table based on new page
 };
+
+const getPersonnel = async(id) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        let request = '/api/personnel'
+        if(id)
+            request += `/${id}`
+        const response = await fetch(request, { 
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(`An error occured: ${data.error}`)
+        return data.personnel
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+onMounted(async() => {
+    tableItems.value = await getPersonnel()
+})
 
 // Watcher for Dropdown Changes
 watch(selectedRows, (newValue) => {

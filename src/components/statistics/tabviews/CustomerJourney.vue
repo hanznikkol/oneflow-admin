@@ -8,7 +8,7 @@
     </div>
     
 
-    <div class="bg-pure-white bg- w-full h-auto p-2 rounded-lg flex items-center">
+    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
         <Pagination
             :currentPage="currentPage"
             :totalItems="totalItems"
