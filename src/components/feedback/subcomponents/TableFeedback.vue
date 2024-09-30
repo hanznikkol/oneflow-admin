@@ -18,7 +18,9 @@
             <!-- Content -->
             <tbody>
                 <!-- Table Row -->
-                <tr v-for="(item, index) in paginatedItems" :key="index">
+                <tr v-for="(item, index) in paginatedItems" :key="index"
+                    :class="getRowClass(item,index)"
+                >
                     <template v-for="(header, hIndex) in headers" :key="hIndex">
                         <!-- Reaction Column -->
                         <td v-if="header === 'Reaction'" 
@@ -77,6 +79,12 @@ const tableProps = defineProps({
         default: () => []
     }
 })
+
+const getRowClass = (item, index) => {
+    return item.selected
+        ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
+        : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
+};
 
 const emit = defineEmits(['selection:changed', 'showFeedback']);
 const headerChecked = ref(false)

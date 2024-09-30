@@ -19,6 +19,7 @@
             <tbody>
                 <!-- Table Row -->
                 <tr v-for="(item, index) in paginatedItems" :key="index" 
+                :class="getRowClass(item,index)"
                 >
                     <!-- Table Items -->
                     <template v-for="(header, hIndex) in headers" :key="hIndex"
@@ -87,6 +88,12 @@ const tableProps = defineProps({
         default: () => ({}),
     },
 })
+
+const getRowClass = (item, index) => {
+    return item.selected
+        ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
+        : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
+};
 
 const emit = defineEmits(['edit:item']);
 

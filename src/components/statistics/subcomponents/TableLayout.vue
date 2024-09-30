@@ -22,7 +22,7 @@
                     <!-- Table Row -->
                     <tr v-for="(item, index) in items" :key="index" 
                         class="flex items-center"
-                        :class="{'bg-light-accent': index === selectedIndex, 'bg-pure-white': item.selected && index !== selectedIndex}"
+                        :class="getRowClass(item, index)"
                         @click="toggleRow(index)"
                     >
                         <!-- Table Items -->
@@ -97,5 +97,12 @@ const getCellClass = (header, item) => {
 
 const getTextClass = (header, item) => {
     return '';
+};
+
+// Function to get dynamic row classes
+const getRowClass = (item, index) => {
+    return selectedIndex.value === index
+        ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
+        : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
 };
 </script>
