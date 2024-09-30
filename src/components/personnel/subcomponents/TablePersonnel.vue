@@ -3,13 +3,12 @@
         <table class="min-w-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
-                <tr class="flex items-center">
+                <tr>
                     <!-- Table Headers -->
                     <th 
                         v-for="(header, index) in headers" 
                         :key="index" 
-                        :class="index === 0 ? 'w-20 lg:w-28' : 'flex-1'"
-                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default"
+                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
                     >
                         {{ header }}
                     </th>
@@ -20,24 +19,17 @@
             <tbody>
                 <!-- Table Row -->
                 <tr v-for="(item, index) in paginatedItems" :key="index" 
-                    class="flex items-center"
                 >
                     <!-- Table Items -->
-                    <td v-for="(header, hIndex) in headers" :key="hIndex"
-                        :class="hIndex === 0 ? 'w-20 lg:w-28' : 'flex-1'"
-                        class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default"
+                    <template v-for="(header, hIndex) in headers" :key="hIndex"
                     >
-                        <span :class="getTextClass(header, item)">
                             <!-- Special handling for the status column -->
-                            <template v-if="header === tableProps.statusColumn"> 
+                            <td v-if="header === tableProps.statusColumn"> 
                                 <span :class="tableProps.statusClasses[item[header]]">
                                     {{ item[header] }}
                                 </span>
-                            </template>
-
-                            <!-- Check for the last column -->
-                            <template v-else-if="header === ' '">
-                                <td class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm py-4 px-2 flex items-center justify-end ml-auto">
+                            </td>
+                            <td v-else-if="header === ''" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
                                     <ButtonContainer
                                         text="Edit"
                                         textClass="text-white text-xs"
@@ -46,14 +38,14 @@
                                         bgColorClass="bg-[#138FCD]"
                                         @click="handleEditClick(item)"
                                     />
-                                </td>
-                            </template>
+                            </td>
 
-                            <template v-else>
+                            <td v-else class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]">
                                 {{ item[header] }}
-                            </template>
-                        </span>
-                    </td>
+                            </td>
+                        
+                    </template>
+                    
                 </tr>
             </tbody>
         </table>
@@ -61,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import ButtonContainer from '../../main/subcomponents/ButtonContainer.vue';
 
 const tableProps = defineProps({
@@ -96,12 +88,11 @@ const tableProps = defineProps({
     },
 })
 
-const emit = defineEmits(['selection:changed']);
+const emit = defineEmits(['edit:item']);
 
 const handleEditClick = (item) => {
     emit('edit:item', item);  // Emit the item that was clicked for editing
 };
-const headerChecked = ref(false)
 
 const paginatedItems = computed(() => {
     const totalItems = tableProps.items.length;
@@ -115,35 +106,7 @@ const paginatedItems = computed(() => {
     return tableProps.items.slice(start, end);
 });
 
-// Select All Items
-const toggleSelectAll = (isChecked) => {
-    paginatedItems.value.forEach(item => item.selected = isChecked);
-    emit('selection:changed', getSelectionStatus())
-}
-
-// Watch for changes in the headerChecked state to update all items
-watch(headerChecked, (newValue) => {
-    toggleSelectAll(newValue);
-});
-
-// Watch for changes in the items to update headerChecked
-watch(() => tableProps.items, () => {
-    const { allSelected } = getSelectionStatus();
-    headerChecked.value = allSelected;
-}, { deep: true });
-
-// Get the Selection Status
-const getSelectionStatus = () => {
-    const totalItems = tableProps.items.length;
-    const selectedItems = tableProps.items.filter(item => item.selected).length;
-    return {
-        allSelected: totalItems > 0 && selectedItems === totalItems,
-        anySelected: selectedItems > 0
-    };
-};
-
 const getTextClass = (header, item) => {
     return '';
 };
-
 </script>

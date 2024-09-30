@@ -14,7 +14,6 @@
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
                     @click="openDialog('add')"
-                    v-if = "!showActionButton"
                     text="Add Personnel"
                     textClass = "text-xs lg:text-sm font-bold"
                     sizeClass = "w-full lg:w-auto h-8 px-2"
@@ -23,26 +22,7 @@
                 />
             </div>
             
-            <!-- Selected Item -->
-            <div v-if="showActionButton" class="  flex flex-row w-auto h-full justify-around items-center gap-2">
-                <ButtonContainer
-                    text="Delete"
-                    textClass = "text-xs lg:text-sm font-bold text-white"
-                    bgColorClass = "bg-custom-red hover:bg-[#9f202f]"
-                    sizeClass = "w-full lg:w-24 h-8 px-2"
-                    buttonRadius = "rounded-lg"
-                    :icon = 'IconDelete'
-                /> 
-                <ButtonContainer
-                    @click="openDialog('edit')"
-                    v-if = "!isAllSelected"
-                    text= "Edit"
-                    textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-full lg:w-24 h-8 px-2"
-                    buttonRadius = "rounded-lg"
-                    :icon = 'IconEdit'
-                />
-            </div>
+    
         </div>
         <!-- Table -->
         <div class="w-full flex-grow">
@@ -51,9 +31,8 @@
                 :items="paginatedItems"
                 :currentPage="currentPage"
                 :itemsPerPage="itemsPerPage"
-                :status-column= "Status"
                 :status-classes="statusClasses"
-                @selection:changed="handleSelectionChanged"
+                @edit:item="handleEditItem"
             />
         </div>
     </div>
@@ -71,7 +50,8 @@
     <!-- Show Dialog Box -->
     <DialogBoxPersonnel 
         v-if="isPersonnelVisible"  
-        @close="isPersonnelVisible = false"
+        :item = "selectedItem"
+        @close="handleClose"
         :mode ="dialogMode"
     />
 </template>
@@ -92,13 +72,14 @@ import Pagination from '../pagination/Pagination.vue';
 import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
 
 //Sample Data
-const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status'])
+const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status', ''])
 const tableItems = ref([]);
+const selectedItem = ref({})
 
 // Status Classes
 const statusClasses = ref({
-    Online: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center',
-    Offline: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center',
+    Online: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]' ,
+    Offline: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]',
 });
 
 //Dropdown
@@ -109,19 +90,23 @@ const selectedRows = ref(rowOptions[0]);
 const isPersonnelVisible = ref(false)
 const dialogMode = ref('add')
 
-//Selection in Table
-const showActionButton = ref(false)
-const isAllSelected = ref(false)
 
-const handleSelectionChanged = (selectionStatus) => {
-    showActionButton.value = selectionStatus.anySelected;
-    isAllSelected.value = selectionStatus.allSelected;
+const handleEditItem = async (item) => {
+    // fetch the selected user
+    selectedItem.value = await getPersonnel(item.adminID)
+    dialogMode.value = 'edit';
+    isPersonnelVisible.value = true;  // Show the dialog
 };
 
 const openDialog = (mode) => {
     dialogMode.value = mode;
     isPersonnelVisible.value = true;
 };
+
+const handleClose = () => {
+    selectedItem.value = {}
+    isPersonnelVisible.value = false
+}
 
 // Pagination state
 const currentPage = ref(1);

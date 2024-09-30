@@ -17,29 +17,31 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Dropdown Admin Type -->
                         <div class="w-full h-auto flex flex-col gap-2">
-                            <h1 class="text-sm">Admin Type</h1>
+                            <h1 class="text-sm">Admin Type<span v-if="isSaved && currentItem.adminType.isChanged" class="ms-2 text-green-400">Saved</span></h1>
                             <DropdownBoxContainer
                                 size="w-full"
-                                :options="announcedToOptions"
-                                v-model="selectedAnnouncedTo"
+                                :options="adminTypeOptions"
+                                v-model="currentItem.adminType.value"
                             />
                         </div>
 
                         <!-- Last Name -->
                         <DialogBoxInput
                             label="Last Name"
-                            v-model="lastName"
+                            v-model="currentItem.lastName.value"
                             id="lastName"
                             placeholder="E.g. Doe"
+                            :showSave="isSaved && currentItem.lastName.isChanged"
                         />
 
                         <!-- Email -->
                         <DialogBoxInput
                             label="Email"
                             type="email"
-                            v-model="email"
+                            v-model="currentItem.email.value"
                             id="email"
                             placeholder="example@mail.com"
+                            :showSave="isSaved && currentItem.email.isChanged"
                         />
                     </div>
 
@@ -47,11 +49,11 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Counter No -->
                         <div class="flex flex-col gap-2 w-full h-auto">
-                            <label for="counterNo" class="text-sm">Counter No</label>
+                            <label for="counterNo" class="text-sm">Counter No<span v-if="isSaved && currentItem.counterNo.isChanged" class="ms-2 text-green-400">Saved</span></label>
                             <input
                                 id="counterNo"
                                 type="text"
-                                v-model="counterNo"
+                                v-model="currentItem.counterNo.value"
                                 @input="validateCounterInput"
                                 placeholder="E.g. 2"
                                 class="border border-[#ddd] text-sm rounded-lg h-10 px-2 duration-200 hover:border-[#aaaeb7]"
@@ -61,18 +63,19 @@
                         <!-- First Name -->
                         <DialogBoxInput
                             label="First Name"
-                            v-model="firstName"
+                            v-model="currentItem.firstName.value"
                             id="firstName"
                             placeholder="E.g. John"
+                            :showSave="isSaved && currentItem.firstName.isChanged"
                         />
 
                         <!-- Phone No -->
                         <div class="flex flex-col gap-2 w-full h-auto">
-                            <label for="phone" class="text-sm">Phone No</label>
+                            <label for="phone" class="text-sm">Phone No<span v-if="isSaved && currentItem.phone.isChanged" class="ms-2 text-green-400">Saved</span></label>
                             <input
                                 id="phone"
                                 type="text"
-                                v-model="phone"
+                                v-model="currentItem.phone.value"
                                 @input="validatePhoneInput"
                                 placeholder="09*********"
                                 class="border border-[#ddd] text-sm rounded-lg h-10 px-2 duration-200 hover:border-[#aaaeb7]"
@@ -95,11 +98,23 @@
                 />
 
                 <DialogButtonContainer
-                    :text="mode === 'edit' ? 'Save' : 'Create'"
+                    v-if="mode === 'edit'"
+                    text="Save"
                     textClass="text-base text-black font-bold"
                     sizeClass="p-2 w-full"
                     buttonRadius="rounded-md"
                     shadowClass="shadow-2xl"
+                    @click="emitUpdate"
+                />
+
+                <DialogButtonContainer
+                    v-else
+                    text="Create"
+                    textClass="text-base text-black font-bold"
+                    sizeClass="p-2 w-full"
+                    buttonRadius="rounded-md"
+                    shadowClass="shadow-2xl"
+                    @click="emitAdd"
                 />
 
                 <!-- Delete Button (only visible in edit mode) -->
@@ -111,7 +126,7 @@
                         bgColorClass="bg-pure-white hover:bg-light-gray"
                         buttonRadius="rounded-md"
                         shadowClass="shadow-2xl"
-                        @click="handleDelete"
+                        @click="emitDelete"
                     />
                 </div>
             </div>
@@ -120,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, reactive, ref, toRef, watch } from 'vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import DialogButtonContainer from './subcomponents/DialogButtonContainer.vue';
 import DialogBoxInput from './subcomponents/DialogBoxInput.vue';
@@ -133,23 +148,52 @@ const props = defineProps({
     mode: {
         type: String,
         required: true
+    },
+    item: {
+        type: Object,
     }
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'delete', 'update', 'add']);
 const emitClose = () => emit('close');
+const emitDelete = () => emit('delete')
+const emitUpdate = () => {
+    Object.keys(currentItem).forEach(k => {
+        currentItem[k].isChanged = currentItem[k].value != item.value[k]
+    })
+    emit('update')
+}
+const emitAdd = () => emit('add')
 
-const announcedToOptions = [
+const adminTypeOptions = [
     'Cashier',
-    'Registrar'
+    'Registrar',
+    'Admission'
 ];
 
-const selectedAnnouncedTo = ref(announcedToOptions[0]);
-const lastName = ref('');
-const email = ref('');
-const firstName = ref('');
-const counterNo = ref(''); // This is the Counter No field
-const phone = ref(''); // This is the Phone No field
+const item = toRef(props.item)
+const isSaved = ref(true)
+
+const currentItem = reactive({
+    adminType: {value: adminTypeOptions[0], isChanged: false},
+    lastName: {value: '', isChanged: false},
+    email: {value: '', isChanged: false},
+    firstName: {value: '', isChanged: false},
+    counterNo: {value: '', isChanged: false}, // This is the Counter No field
+    phone: {value: '', isChanged: false}, // This is the Phone No field
+})
+
+
+onMounted(async ()=> {
+    if(item.value) {
+        currentItem.adminType.value = adminTypeOptions.find(adminType => adminType == item.value.adminType)
+        currentItem.lastName.value = item.value.lastName
+        currentItem.firstName.value = item.value.firstName
+        currentItem.email.value = item.value.email
+        currentItem.counterNo.value = item.value.counterNo
+        currentItem.phone.value = item.value.phone
+    }
+})
 
 // Method to validate Counter No input
 const validateCounterInput = (event) => {
