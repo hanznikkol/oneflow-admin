@@ -8,7 +8,7 @@
                     <th 
                         v-for="(header, index) in headers" 
                         :key="index" 
-                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
+                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default w-1/6"
                     >
                         {{ header }}
                     </th>
@@ -24,34 +24,34 @@
                     <!-- Table Items -->
                     <template v-for="(header, hIndex) in headers" :key="hIndex"
                     >
-                            <!-- Special handling for the status column -->
-                            <td v-if="header === tableProps.statusColumn" class="px-2 py-4"> 
-                                <span :class="tableProps.statusClasses[item[header]]">
-                                    {{ item[header] }}
-                                </span>
-                            </td>
-                            <td v-else-if="header === ''" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
-                                    <ButtonContainer
-                                        text="Edit"
-                                        textClass="text-white text-xs"
-                                        sizeClass="w-full h-full"
-                                        buttonRadius="rounded-lg"
-                                        bgColorClass="bg-[#138FCD]"
-                                        @click="handleEditClick(item)"
-                                    />
-                            </td>
-
-                            <td v-else class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]">
+                        <!-- Special handling for the status column -->
+                        <td v-if="header === tableProps.statusColumn" class="px-2 py-4"> 
+                            <span :class="tableProps.statusClasses[item[header]]">
                                 {{ item[header] }}
-                            </td>
-                        
+                            </span>
+                        </td>
+                        <td v-else-if="header === ' '" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
+                                <ButtonContainer
+                                    text="Edit"
+                                    textClass="text-white text-xs"
+                                    sizeClass="w-full h-full"
+                                    buttonRadius="rounded-lg"
+                                    bgColorClass="bg-[#138FCD]"
+                                    @click="handleEditClick(item)"
+                                />
+                        </td>
+
+                        <td v-else class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default max-w-xs overflow-hidden text-ellipsis w-[15%]">
+                            {{ item[header] }}
+                        </td> 
                     </template>
-                    
                 </tr>
             </tbody>
         </table>
     </div>
 </template>
+
+
 
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue';

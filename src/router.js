@@ -8,6 +8,7 @@ import Personnel from './views/Personnel.vue'
 import Announcement from './views/Announcement.vue'
 import Statistics from './views/Statistics.vue'
 import Main from './views/Main.vue'
+import Services from './views/Services.vue'
 import Videos from './views/Videos.vue'
 import Feedback from './views/Feedback.vue'
 //Tab Layouts (Statistics)
@@ -36,6 +37,7 @@ const routes = [
                 props: route => ({ counter: route.query.c, type: route.query.t, startDate: route.query.sd, endDate: route.query.ed})
             },
         ]},
+        {path: 'services', component: Services },
         {path: 'videos', component: Videos},
         {path: 'feedback', component: Feedback},
     ]},

@@ -3,29 +3,40 @@
     <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
         <div class="w-full h-[12%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
-            <div class="w-auto h-auto">
+            <div class="w-auto h-auto flex flex-row gap-2">
+                <!-- Dropdown Rows -->
                 <DropdownBoxContainer
                     :options = "rowOptions"
                     v-model= "selectedRows"
                     size = "w-full lg:w-36 h-9"
                 />
+                <!--  -->
+                <DropdownBoxContainer
+                    size = "w-full lg:w-60 h-9"
+                    icon = "IconAdmin"
+                    v-model= "selectedCounterOption"
+                    :options = "listCounters"
+                />
             </div>
-            
+                
             <!-- Create/Add Item -->
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
-                    @click="openDialog('add')"
-                    text="Add Personnel"
+                    @click="openDialog('create')"
+                    v-if = "!showActionButton"
+                    text="Create"
                     textClass = "text-xs lg:text-sm font-bold"
-                    sizeClass = "w-full lg:w-auto h-8 px-2"
+                    sizeClass = "w-full lg:w-24 h-8 px-2"
                     buttonRadius = "rounded-lg"
                     :icon = 'IconAdd'
                 />
             </div>
+    
         </div>
+
         <!-- Table -->
         <div class="w-full flex-grow">
-            <TablePersonnel 
+            <TableService 
                 :headers="tableHeaders"
                 :items="paginatedItems"
                 :currentPage="currentPage"
@@ -34,6 +45,7 @@
                 @edit:item="handleEditItem"
             />
         </div>
+        
     </div>
     
     <!-- Pagination -->
@@ -47,8 +59,8 @@
     </div>
 
     <!-- Show Dialog Box -->
-    <DialogBoxPersonnel 
-        v-if="isPersonnelVisible"  
+    <DialogBoxServices 
+        v-if="isServicesVisible"  
         :item = "selectedItem"
         @close="handleClose"
         :mode ="dialogMode"
@@ -57,22 +69,79 @@
 
 <script setup>
 import { ref, computed , watch, onMounted } from 'vue';
-
-//Icon
+import DialogBoxServices from '../dialogbox/DialogBoxServices.vue';
 import IconAdd from '../icons/announcement_icons/IconAdd.vue';
-import IconEdit from '../icons/announcement_icons/IconEdit.vue';
-import IconDelete from '../icons/announcement_icons/IconDelete.vue';
-
+import IconAdmin from '../icons/statistics_icons/IconAdmin.vue';
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
-import TablePersonnel from './subcomponents/TablePersonnel.vue';
+import TableService from './subcomponents/TableService.vue';
 import Pagination from '../pagination/Pagination.vue';
-import DialogBoxPersonnel from '../dialogbox/DialogBoxPersonnel.vue';
+
 
 //Sample Data
-const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status', ''])
-const tableItems = ref([]);
+const tableHeaders = ref([ 'Service Name', 'Admin Type', 'Status', ' ']);
+const tableItems = ref([
+    // Cashier-related services
+    {
+        'Service ID': 'C001',
+        'Service Name': 'Tuition Fee Payment',
+        'Admin Type': 'Cashier',
+        'Status': 'Online',
+    },
+    {
+        'Service ID': 'C002',
+        'Service Name': 'Miscellaneous Fee Payment',
+        'Admin Type': 'Cashier',
+        'Status': 'Offline',
+    },
+    {
+        'Service ID': 'C003',
+        'Service Name': 'Scholarship Processing',
+        'Admin Type': 'Cashier',
+        'Status': 'Online',
+    },
+
+    // Registrar-related services
+    {
+        'Service ID': 'R001',
+        'Service Name': 'Transcript of Records Request',
+        'Admin Type': 'Registrar',
+        'Status': 'Online',
+    },
+    {
+        'Service ID': 'R002',
+        'Service Name': 'Enrollment Verification',
+        'Admin Type': 'Registrar',
+        'Status': 'Offline',
+    },
+    {
+        'Service ID': 'R003',
+        'Service Name': 'Degree Certification',
+        'Admin Type': 'Registrar',
+        'Status': 'Online',
+    },
+
+    // Admission-related services
+    {
+        'Service ID': 'A001',
+        'Service Name': 'New Student Enrollment',
+        'Admin Type': 'Admission',
+        'Status': 'Online',
+    },
+    {
+        'Service ID': 'A002',
+        'Service Name': 'Admission Application Processing',
+        'Admin Type': 'Admission',
+        'Status': 'Offline',
+    },
+    {
+        'Service ID': 'A003',
+        'Service Name': 'Transfer Student Evaluation',
+        'Admin Type': 'Admission',
+        'Status': 'Online',
+    },
+]);
 const selectedItem = ref({})
 
 // Status Classes
@@ -86,25 +155,24 @@ const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
 //Add Announcement Dialogbox
-const isPersonnelVisible = ref(false)
+const isServicesVisible = ref(false)
 const dialogMode = ref('add')
-
 
 const handleEditItem = async (item) => {
     // fetch the selected user
-    selectedItem.value = await getPersonnel(item.adminID)
+    // selectedItem.value = await getPersonnel(item.adminID)
     dialogMode.value = 'edit';
-    isPersonnelVisible.value = true;  // Show the dialog
+    isServicesVisible.value = true;  // Show the dialog
 };
 
 const openDialog = (mode) => {
     dialogMode.value = mode;
-    isPersonnelVisible.value = true;
+    isServicesVisible.value = true;
 };
 
 const handleClose = () => {
     selectedItem.value = {}
-    isPersonnelVisible.value = false
+    isServicesVisible.value = false
 }
 
 // Pagination state
@@ -159,9 +227,9 @@ const getPersonnel = async(id) => {
     }
 }
 
-onMounted(async() => {
-    tableItems.value = await getPersonnel()
-})
+// onMounted(async() => {
+//     tableItems.value = await getPersonnel()
+// })
 
 // Watcher for Dropdown Changes
 watch(selectedRows, (newValue) => {
