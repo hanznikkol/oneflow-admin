@@ -82,40 +82,74 @@
     </div>
 
     <!-- Feedback Container -->
-    <div class="flex flex-[1] flex-col gap-2 bg-pure-white border-4 border-main-gray rounded-xl p-4">
+    <div class="w-full flex-1 flex flex-col gap-2 border-4 border-main-gray rounded-xl p-4">
         <div class="w-full h-auto flex-col flex">
             <h1 class="text-2xl font-bold text-custom-orange">Feedback</h1>
             <div class="flex flex-row gap-2 h-auto">
                 <p class="text-xl">for today</p>
-                <p class="text-xl font-bold text-primary">(3)</p>
+                <p class="text-xl font-bold text-primary">({{feedbackItems.length}})</p>
             </div>
         </div>
 
         <!-- Swiper Js -->
-        <div class="flex-1 h-full w-full bg-red-50">
-            <!-- <swiper
-                :space-between="10"
-                :pagination="{ clickable: true }"
-                :modules="modules"
-                class="flex-col flex items-center bg-blue-100"
-                :autoplay="{ delay: 2500, disableOnInteraction: false }"
+        <div class="flex flex-row w-full h-full">
+            <Swiper
+            :slide-per-view="1"
+            :space-between="10"
+            :pagination="{ clickable: true }"
+            :modules="[Pagination, Autoplay, Grid]"
+            class="w-0 flex-grow h-full"
+            :autoplay="{ delay: 5000, disableOnInteraction: false }"
             >
-              <swiper-slide v-for="index in 3" :key="index">{{ index }}</swiper-slide>
-            </swiper> -->
+                <template v-for="(slide, index) in feedbackSlides" :key="index">
+                    <SwiperSlide>
+                        <div class="h-full flex flex-col gap-1"> <!-- Flex container for spacing -->
+                            <FeedbackItem 
+                                v-for="(item, itemIndex) in slide" 
+                                :key="itemIndex" 
+                                :content="item.content" 
+                                :reaction="item.reaction" 
+                                :date="item.date" 
+                            />
+                        </div>
+                    </SwiperSlide>
+                </template>
+            </Swiper>
         </div>
+        
     </div>
 </template>
 
 <script setup>
-// import IconTicketDark from '../icons/dashboard_icons/IconTicketDark.vue';
-// import IconTicketLight from '../icons/dashboard_icons/IconTicketLight.vue';
-// import 'swiper/css'
-// import 'swiper/css/pagination'
-// import 'swiper/css/autoplay'
-// import 'swiper/css/grid'
-// import { Swiper } from 'swiper/vue';
-// import { SwiperSlide } from 'swiper/vue';
-// import { Pagination, Autoplay } from 'swiper/modules';
+import { ref, computed } from 'vue';
+import IconTicketDark from '../icons/dashboard_icons/IconTicketDark.vue';
+import IconTicketLight from '../icons/dashboard_icons/IconTicketLight.vue';
+import FeedbackItem from './subcomponents/FeedbackItem.vue';
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/autoplay'
+import 'swiper/css/grid'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Autoplay, Grid } from 'swiper/modules';
 
-// const modules = [Pagination, Autoplay]
+const feedbackItems = ref([
+    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
+    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
+    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
+    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
+    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
+    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
+    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
+    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
+    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
+    // Add more items as needed
+]);
+
+const feedbackSlides = computed(() => {
+    const slides = [];
+    for (let i = 0; i < feedbackItems.value.length; i += 3) {
+        slides.push(feedbackItems.value.slice(i, i + 3));
+    }
+    return slides;
+});
 </script>
