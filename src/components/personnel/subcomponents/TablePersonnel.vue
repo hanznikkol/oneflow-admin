@@ -30,7 +30,17 @@
                                 </span>
                             </td>
                             <td v-else-if="header === ''" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
+                                <ButtonContainer
+                                        v-if="item.Status === 'Deleted'"
+                                        text="Restore"
+                                        textClass="text-white text-xs"
+                                        sizeClass="w-full h-full"
+                                        buttonRadius="rounded-lg"
+                                        bgColorClass="bg-[#138FCD]"
+                                        @click="handleRestoreClick(item)"
+                                    />
                                     <ButtonContainer
+                                        v-else
                                         text="Edit"
                                         textClass="text-white text-xs"
                                         sizeClass="w-full h-full"
@@ -88,11 +98,15 @@ const tableProps = defineProps({
     },
 })
 
-const emit = defineEmits(['edit:item']);
+const emit = defineEmits(['edit:item', 'restore:item']);
 
 const handleEditClick = (item) => {
     emit('edit:item', item);  // Emit the item that was clicked for editing
 };
+
+const handleRestoreClick = (item) => {
+    emit('restore:item', item)
+}
 
 const paginatedItems = computed(() => {
     const totalItems = tableProps.items.length;

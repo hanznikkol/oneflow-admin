@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 
 export const state = reactive({
   connected: false,
+  onlinePersonnels: [],
   adminInfo: '',
   queueTickets: ref([]),
 });
@@ -19,6 +20,10 @@ socket.on("connect", () => {
 socket.on("disconnect", () => {
   state.connected = false;
 });
+
+socket.on('onlineUsers', (onlineUsers) => {
+  state.onlinePersonnels = onlineUsers
+})
 
 // Events
 socket.on('newTicket', (ticket) => {

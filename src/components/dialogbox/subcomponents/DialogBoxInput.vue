@@ -1,6 +1,9 @@
 <template>
     <div class="w-full h-auto flex flex-col gap-2">
-        <label :for="id" class="text-sm">{{label}}<span v-if="showSave" class="ms-2 text-green-400">Saved</span></label>
+        <label :for="id" class="text-sm">{{label}}
+            <span v-if="showSave" class="ms-2 text-green-400">Saved</span>
+            <span v-if="showError" class="ms-2 text-red-600">Field Required</span>
+        </label>
         <input
             :id="id"
             :type="type"
@@ -35,6 +38,10 @@ const props = defineProps({
         required: true
     },
     showSave: {
+        type: Boolean,
+        default: false
+    },
+    showError: {
         type: Boolean,
         default: false
     }
