@@ -117,7 +117,6 @@
                                 :key="itemIndex" 
                                 :content="item.content" 
                                 :reaction="item.reaction" 
-                                :date="item.date" 
                             />
                         </div>
                     </SwiperSlide>
@@ -144,15 +143,15 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay, Grid } from 'swiper/modules';
 
 const feedbackItems = ref([
-    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
-    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
-    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
-    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
-    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
-    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
-    { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
-    { content: "Great service, very efficient!", reaction: "Excellent", date: "August 11, 2024" },
-    { content: "Had a good experience, thanks!", reaction: "Good", date: "August 12, 2024" },
+    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good" },
+    { content: "Great service, very efficient!", reaction: "Excellent" },
+    { content: "Had a good experience, thanks!", reaction: "Good"},
+    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good"},
+    { content: "Great service, very efficient!", reaction: "Excellent"},
+    { content: "Had a good experience, thanks!", reaction: "Good" },
+    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good" },
+    { content: "Great service, very efficient!", reaction: "Excellent"},
+    { content: "Had a good experience, thanks!", reaction: "Good"},
     // Add more items as needed
 ]);
 
