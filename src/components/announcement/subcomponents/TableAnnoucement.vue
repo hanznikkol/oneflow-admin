@@ -1,4 +1,5 @@
 <template>
+<div :class="itemClass">
     <div class="max-h-[30rem] lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
         <table class="min-w-full bg-pure-white table-fixed">
             <!-- Header -->
@@ -28,7 +29,7 @@
                 <!-- Table Row -->
                 <tr v-for="(item, index) in paginatedItems" :key="index" 
                     class="flex items-center"
-                    :class="{'bg-light-accent': item.selected }"
+                    :class="getRowClass(item,index)"
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in headers" :key="hIndex"
@@ -49,6 +50,7 @@
 
         </table>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -79,6 +81,20 @@ const tableProps = defineProps({
 
 const emit = defineEmits(['selection:changed']);
 const headerChecked = ref(false)
+
+const getRowClass = (item, index) => {
+    return item.selected
+        ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
+        : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
+};
+
+//Sizing of the table
+const itemClass = computed(() => {
+    return tableProps.items.length > 6
+        ? 'lg:w-full lg:h-64 lg:flex-grow' // Set a specific height with overflow
+        : 'lg:w-full lg:flex-shrink';
+});
+
 
 const paginatedItems = computed(() => {
     const totalItems = tableProps.items.length;

@@ -28,7 +28,7 @@
                 <!-- Table Row -->
                 <tr v-for="(item, index) in items" :key="index" 
                     class="flex items-center"
-                    :class="{'bg-light-accent': item.selected }"
+                    :class="getRowClass(item, index)"
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in header" :key="hIndex"
@@ -78,6 +78,13 @@ const items = ref([
 
 const emit = defineEmits(['selection:changed']);
 const headerChecked = ref(false);
+
+const getRowClass = (item, index) => {
+    return item.selected
+        ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
+        : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
+};
+
 
 // Select All Items
 const toggleSelectAll = (isChecked) => {

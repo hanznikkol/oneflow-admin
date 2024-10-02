@@ -39,6 +39,8 @@ const headerText = computed(() => {
             return 'Announcement';
         case route.path.startsWith('/admin/statistics'):
             return 'Statistics';
+        case route.path === '/admin/services':
+            return 'Services';
         case route.path === '/admin/videos':
             return 'Videos';
         case route.path === '/admin/feedback':

@@ -63,6 +63,21 @@
                 </RouterLink>
             </div>
 
+            <!-- Service -->
+            <div class="group hover:cursor-pointer w-auto h-auto">
+                <RouterLink to="/admin/services"
+                    class="flex flex-col items-center group-active:text-secondary"
+                >
+                    <component 
+                    class="object-cover w-5 h-5 lg:w-6 lg:h-6 fill-current text-pure-white group-hover:text-secondary" 
+                    :class = "{'text-secondary': isActive('/admin/services')}"
+                    :is="IconService" />
+                    <span class="text-[0.5rem] mt-1 text-pure-white group-hover:text-secondary items-center"
+                    :class = "{'text-secondary': isActive('/admin/services')}" 
+                    >Services</span>
+                </RouterLink>
+            </div>
+
             <!-- Videos -->
             <div class="group hover:cursor-pointer w-auto h-auto">
                 <RouterLink to="/admin/videos"
@@ -117,6 +132,7 @@ import IconStatistics from '../icons/main_icons/sidenavigation/IconStatistics.vu
 import IconLogout from '../icons/main_icons/sidenavigation/IconLogout.vue';
 import IconVideos from '../icons/main_icons/sidenavigation/IconVideos.vue';
 import IconFeedback from '../icons/main_icons/sidenavigation/IconFeedback.vue';
+import IconService from '../icons/main_icons/sidenavigation/IconService.vue';
 
 import { useRoute } from 'vue-router';
 

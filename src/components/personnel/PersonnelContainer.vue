@@ -11,6 +11,7 @@
                 />
                 <ButtonSegmented @update:selected="handleStatusSelectChange" class="ms-2"/>
             </div>
+            
             <!-- Create/Add Item -->
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
@@ -22,8 +23,6 @@
                     :icon = 'IconAdd'
                 />
             </div>
-            
-    
         </div>
         <!-- Table -->
         <div class="w-full flex-grow">

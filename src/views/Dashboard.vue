@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full min-h-full rounded-xl bg-pure-white p-2 flex flex-col lg:flex-row gap-2">
+    <div class="w-full h-full flex flex-col lg:flex-row bg-pure-white gap-2 p-2 rounded-lg">
         <MainHomeContainer/>
-    </div>  
+    </div>
 </template>
 
 <script setup>
