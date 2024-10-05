@@ -23,7 +23,6 @@
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
                     @click="openDialog('create')"
-                    v-if = "!showActionButton"
                     text="Create"
                     textClass = "text-xs lg:text-sm font-bold"
                     sizeClass = "w-full lg:w-24 h-8 px-2"
@@ -63,6 +62,8 @@
         v-if="isServicesVisible"  
         :item = "selectedItem"
         @close="handleClose"
+        @update="handleUpdate"
+        @add="handleAdd"
         :mode ="dialogMode"
     />
 </template>
@@ -77,77 +78,27 @@ import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import TableService from './subcomponents/TableService.vue';
 import Pagination from '../pagination/Pagination.vue';
+import { useNotification } from '@kyvg/vue3-notification';
 
 
 //Sample Data
-const tableHeaders = ref([ 'Service Name', 'Admin Type', 'Status', ' ']);
-const tableItems = ref([
-    // Cashier-related services
-    {
-        'Service ID': 'C001',
-        'Service Name': 'Tuition Fee Payment',
-        'Admin Type': 'Cashier',
-        'Status': 'Online',
-    },
-    {
-        'Service ID': 'C002',
-        'Service Name': 'Miscellaneous Fee Payment',
-        'Admin Type': 'Cashier',
-        'Status': 'Offline',
-    },
-    {
-        'Service ID': 'C003',
-        'Service Name': 'Scholarship Processing',
-        'Admin Type': 'Cashier',
-        'Status': 'Online',
-    },
-
-    // Registrar-related services
-    {
-        'Service ID': 'R001',
-        'Service Name': 'Transcript of Records Request',
-        'Admin Type': 'Registrar',
-        'Status': 'Online',
-    },
-    {
-        'Service ID': 'R002',
-        'Service Name': 'Enrollment Verification',
-        'Admin Type': 'Registrar',
-        'Status': 'Offline',
-    },
-    {
-        'Service ID': 'R003',
-        'Service Name': 'Degree Certification',
-        'Admin Type': 'Registrar',
-        'Status': 'Online',
-    },
-
-    // Admission-related services
-    {
-        'Service ID': 'A001',
-        'Service Name': 'New Student Enrollment',
-        'Admin Type': 'Admission',
-        'Status': 'Online',
-    },
-    {
-        'Service ID': 'A002',
-        'Service Name': 'Admission Application Processing',
-        'Admin Type': 'Admission',
-        'Status': 'Offline',
-    },
-    {
-        'Service ID': 'A003',
-        'Service Name': 'Transfer Student Evaluation',
-        'Admin Type': 'Admission',
-        'Status': 'Online',
-    },
-]);
+const tableHeaders = ref([ 'Service Name', 'Admin Type', 'Status', '']);
+const tableItems = ref([]);
 const selectedItem = ref({})
+const {notify} = useNotification()
+
+const listCounters = ref([{label: 'All', type: ''}, {label: 'Cashier', type: 'C'}, {label: 'Registrar', type: 'R'}, {label: 'Admission', type: 'A'}])
+
+const selectedCounterOption = ref(listCounters.value[0])
+const filteredData = computed(() => {
+    if(selectedCounterOption.value.type == '') return tableItems.value
+    else return tableItems.value.filter(service => service['Admin Type'] == selectedCounterOption.value.label)
+})
 
 // Status Classes
 const statusClasses = ref({
-    Online: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]' ,
-    Offline: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]',
+    Open: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]' ,
+    Closed: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]',
 });
 
 //Dropdown
@@ -158,11 +109,10 @@ const selectedRows = ref(rowOptions[0]);
 const isServicesVisible = ref(false)
 const dialogMode = ref('add')
 
+
 const handleEditItem = async (item) => {
-    // fetch the selected user
-    // selectedItem.value = await getPersonnel(item.adminID)
-    dialogMode.value = 'edit';
-    isServicesVisible.value = true;  // Show the dialog
+    selectedItem.value = item
+    openDialog('edit');  // Show the dialog
 };
 
 const openDialog = (mode) => {
@@ -178,7 +128,7 @@ const handleClose = () => {
 // Pagination state
 const currentPage = ref(1);
 const itemsPerPage = computed(()=>parseInt(selectedRows.value.split(' ')[0], 10));
-const totalItems = computed(()=>tableItems.value.length);
+const totalItems = computed(()=>filteredData.value.length);
 
 // Compute paginated items based on current page and items per page
 const paginatedItems = computed(() => {
@@ -196,7 +146,7 @@ const paginatedItems = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage.value;
     const end = start + itemsPerPage.value;
 
-    return tableItems.value.slice(start, end);
+    return filteredData.value.slice(start, end);
 });
 
 //Handle Page Changes
@@ -205,12 +155,61 @@ const handlePageChange = (page) => {
     // Fetch new data or update table based on new page
 };
 
-const getPersonnel = async(id) => {
+// Handle Update Request
+const handleUpdate = async (valuesToUpdate, callback) => {
+    const serviceID = selectedItem.value.serviceID
+    if(serviceID && Object.entries(valuesToUpdate).length > 0) {
+        const data = await updateService(serviceID, valuesToUpdate)
+        if(!data) return
+        console.log(data)
+        if(data.updated) {
+            tableItems.value = await getServices()
+            notify({
+                title: 'Success',
+                text: data.status,
+                type: 'success'
+            })
+            callback()
+        }
+        else {
+            notify({
+                title: 'Error',
+                text: data.status,
+                type: 'error'
+            })
+        }
+    }
+}
+
+// Handle Add Request
+const handleAdd = async(service, callback) => {
+    if(service) {
+        const data = await createService(service)
+        if(!data) return
+        console.log(data)
+        if(data.created) {
+            tableItems.value = await getServices()
+            notify({
+                title: 'Success',
+                text: data.status,
+                type: 'success'
+            })
+            callback()
+        }
+        else {
+            notify({
+                title: 'Error',
+                text: data.status,
+                type: 'error'
+            })
+        }
+    }
+}
+
+const getServices = async() => {
     try{
         const token = localStorage.getItem('jwt')
-        let request = '/api/personnel'
-        if(id)
-            request += `/${id}`
+        let request = '/api/services'
         const response = await fetch(request, { 
             method: 'GET', 
             headers: {
@@ -220,16 +219,83 @@ const getPersonnel = async(id) => {
         })
         const data = await response.json()
         if(!response.ok) return alert(`An error occured: ${data.error}`)
-        return data.personnel
+        const services = data.services.map(service => ({
+            serviceID: service.serviceID,
+            'Admin Type': service.roleType,
+            'Service Name': service.name,
+            'Status': service.status
+        }))
+        return services
     }
     catch(err){
         alert(`An error occured: ${err}`)
     }
 }
 
-// onMounted(async() => {
-//     tableItems.value = await getPersonnel()
-// })
+// REQUEST UPDATE PERSONNEL
+const updateService = async(id, valuesToUpdate) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        const request = `/api/services/${id}`
+        const response = await fetch(request, { 
+            method: 'PATCH', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(valuesToUpdate)
+        })
+        const data = await response.json()
+        if(!response.ok) {
+            notify({
+                title: 'Error',
+                text: data.error,
+                type: 'error',
+                closeOnClick: true,
+            })
+            return
+        }
+        return data
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+// REQUEST CREATE PERSONNEL
+const createService = async(service) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        const request = `/api/services`
+        const response = await fetch(request, { 
+            method: 'POST', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(service)
+        })
+        const data = await response.json()
+        if(!response.ok){
+            notify({
+                title: 'Error',
+                text: data.error,
+                type: 'error',
+                closeOnClick: true,
+            })
+            return
+        }
+        return data
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+
+onMounted(async() => {
+    tableItems.value = await getServices()
+})
 
 // Watcher for Dropdown Changes
 watch(selectedRows, (newValue) => {

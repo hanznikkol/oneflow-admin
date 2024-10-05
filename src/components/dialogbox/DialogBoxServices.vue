@@ -17,22 +17,29 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Dropdown Admin Type -->
                         <div class="w-full h-auto flex flex-col gap-2">
-                            <h1 class="text-sm">Admin Type<span v-if="isSaved && currentItem.adminType.isChanged" class="ms-2 text-green-400">Saved</span></h1>
+                            <h1 class="text-sm">Admin Type<span v-if="isSaved && currentItem['Admin Type'].isChanged" class="ms-2 text-green-400">Saved</span></h1>
+                            <span v-if="currentItem['Admin Type'].value === ''" class="ms-2 text-red-600">Field Required</span>
                             <DropdownBoxContainer
                                 size="w-full"
                                 :options="adminTypeOptions"
-                                v-model="currentItem.adminType.value"
+                                v-model="currentItem['Admin Type'].value"
                             />
                         </div>
 
-                        <!-- Last Name -->
+                        <!-- Service Name -->
+                         
                         <DialogBoxInput
                             label="Service Name"
-                            v-model="currentItem.lastName.value"
+                            v-model="currentItem['Service Name'].value"
                             id="serviceName"
                             placeholder="E.g. Tuition Pay"
-                            :showSave="isSaved && currentItem.lastName.isChanged"
+                            :showError = "currentItem['Service Name'].value.trim() === ''"
+                            :showSave="isSaved && currentItem['Service Name'].isChanged"
                         />
+                        <div class="flex flex-col gap-2 w-full h-auto">
+                            <label class="text-sm">Status<span v-if="isSaved && currentItem['Status'].isChanged" class="ms-2 text-green-400">Saved</span></label>
+                            <ButtonSegmented v-model="currentItem.Status.value"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,18 +76,6 @@
                     @click="emitAdd"
                 />
 
-                <!-- Delete Button (only visible in edit mode) -->
-                <div class="w-full" v-if="mode === 'edit'">
-                    <DialogButtonContainer
-                        text="Delete"
-                        textClass="text-base text-red-500 font-bold"
-                        sizeClass="p-2 w-full"
-                        bgColorClass="bg-pure-white hover:bg-light-gray"
-                        buttonRadius="rounded-md"
-                        shadowClass="shadow-2xl"
-                        @click="emitDelete"
-                    />
-                </div>
             </div>
         </div>
     </div>
@@ -91,7 +86,7 @@ import { onMounted, reactive, ref, toRef, watch } from 'vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import DialogButtonContainer from './subcomponents/DialogButtonContainer.vue';
 import DialogBoxInput from './subcomponents/DialogBoxInput.vue';
-
+import ButtonSegmented from '../service/subcomponents/ButtonSegmented.vue'
 // Props
 const props = defineProps({
     showDialog: {
@@ -108,14 +103,50 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'delete', 'update', 'add']);
 const emitClose = () => emit('close');
-const emitDelete = () => emit('delete')
 const emitUpdate = () => {
+    const valuesToUpdate = {};
+    // get all the updated values
     Object.keys(currentItem).forEach(k => {
-        currentItem[k].isChanged = currentItem[k].value != item.value[k]
+        // set changed value
+        currentItem[k].isChanged = currentItem[k].value != (item.value[k] ? item.value[k] : '')
+        
+        // if changed, add to values to update
+        if(currentItem[k].isChanged) {
+            valuesToUpdate[k] = currentItem[k].value
+        }
     })
-    emit('update')
+
+    if(!isRequiredValuesNotEmpty()) return
+    isSaved.value = false // reset 
+    emit('update', valuesToUpdate, () => {
+        // success callback
+        isSaved.value = true
+        Object.keys(valuesToUpdate).forEach(k=> {
+            item.value[k] = valuesToUpdate[k]
+        })
+    })
 }
-const emitAdd = () => emit('add')
+const emitAdd = () => {
+    if(!isRequiredValuesNotEmpty()) return
+    const service = {
+        adminType: currentItem['Admin Type'].value,
+        name: currentItem['Service Name'].value.trim(),
+        status: currentItem.Status.value
+    }
+    emit('add', service, () => {
+        emitClose()
+    })
+}
+
+const isRequiredValuesNotEmpty = () => {
+    // check if any required fields have empty values
+    const emptyRequiredValues = Object.keys(currentItem).filter((k)=>
+        currentItem[k].required && currentItem[k].value.trim() === ''
+    )
+
+    if(emptyRequiredValues.length > 0) return false
+    return true
+}
 
 const adminTypeOptions = [
     'Cashier',
@@ -127,39 +158,20 @@ const item = toRef(props.item)
 const isSaved = ref(true)
 
 const currentItem = reactive({
-    adminType: {value: adminTypeOptions[0], isChanged: false},
-    lastName: {value: '', isChanged: false},
-    email: {value: '', isChanged: false},
-    firstName: {value: '', isChanged: false},
-    counterNo: {value: '', isChanged: false}, // This is the Counter No field
-    phone: {value: '', isChanged: false}, // This is the Phone No field
+    'Admin Type': {value: adminTypeOptions[0], isChanged: false, required: true},
+    'Service Name': {value: '', isChanged: false, required: true},
+    'Status': {value: 'Open', isChanged: false, required: true }
 })
 
 
 onMounted(async ()=> {
-    if(item.value) {
-        currentItem.adminType.value = adminTypeOptions.find(adminType => adminType == item.value.adminType)
-        currentItem.lastName.value = item.value.lastName
-        currentItem.firstName.value = item.value.firstName
-        currentItem.email.value = item.value.email
-        currentItem.counterNo.value = item.value.counterNo
-        currentItem.phone.value = item.value.phone
+    if(item.value && item.value.serviceID != undefined) {
+        currentItem['Admin Type'].value = adminTypeOptions.find(adminType => adminType == item.value['Admin Type'])
+        currentItem['Service Name'].value = item.value['Service Name']
+        currentItem['Status'].value = item.value['Status']
     }
 })
 
-// Method to validate Counter No input
-const validateCounterInput = (event) => {
-    // Allow only numeric input and limit to 2 digits
-    const inputValue = event.target.value.replace(/[^0-9]/g, '').slice(0, 2);
-    counterNo.value = inputValue;
-};
-
-// Method to validate Phone No input
-const validatePhoneInput = (event) => {
-    // Allow only numeric input and limit to 11 digits
-    const inputValue = event.target.value.replace(/[^0-9]/g, '').slice(0, 11);
-    phone.value = inputValue;
-};
 </script>
 
 <style>
