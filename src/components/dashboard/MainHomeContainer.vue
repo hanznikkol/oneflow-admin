@@ -13,17 +13,19 @@
                 <!-- Total Ticket Volume -->
                 <div class="relative overflow-hidden flex-1 flex flex-col w-full h-full bg-pure-white p-2 rounded-lg">
                     <p class="text-[.80rem] xl:text-sm font-semibold">Total Ticket Volume</p>
-                    <div class="w-full h-full flex justify-end items-end z-20">
-                        <h1 class="text-4xl lg:text-7xl font-bold">999</h1>
+                    <div class="w-full h-full flex flex-col justify-end items-end z-20">
+                        <Stonks :isImproved="report.totalTicketVolume ? report.totalTicketVolume.change > 0 : false" :value="report.totalTicketVolume ? report.totalTicketVolume.change : ''" />
+                        <h1 class="text-4xl lg:text-7xl font-bold">{{ report.totalTicketVolume ? report.totalTicketVolume.value : 'N/A' }}</h1>
                     </div>
                     <component :is="IconTicketDark" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-16 -left-6 absolute" />
                 </div>
 
                 <!-- Total Volume Today -->
                 <div class="relative overflow-hidden flex-1 flex flex-col w-full h-full bg-pure-white p-2 rounded-lg">
-                    <p class="text-[.80rem] xl:text-sm font-semibold">Total Volume Today</p>
-                    <div class="w-full h-full flex justify-end items-end z-20">
-                        <h1 class="text-4xl lg:text-7xl font-bold">100</h1>
+                    <p class="text-[.80rem] xl:text-sm font-semibold">Ticket Volume Today</p>
+                    <div class="w-full h-full flex flex-col justify-end items-end z-20">
+                        <Stonks :isImproved="report.ticketVolumeToday ? report.ticketVolumeToday.change > 0 : false" :value="report.ticketVolumeToday ? report.ticketVolumeToday.change : ''" />
+                        <h1 class="text-4xl lg:text-7xl font-bold">{{ report.ticketVolumeToday ? report.ticketVolumeToday.value : 'N/A' }}</h1>
                     </div>
                     <component :is="IconTicketDark" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-16 -left-6 absolute"/>
                 </div>
@@ -32,7 +34,7 @@
                 <div class="relative overflow-hidden flex-1 flex flex-col w-full h-full bg-main-gray p-2 rounded-lg">
                     <p class="text-[.80rem] xl:text-sm font-semibold">Pending Ticket Today</p>
                     <div class="w-full h-full flex justify-end items-end">
-                        <h1 class="text-4xl lg:text-7xl font-bold z-20">19</h1>
+                        <h1 class="text-4xl lg:text-7xl font-bold z-20">{{report.pendingTicketToday ? report.pendingTicketToday.value : 'N/A' }}</h1>
                     </div>
                     <component :is="IconTicketLight" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-16 -left-6 absolute"/>
                 </div>
@@ -45,16 +47,18 @@
                     <div class="flex-1 flex flex-col h-full gap-1 bg-main-gray p-1 rounded-lg">
                         <!-- Abandonment Rate -->
                         <div class="flex-1 w-full h-full flex flex-col bg-pure-white p-2 rounded-lg">
-                            <p class="text-[.80rem] xl:text-sm font-semibold">Abandonment Rate</p>
-                            <div class="w-full h-full flex justify-end items-end">
-                                <h1 class="text-4xl lg:text-7xl font-bold">8%</h1>
+                            <p class="text-[.80rem] xl:text-sm font-semibold">Total Abandonment Rate</p>
+                            <div class="w-full h-full flex flex-col justify-end items-end">
+                                <Stonks :isImproved="report.totalAbandonmentRate ? report.totalAbandonmentRate.change < 0 : false" :value="report.totalAbandonmentRate ? report.totalAbandonmentRate.change : ''" />
+                                <h1 class="text-4xl lg:text-7xl font-bold">{{ report.totalAbandonmentRate ? report.totalAbandonmentRate.value : 'N/A' }}%</h1>
                             </div>
                         </div>
                         <!-- Abandonment Count Today -->
                         <div class="flex-1 w-full h-full flex flex-col bg-main-gray p-2">
                             <p class="text-[.80rem] xl:text-sm font-semibold">Abandonment Count Today</p>
-                            <div class="w-full h-full flex justify-end items-end">
-                                <h1 class="text-4xl lg:text-7xl font-bold">8%</h1>
+                            <div class="w-full h-full flex flex-col justify-end items-end">
+                                <Stonks :isImproved="report.abandonmentCountToday ? report.abandonmentCountToday.change < 0 : false" :value="report.abandonmentCountToday ? report.abandonmentCountToday.change : ''" />
+                                <h1 class="text-4xl lg:text-7xl font-bold">{{ report.abandonmentCountToday ? report.abandonmentCountToday.value : 'N/A' }}</h1>
                             </div>
                         </div>
                     </div>
@@ -65,7 +69,8 @@
                     <div class="relative overflow-hidden flex-grow w-full h-full lg:h-0 flex flex-col bg-pure-white border-4 border-main-gray rounded-lg p-2">
                         <p class="text-[.80rem] xl:text-sm font-semibold">Total Avg. Waiting Time</p>
                         <div class="w-full h-full flex justify-end items-end">
-                            <h1 class="text-4xl lg:text-7xl font-bold">01:00</h1>
+                            <Stonks :isImproved="report.totalAvgWaitingTime ? report.totalAvgWaitingTime.change < 0 : false" :value="report.totalAvgWaitingTime ? report.totalAvgWaitingTime.change : ''" />
+                            <h1 class="text-4xl lg:text-7xl font-bold">{{ report.totalAvgWaitingTime ? formatTime(report.totalAvgWaitingTime.value) : 'N/A' }}</h1>
                         </div>
                         <component :is="IconTimer" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-20 absolute"/>
                     </div>
@@ -73,7 +78,8 @@
                     <div class="relative overflow-hidden flex-grow w-full h-full lg:h-0 flex flex-col bg-pure-white border-4 border-main-gray rounded-lg p-2">
                         <p class="text-[.80rem] xl:text-sm font-semibold">Total Avg. Serving Time</p>
                         <div class="w-full h-full flex justify-end items-end">
-                            <h1 class="text-4xl lg:text-7xl font-bold">01:00</h1>
+                            <Stonks :isImproved="report.totalAvgServingTime ? report.totalAvgServingTime.change < 0 : false" :value="report.totalAvgServingTime ? report.totalAvgServingTime.change : ''" />
+                            <h1 class="text-4xl lg:text-7xl font-bold">{{ report.totalAvgServingTime ? formatTime(report.totalAvgServingTime.value) : 'N/A' }}</h1>
                         </div>
                         <component :is="IconTimer" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-20 absolute"/>
                     </div>
@@ -81,7 +87,8 @@
                     <div class="relative overflow-hidden flex-grow w-full h-full lg:h-0 flex flex-col bg-pure-white border-4 border-main-gray rounded-lg p-2">
                         <p class="text-[.80rem] xl:text-sm font-semibold">Total Avg. Resolution Time</p>
                         <div class="w-full h-full flex justify-end items-end">
-                            <h1 class="text-4xl lg:text-7xl font-bold">01:00</h1>
+                            <Stonks :isImproved="report.totalAvgResolutionTime ? report.totalAvgResolutionTime.change < 0 : false" :value="report.totalAvgResolutionTime ? report.totalAvgResolutionTime.change : ''" />                          
+                            <h1 class="text-4xl lg:text-7xl font-bold">{{ report.totalAvgResolutionTime ? formatTime(report.totalAvgResolutionTime.value) : 'N/A' }}</h1>
                         </div>
                         <component :is="IconTimer" class="w-32 h-32 lg:w-40 lg:h-40 -bottom-20 absolute"/>
                     </div>
@@ -128,11 +135,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 //Icons
 import IconTicketDark from '../icons/dashboard_icons/IconTicketDark.vue';
 import IconTicketLight from '../icons/dashboard_icons/IconTicketLight.vue';
 import IconTimer from '../icons/dashboard_icons/IconTimer.vue';
+import IconUptrend from '../icons/dashboard_icons/IconUptrend.vue';
+import Stonks from './subcomponents/Stonks.vue';
 //Component 
 import FeedbackItem from './subcomponents/FeedbackItem.vue';
 //Swiper JS
@@ -142,6 +151,7 @@ import 'swiper/css/autoplay'
 import 'swiper/css/grid'
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay, Grid } from 'swiper/modules';
+import moment from 'moment';
 
 const feedbackItems = ref([
     { content: "The online queue ticket is superb!! ...", reaction: "Very Good", date: "August 10, 2024" },
@@ -156,6 +166,7 @@ const feedbackItems = ref([
     // Add more items as needed
 ]);
 
+const report = ref({})
 const feedbackSlides = computed(() => {
     const slides = [];
     for (let i = 0; i < feedbackItems.value.length; i += 3) {
@@ -163,6 +174,45 @@ const feedbackSlides = computed(() => {
     }
     return slides;
 });
+
+onMounted(async ()=> {
+    report.value = await getStatistics()
+})
+
+const getStatistics = async() => {
+    try{
+        const token = localStorage.getItem('jwt')
+        let request =  `/api/statistics?type=total-summary-report`
+        const response = await fetch(request, { 
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(`An error occured: ${data.error}`)
+        return data.statistics
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+const formatTime = (time) => {
+    const duration = moment.duration(time); // Replace with your time string
+    let formattedTime;
+    if (duration.asHours() >= 1) {
+        // If duration is 1 hour or more, use "hh:mm:ss"
+        formattedTime = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+    } else {
+        // Otherwise, use "mm:ss"
+        formattedTime = moment.utc(duration.asMilliseconds()).format("mm:ss");
+    }
+    return formattedTime
+}
+
+
 </script>
 
 <style>

@@ -30,7 +30,7 @@
                                 {{ item[header] }}
                             </span>
                         </td>
-                        <td v-else-if="header === ' '" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
+                        <td v-else-if="header === ''" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
                                 <ButtonContainer
                                     text="Edit"
                                     textClass="text-white text-xs"
