@@ -27,17 +27,17 @@
                     </h1>
 
                     <p class="text-sm overflow-y-auto max-h-48 w-full lg:max-h-none whitespace-pre-line">
-                        The online queue ticket is superb!! ang laking tulong nya especially kapag may inaabyad ka pa na iba and ayaw mo mawala sa pila, just a glance sa phone mo makikita mo na kung anong queue number na ung currently being served!
+                        {{ props.feedback.Message }}
                     </p>
 
                     <!-- Reaction -->
                     <div class="w-auto lg:w-64">
-                        <ReactionContainer/>
+                        <ReactionContainer :reaction="props.feedback.reaction"/>
                     </div>
                     
                     <!-- Date -->
                     <p class="font-bold text-sm">
-                        August 5, 2002
+                        {{ props.feedback.Date }}
                     </p>
                 </div>
 
@@ -57,7 +57,15 @@ import IconQuotation from '../icons/dialogbox_icons/IconQuotation.vue';
 import IconCancel from '../icons/dialogbox_icons/IconCancel.vue';
 import DialogButtonContainer from './subcomponents/DialogButtonContainer.vue';
 import ReactionContainer from '../feedback/subcomponents/ReactionContainer.vue';
+import { ref } from 'vue';
 
 const emit = defineEmits(['close'])
 const emitClose = () => emit('close');
+
+const props = defineProps({
+    feedback: {
+        type: Object,
+    }
+})
+
 </script>

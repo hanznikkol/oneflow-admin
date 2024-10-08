@@ -17,7 +17,6 @@
                 :items="paginatedItems"
                 :currentPage="currentPage"
                 :itemsPerPage="itemsPerPage"
-                @selection:changed="handleSelectionChanged"
                 @showFeedback="showFeedbackDialog"
             />
         </div>
@@ -35,13 +34,14 @@
 
      <!-- Show Dialog Box -->
      <DialogBoxFeedback 
+        :feedback="selectedFeedback"
         v-if="isFeedbackVisible"  
-        @close="isFeedbackVisible = false"
+        @close="hideFeedbackDialog"
     />
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import Pagination from '../pagination/Pagination.vue';
 import TableFeedback from './subcomponents/TableFeedback.vue';
@@ -52,76 +52,18 @@ const selectedRows = ref(rowOptions.value[0]);
 
 //Show Feedback dialog
 const isFeedbackVisible = ref(false)
+const selectedFeedback = ref({})
 const showFeedbackDialog = (item) => {
-    console.log("Item received for feedback:", item); // Optional: Use the item
+    selectedFeedback.value = item // Optional: Use the item
     isFeedbackVisible.value = true;  // Make dialog visible
 };
+const hideFeedbackDialog = () => {
+    isFeedbackVisible.value = false;
+    selectedFeedback.value = {}
+}
 
 const tableHeaders = ref(['Message', 'Date', 'Reaction', 'Phone', ' '])
-const tableItems = ref([
-    { 
-        Message: 'The kiosk was incredibly easy to use! I checked in within minutes and received my ticket promptly.', 
-        Date: '2024-09-01', 
-        Reaction: 'Very Good', 
-        Phone: '555-0101',
-    },
-    { 
-        Message: 'The check-in process was good, but I had to wait too long after that.', 
-        Date: '2024-09-02', 
-        Reaction: 'Good', 
-        Phone: '555-0102' 
-    },
-    { 
-        Message: 'It was an average experience. The kiosk worked, but it could have been clearer with the instructions.', 
-        Date: '2024-09-03', 
-        Reaction: 'Neutral', 
-        Phone: '555-0103' 
-    },
-    { 
-        Message: 'I encountered several issues during check-in. The kiosk was slow and unresponsive.', 
-        Date: '2024-09-04', 
-        Reaction: 'Bad', 
-        Phone: '555-0104' 
-    },
-    { 
-        Message: 'Very disappointing! The system crashed twice while I was trying to check in.', 
-        Date: '2024-09-05', 
-        Reaction: 'Very Bad', 
-        Phone: '555-0105' 
-    },
-    { 
-        Message: 'I liked the self-service feature. It saved time, and I had a pleasant experience overall.', 
-        Date: '2024-09-06', 
-        Reaction: 'Very Good', 
-        Phone: '555-0106' 
-    },
-    { 
-        Message: 'The waiting area was chaotic, but the kiosk helped streamline my check-in.', 
-        Date: '2024-09-07', 
-        Reaction: 'Good', 
-        Phone: '555-0107' 
-    },
-    { 
-        Message: 'Everything was average, but the interface was quite user-friendly.', 
-        Date: '2024-09-08', 
-        Reaction: 'Neutral', 
-        Phone: '555-0108' 
-    },
-    { 
-        Message: 'The service was slow, and I felt frustrated using the kiosk.', 
-        Date: '2024-09-09', 
-        Reaction: 'Bad', 
-        Phone: '555-0109' 
-    },
-    { 
-        Message: 'The kiosk was down for maintenance when I arrived. Very inconvenient.', 
-        Date: '2024-09-10', 
-        Reaction: 'Very Bad', 
-        Phone: '555-0110' 
-    },
-]);
-
-
+const tableItems = ref([]);
 
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
@@ -140,6 +82,29 @@ const handlePageChange = (page) => {
 watch(selectedRows, (newRows) => {
     itemsPerPage.value = parseInt(newRows);
 });
+
+const getFeedbacks = async() => {
+    try{
+        const request = `/api/feedbacks`
+        const response = await fetch(request, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }, 
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(data.error)
+        return data.feedbacks
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
+onMounted(async () => {
+    tableItems.value = await getFeedbacks()
+    console.log(tableItems.value)
+})
 
 const totalItems = computed(() => tableItems.value.length);
 </script>
