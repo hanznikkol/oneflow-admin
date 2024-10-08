@@ -99,13 +99,24 @@
 
     <!-- Feedback Container -->
     <div class="w-full flex-1 h-full flex flex-col gap-2 border-4 border-main-gray rounded-xl p-4">
-        <div class="w-full flex-col flex ">
-            <h1 class="text-2xl font-bold text-custom-orange">Feedback</h1>
-            <div class="flex flex-row gap-2 h-auto">
-                <p class="text-xl">for today</p>
-                <p class="text-xl font-bold text-primary">({{feedbackItems.length}})</p>
+        <div class="w-full h-auto flex flex-row">
+            <!-- Label -->
+            <div class="w-full flex-col flex">
+                <h1 class="text-2xl font-bold text-custom-orange">Feedback</h1>
+                <div class="flex flex-row gap-2 h-auto">
+                    <p class="text-xl">for today</p>
+                    <p class="text-xl font-bold text-primary">({{feedbackItems.length}})</p>
+                </div>
+            </div>
+            <!-- View ALl -->
+            <div class="w-full p-1">
+                <p class="w-full hover:text-custom-orange cursor-pointer text-sm text-primary text-end "
+                    @click="viewAllFeedbacks"
+                >View All</p>
             </div>
         </div>
+
+        
 
         <div class="flex flex-row w-full h-full lg:h-0 flex-grow">
             <Swiper
@@ -142,6 +153,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 //Icons
 import IconTicketDark from '../icons/dashboard_icons/IconTicketDark.vue';
 import IconTicketLight from '../icons/dashboard_icons/IconTicketLight.vue';
@@ -161,6 +173,11 @@ import { Pagination, Autoplay, Grid } from 'swiper/modules';
 import moment from 'moment';
 
 const feedbackItems = ref([]);
+
+const router = useRouter()
+const viewAllFeedbacks = () => {
+    router.push({ path: 'feedback' })
+}
 
 const report = ref({})
 const feedbackSlides = computed(() => {
