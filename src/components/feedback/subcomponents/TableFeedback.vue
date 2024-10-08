@@ -26,7 +26,7 @@
                         <td v-if="header === 'Reaction'" 
                             class="text-left px-2 py-4 cursor-default w-1/6"
                         >
-                            <ReactionContainer :reaction="item.Reaction" />
+                            <ReactionContainer :reaction="item.reaction" />
                         </td>
 
                         <!-- Button at the end (View Feedback) -->

@@ -122,8 +122,8 @@
                             <FeedbackItem 
                                 v-for="(item, itemIndex) in slide" 
                                 :key="itemIndex" 
-                                :content="item.content" 
-                                :reaction="item.reaction" 
+                                :feedback="item" 
+                                @click="showFeedbackDialog(item)"
                             />
                         </div>
                     </SwiperSlide>
@@ -131,6 +131,13 @@
             </Swiper>
         </div>
     </div>
+
+    <!-- Show Dialog Box -->
+     <DialogBoxFeedback 
+        :feedback="selectedFeedback"
+        v-if="isFeedbackVisible"  
+        @close="hideFeedbackDialog"
+    />
 </template>
 
 <script setup>
@@ -141,6 +148,7 @@ import IconTicketLight from '../icons/dashboard_icons/IconTicketLight.vue';
 import IconTimer from '../icons/dashboard_icons/IconTimer.vue';
 import IconUptrend from '../icons/dashboard_icons/IconUptrend.vue';
 import Stonks from './subcomponents/Stonks.vue';
+import DialogBoxFeedback from '../dialogbox/DialogBoxFeedback.vue';
 //Component 
 import FeedbackItem from './subcomponents/FeedbackItem.vue';
 //Swiper JS
@@ -152,18 +160,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay, Grid } from 'swiper/modules';
 import moment from 'moment';
 
-const feedbackItems = ref([
-    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good" },
-    { content: "Great service, very efficient!", reaction: "Excellent" },
-    { content: "Had a good experience, thanks!", reaction: "Good"},
-    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good"},
-    { content: "Great service, very efficient!", reaction: "Excellent"},
-    { content: "Had a good experience, thanks!", reaction: "Good" },
-    { content: "The online queue ticket is superb!! Napakalopit talaga, Hindi siya biro pramis! Ang galing ng gumawa ng system na ito. Angas talaga, ganda ng kiosk rin. Napakalupet", reaction: "Very Good" },
-    { content: "Great service, very efficient!", reaction: "Excellent"},
-    { content: "Had a good experience, thanks!", reaction: "Good"},
-    // Add more items as needed
-]);
+const feedbackItems = ref([]);
 
 const report = ref({})
 const feedbackSlides = computed(() => {
@@ -174,8 +171,40 @@ const feedbackSlides = computed(() => {
     return slides;
 });
 
+const isFeedbackVisible = ref(false)
+const selectedFeedback = ref({})
+
+const showFeedbackDialog = (item) => {
+    selectedFeedback.value = item // Optional: Use the item
+    isFeedbackVisible.value = true;  // Make dialog visible
+};
+
+const hideFeedbackDialog = () => {
+    isFeedbackVisible.value = false;
+    selectedFeedback.value = {}
+}
+
+const getFeedbacks = async(date) => {
+    try{
+        const request = `/api/feedbacks?sd=${date}`
+        const response = await fetch(request, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }, 
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(data.error)
+        return data.feedbacks
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
 onMounted(async ()=> {
     report.value = await getStatistics()
+    feedbackItems.value = await getFeedbacks(moment().format('YYYY-MM-DD'))
 })
 
 const getStatistics = async() => {
