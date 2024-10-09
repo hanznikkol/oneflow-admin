@@ -82,7 +82,7 @@ import { useNotification } from '@kyvg/vue3-notification';
 
 
 //Sample Data
-const tableHeaders = ref([ 'Service Name', 'Admin Type', 'Status', '']);
+const tableHeaders = ref([ 'Service Name', 'Role Type', 'Status', '']);
 const tableItems = ref([]);
 const selectedItem = ref({})
 const {notify} = useNotification()
@@ -92,7 +92,7 @@ const listCounters = ref([{label: 'All', type: ''}, {label: 'Cashier', type: 'C'
 const selectedCounterOption = ref(listCounters.value[0])
 const filteredData = computed(() => {
     if(selectedCounterOption.value.type == '') return tableItems.value
-    else return tableItems.value.filter(service => service['Admin Type'] == selectedCounterOption.value.label)
+    else return tableItems.value.filter(service => service['Role Type'] == selectedCounterOption.value.label)
 })
 
 // Status Classes
@@ -221,7 +221,7 @@ const getServices = async() => {
         if(!response.ok) return alert(`An error occured: ${data.error}`)
         const services = data.services.map(service => ({
             serviceID: service.serviceID,
-            'Admin Type': service.roleType,
+            'Role Type': service.roleType,
             'Service Name': service.name,
             'Status': service.status
         }))

@@ -30,7 +30,7 @@
                                     {{ item[header] }}
                                 </span>
                             </td>
-                            <td v-else-if="header === ''" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
+                            <td v-else-if="header === '' && (item.adminID != state.adminInfo?.adminID) && (item.permission != 'system')" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
                                 <ButtonContainer
                                         v-if="item.Status === 'Deleted'"
                                         text="Restore"
@@ -66,7 +66,7 @@
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue';
 import ButtonContainer from '../../main/subcomponents/ButtonContainer.vue';
-
+import {state} from '../../../../socket.js'
 const tableProps = defineProps({
     headers: {
         type: Array,
@@ -98,6 +98,7 @@ const tableProps = defineProps({
         default: () => ({}),
     },
 })
+
 
 const emit = defineEmits(['edit:item', 'restore:item']);
 const getRowClass = (item, index) => {

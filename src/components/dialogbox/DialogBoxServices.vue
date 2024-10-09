@@ -17,12 +17,12 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Dropdown Admin Type -->
                         <div class="w-full h-auto flex flex-col gap-2">
-                            <h1 class="text-sm">Admin Type<span v-if="isSaved && currentItem['Admin Type'].isChanged" class="ms-2 text-green-400">Saved</span></h1>
-                            <span v-if="currentItem['Admin Type'].value === ''" class="ms-2 text-red-600">Field Required</span>
+                            <h1 class="text-sm">Role Type<span v-if="isSaved && currentItem['Role Type'].isChanged" class="ms-2 text-green-400">Saved</span></h1>
+                            <span v-if="currentItem['Role Type'].value === ''" class="ms-2 text-red-600">Field Required</span>
                             <DropdownBoxContainer
                                 size="w-full"
                                 :options="adminTypeOptions"
-                                v-model="currentItem['Admin Type'].value"
+                                v-model="currentItem['Role Type'].value"
                             />
                         </div>
 
@@ -129,7 +129,7 @@ const emitUpdate = () => {
 const emitAdd = () => {
     if(!isRequiredValuesNotEmpty()) return
     const service = {
-        adminType: currentItem['Admin Type'].value,
+        adminType: currentItem['Role Type'].value,
         name: currentItem['Service Name'].value.trim(),
         status: currentItem.Status.value
     }
@@ -158,7 +158,7 @@ const item = toRef(props.item)
 const isSaved = ref(true)
 
 const currentItem = reactive({
-    'Admin Type': {value: adminTypeOptions[0], isChanged: false, required: true},
+    'Role Type': {value: adminTypeOptions[0], isChanged: false, required: true},
     'Service Name': {value: '', isChanged: false, required: true},
     'Status': {value: 'Open', isChanged: false, required: true }
 })
@@ -166,7 +166,7 @@ const currentItem = reactive({
 
 onMounted(async ()=> {
     if(item.value && item.value.serviceID != undefined) {
-        currentItem['Admin Type'].value = adminTypeOptions.find(adminType => adminType == item.value['Admin Type'])
+        currentItem['Role Type'].value = adminTypeOptions.find(adminType => adminType == item.value['Role Type'])
         currentItem['Service Name'].value = item.value['Service Name']
         currentItem['Status'].value = item.value['Status']
     }

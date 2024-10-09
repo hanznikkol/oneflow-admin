@@ -89,7 +89,7 @@ import { useNotification } from '@kyvg/vue3-notification';
 import { socket, state } from '../../../socket';
 
 //Sample Data
-const tableHeaders = ref(['Counter No.', 'Assigned Employee', 'Email', 'Phone', 'Status', ''])
+const tableHeaders = ref(['Role Name', 'Assigned Employee', 'Email', 'Phone', 'Status', ''])
 const tableItems = ref([]);
 const selectedItem = ref({})
 

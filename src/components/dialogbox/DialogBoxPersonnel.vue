@@ -17,7 +17,7 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Dropdown Admin Type -->
                         <div class="w-full h-auto flex flex-col gap-2">
-                            <h1 class="text-sm">Admin Type
+                            <h1 class="text-sm">Role Type
                                 <span v-if="isSaved && currentItem.adminType.isChanged" class="ms-2 text-green-400">Saved</span>
                                 <span v-if="currentItem.adminType.value === ''" class="ms-2 text-red-600">Field Required</span>
                             </h1>
@@ -63,7 +63,7 @@
                     <div class="flex flex-col gap-2 w-full h-full flex-grow">
                         <!-- Counter No -->
                         <div class="flex flex-col gap-2 w-full h-auto">
-                            <label for="counterNo" class="text-sm">Counter No<span v-if="isSaved && currentItem.counterNo.isChanged" class="ms-2 text-green-400">Saved</span></label>
+                            <label for="counterNo" class="text-sm">Role No.<span v-if="isSaved && currentItem.counterNo.isChanged" class="ms-2 text-green-400">Saved</span></label>
                             <input
                                 id="counterNo"
                                 type="text"
@@ -150,10 +150,11 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, toRef, watch } from 'vue';
+import { computed, onMounted, reactive, ref, toRef, watch } from 'vue';
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import DialogButtonContainer from './subcomponents/DialogButtonContainer.vue';
 import DialogBoxInput from './subcomponents/DialogBoxInput.vue';
+import { state } from '../../../socket';
 
 // Props
 const props = defineProps({
@@ -177,11 +178,18 @@ const emitDelete = () => emit('delete')
 const item = toRef(props.item)
 const isSaved = ref(false)
 
-const adminTypeOptions = [
+const adminTypes = ref([
     'Cashier',
     'Registrar',
-    'Admission'
-];
+    'Admission',
+]);
+
+const adminTypeOptions = computed(() => {
+    const adminTypeOptions = adminTypes.value
+    if(state.adminInfo.permission == 'system')
+        adminTypeOptions.push('Admin')
+    return adminTypeOptions
+})
 
 const emitUpdate = () => {
     const valuesToUpdate = {};
@@ -234,7 +242,7 @@ const isRequiredValuesNotEmpty = () => {
 
 const currentItem = reactive({
     adminType: {
-        value: adminTypeOptions[0], 
+        value: adminTypeOptions.value[0], 
         isChanged: false,
         required: true,
     },
@@ -275,7 +283,7 @@ const currentItem = reactive({
 onMounted(async ()=> {
     // if in edit mode
     if(item.value && item.value.adminID != undefined) {
-        currentItem.adminType.value = adminTypeOptions.find(adminType => adminType == item.value.adminType)
+        currentItem.adminType.value = adminTypeOptions.value.find(adminType => adminType == item.value.adminType)
         currentItem.lastName.value = item.value.lastName
         currentItem.firstName.value = item.value.firstName
         currentItem.email.value = item.value.email

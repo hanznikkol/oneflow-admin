@@ -31,6 +31,7 @@
                     />
                 </div>
 
+                
                 <!-- Text Area -->
                 <div class="w-full h-full flex-1">
                     <textarea 
@@ -38,15 +39,30 @@
                         rows = "6"
                         class="text-sm w-full h-full flex-1 bg-light-gray p-4 rounded-lg placeholder:text-black placeholder:italic resize-none"
                         placeholder="Type your announcement here..."
+                        v-model="announcement"
                     />
                 </div>
 
                 <!-- Enable -->
                 <div class="w-full h-auto flex flex-col gap-2">
-                    <h1 class="text-sm">Enable</h1>
-                    <ToggleSwitchContainer
-                        v-model="toggleEnable"
+                    <h1 class="text-sm">Disable</h1>
+                    <ButtonSegmented v-model="selectedDisableOption" :items="disableOptionItems"></ButtonSegmented>
+                </div>
+                 
+                <div class="w-[50%] h-auto flex flex-col gap-2">
+                    <VueDatePicker 
+                        v-if="selectedDisableOption === 'Scheduled'"
+                        v-model = "selectedDuration"
+                        placeholder = "Select time"
+                        format = "MMM. d yyyy HH:mm"
+                        :disabled-dates="disabledDates"
+                        :clearable = "true"
+                        :enable-time-picker="true"
                     />
+                    <template v-else-if="selectedDisableOption === 'Manual'">
+                        <h1 class="text-sm">Status</h1>
+                        <ButtonSegmented v-model="selectedStatusOption" :items="statusOptionItems"></ButtonSegmented>
+                    </template>
                 </div>
             </div>
             
@@ -81,7 +97,16 @@ import ToggleSwitchContainer from '../main/subcomponents/ToggleSwitchContainer.v
 import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue';
 import DialogButtonContainer from './subcomponents/DialogButtonContainer.vue';
 import IconCancel from '../icons/dialogbox_icons/IconCancel.vue';
+import ButtonSegmented from '../announcement/subcomponents/ButtonSegmented.vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
 
+const selectedDisableOption = ref('Manual')
+const disableOptionItems = ref(['Manual', 'Scheduled'])
+const selectedStatusOption = ref('Enabled')
+const statusOptionItems = ref(['Enabled', 'Disabled'])
+
+const selectedDuration = ref('')
+const announcement = ref('')
 //Props
 const props = defineProps({
     showDialog: {
@@ -96,10 +121,19 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 const emitClose = () => emit('close');
 
-const toggleEnable = ref(false)
+const disabledDates = (date) => {
+    const today = new Date();
+    // Compare only date parts (ignore time)
+    today.setHours(0, 0, 0, 0); 
+    return date < today; // disables dates before today
+}
+
 const announcedToOptions = [
+    'Queue Monitor',
+    'All Counters',
     'Cashier',
-    'Registrar'
+    'Registrar',
+    'Admission',
 ]
 
 const selectedAnnouncedTo = ref(announcedToOptions[0])

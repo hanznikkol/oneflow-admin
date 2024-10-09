@@ -135,6 +135,7 @@ import IconFeedback from '../icons/main_icons/sidenavigation/IconFeedback.vue';
 import IconService from '../icons/main_icons/sidenavigation/IconService.vue';
 
 import { useRoute, useRouter } from 'vue-router';
+import { socket } from '../../../socket';
 
 //Active State based on route link
 const route = useRoute()
