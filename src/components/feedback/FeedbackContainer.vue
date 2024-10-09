@@ -85,10 +85,12 @@ watch(selectedRows, (newRows) => {
 
 const getFeedbacks = async() => {
     try{
+        const token = localStorage.getItem('jwt')
         const request = `/api/feedbacks`
         const response = await fetch(request, {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }, 
         })

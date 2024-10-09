@@ -12,6 +12,7 @@
                 :type="inputProps.type"
                 :placeholder="inputProps.placeholder"
                 ref = "inputField"
+                @input="updateValue($event)"
                 class="w-full text-base bg-transparent border-none focus:outline-none focus:bg-transparent" 
             />
         </div>
@@ -21,28 +22,36 @@
 <script setup>
     import { ref } from 'vue';
 
-    //Input Props
-    const inputProps = defineProps({
-        type: {
-            type: String,
-            default: 'text'
-        },
-        placeholder: {
-            type:String,
-            default: ''
-        },
-        //Icon
-        icon: {
-            type: Object,
-            required: true
-        }
-    })
-
-    //Focus in whole container
-    const inputField = ref(null)
-    const focusInput = () => { 
-        if (inputField.value) {
-            inputField.value.focus()
-        }
+//Input Props
+const inputProps = defineProps({
+    modelValue: {
+        type: String,
+    },
+    type: {
+        type: String,
+        default: 'text'
+    },
+    placeholder: {
+        type:String,
+        default: ''
+    },
+    //Icon
+    icon: {
+        type: Object,
+        required: true
     }
+})
+const emit = defineEmits(['update:modelValue'])
+
+//Focus in whole container
+const inputField = ref(null)
+const focusInput = () => { 
+    if (inputField.value) {
+        inputField.value.focus()
+    }
+}
+
+const updateValue = (event) => {
+    emit('update:modelValue', event.target.value)
+}
 </script>

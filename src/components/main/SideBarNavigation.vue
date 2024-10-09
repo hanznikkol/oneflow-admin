@@ -110,7 +110,7 @@
 
             <!-- Log Out -->
             <div class="flex flex-col lg:flex-1 lg:justify-end">
-                <div class="group hover:cursor-pointer w-auto h-auto flex flex-col justify-center items-center">
+                <div @click="logOut" class="group hover:cursor-pointer w-auto h-auto flex flex-col justify-center items-center">
                     <component class="object-cover w-5 h-5 lg:w-6 lg:h-6 stroke-current text-pure-white group-hover:text-custom-red" 
                     :is="IconLogout" />
 
@@ -134,12 +134,19 @@ import IconVideos from '../icons/main_icons/sidenavigation/IconVideos.vue';
 import IconFeedback from '../icons/main_icons/sidenavigation/IconFeedback.vue';
 import IconService from '../icons/main_icons/sidenavigation/IconService.vue';
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 //Active State based on route link
 const route = useRoute()
+const router = useRouter()
 
 const isActive = (path) => {
     return route.path === path || route.path.startsWith(path + '/');
+}
+
+const logOut = () => {
+    localStorage.removeItem('jwt')
+    socket.disconnect()
+    router.push('/admin/login')
 }
 </script>

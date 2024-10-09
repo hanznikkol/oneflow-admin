@@ -5,6 +5,14 @@
 </template>
 
 <script setup>
-    //Component
-    import LoginContainer from '../components/login/LoginContainer.vue';
+//Component
+import { onMounted } from 'vue';
+import LoginContainer from '../components/login/LoginContainer.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+onMounted(() => {
+    const token = localStorage.getItem('jwt')
+    if(token) router.push('/admin')
+})
 </script>

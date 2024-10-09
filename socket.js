@@ -4,14 +4,18 @@ import { io } from "socket.io-client";
 export const state = reactive({
   connected: false,
   onlinePersonnels: [],
-  adminInfo: '',
-  queueTickets: ref([]),
+  adminInfo: {},
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
 const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
 
-export let socket = io(URL);
+export let socket = io(URL, {autoConnect: false});
+
+export const setAuth = (adminInfo) => {
+  socket.auth = {adminID: adminInfo.adminID, adminType: adminInfo.adminType}
+  socket.connect()
+}
 
 socket.on("connect", () => {
   state.connected = true;

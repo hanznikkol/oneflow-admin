@@ -186,10 +186,12 @@ const hideFeedbackDialog = () => {
 
 const getFeedbacks = async(date) => {
     try{
+        const token = localStorage.getItem('jwt')
         const request = `/api/feedbacks?sd=${date}`
         const response = await fetch(request, {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }, 
         })

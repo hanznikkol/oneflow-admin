@@ -30,12 +30,14 @@
                 <div class="flex flex-col gap-4">
                     <!-- Email -->
                     <TextBoxContainer
+                        v-model="email"
                         placeholder = "Email"
                         type = 'email'
                         :icon = 'IconEmail'
                     />
                     <!-- Password -->
                     <TextBoxContainer
+                        v-model="password"
                         placeholder = "Password"
                         type = 'password'
                         :icon = "IconPassword"
@@ -45,6 +47,7 @@
                 </div>
 
                 <ButtonContainer
+                    @click="login"
                     text = "Login"
                     textClass = "text-lg text-black font-bold"
                     sizeClass = "w-full p-4"
@@ -54,13 +57,41 @@
 </template>
 
 <script setup>
-    //Component
-    import RememberMe from './subcomponents/RememberMe.vue';
-    import TextBoxContainer from './subcomponents/TextBoxContainer.vue';
-    import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
+//Component
+import RememberMe from './subcomponents/RememberMe.vue';
+import TextBoxContainer from './subcomponents/TextBoxContainer.vue';
+import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 
-    //Icons
-    import IconEmail from '../icons/login_icons/IconEmail.vue';
-    import IconPassword from '../icons/login_icons/IconPassword.vue';
+//Icons
+import IconEmail from '../icons/login_icons/IconEmail.vue';
+import IconPassword from '../icons/login_icons/IconPassword.vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const email = ref('')
+const password = ref('')
+
+const router = useRouter()
+
+const login = async () => {
+    const body = {email: email.value, password: password.value, permission: 'admin'}
+    try {
+        const response = await fetch('/api/login',  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(`${data.error}`)
+        
+        localStorage.setItem('jwt', data.token)
+        router.push('/admin')
+    }
+    catch(error) {
+        alert(error)
+    }
+}
 
 </script>
