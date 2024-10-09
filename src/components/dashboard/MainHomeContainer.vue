@@ -129,7 +129,7 @@
             >
                 <template v-for="(slide, index) in feedbackSlides" :key="index">
                     <SwiperSlide>
-                        <div class="h-full flex flex-col gap-1">
+                        <div class="h-full flex flex-col gap-1 p-2">
                             <FeedbackItem 
                                 v-for="(item, itemIndex) in slide" 
                                 :key="itemIndex" 
