@@ -463,6 +463,7 @@ onUnmounted(()=>{
 
 const fetchUpdatedPersonnels = async(status) => {
     tableItems.value = await getAllPersonnel(status)
+    console.log(tableItems.value)
     // Get all online personnels after fetching data 
     fetchOnlinePersonnels()
 
