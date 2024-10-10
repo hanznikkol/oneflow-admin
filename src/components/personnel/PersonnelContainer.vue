@@ -106,7 +106,7 @@ const statusClasses = ref({
 const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
-//Add Announcement Dialogbox
+// Dialogbox
 const isPersonnelVisible = ref(false)
 const isConfirmationDialogVisible = ref(false)
 const dialogMode = ref('add')

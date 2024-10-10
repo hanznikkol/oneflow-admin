@@ -14,7 +14,7 @@
             <div class="flex flex-row w-auto h-auto justify-around items-center gap-2">
                 <ButtonContainer
                     @click="openDialog('create')"
-                    v-if = "!showActionButton"
+                    v-if = "selectedItems.length === 0"
                     text="Create"
                     textClass = "text-xs lg:text-sm font-bold"
                     sizeClass = "w-full lg:w-24 h-8 px-2"
@@ -24,8 +24,9 @@
             </div>
             
             <!-- Selected Item -->
-            <div v-if="showActionButton" class=" flex flex-row w-auto h-full justify-around items-center gap-2">
+            <div v-if="selectedItems.length > 0" class=" flex flex-row w-auto h-full justify-around items-center gap-2">
                 <ButtonContainer
+                    @click="showDeleteDialog"
                     text="Delete"
                     textClass = "text-xs lg:text-sm font-bold text-white"
                     bgColorClass = "bg-custom-red hover:bg-[#9f202f]"
@@ -35,7 +36,7 @@
                 /> 
                 <ButtonContainer
                     @click="openDialog('edit')"
-                    v-if = "!isAllSelected"
+                    v-if = "selectedItems.length === 1"
                     text= "Edit"
                     textClass = "text-xs lg:text-sm font-bold"
                     sizeClass = "w-full lg:w-24 h-8 px-2"
@@ -51,6 +52,7 @@
                 :items="paginatedItems"
                 :currentPage="currentPage"
                 :itemsPerPage="itemsPerPage"
+                :statusClasses="statusClasses"
                 @selection:changed="handleSelectionChanged"
             />
         </div>
@@ -69,13 +71,25 @@
     <!-- Show Dialog Box -->
     <DialogBoxAnnouncement 
         v-if="isAnnouncementVisible"  
-        @close="isAnnouncementVisible = false"
+        @close="handleClose"
+        @add="handleAdd"
+        @update="handleUpdate"
+        :item="selectedItems[0]"
         :mode ="dialogMode"
+    />
+
+    <DialogConfirmation 
+        v-if="isConfirmationDialogVisible"
+        :title="confirmationDialogTitle"
+        :content="confirmationDialogContent"
+        :mode="confirmationDialogMode"
+        @delete="handleDelete"
+        @close="isConfirmationDialogVisible = false"
     />
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
@@ -84,75 +98,250 @@ import TableAnnoucement from './subcomponents/TableAnnoucement.vue';
 import Pagination from '../pagination/Pagination.vue';
 
 //Dialog Box
+import DialogConfirmation from '../dialogbox/DialogConfirmation.vue';
 import DialogBoxAnnouncement from '../dialogbox/DialogBoxAnnouncement.vue';
 
 //Icons
 import IconEdit from '../icons/announcement_icons/IconEdit.vue';
 import IconDelete from '../icons/announcement_icons/IconDelete.vue';
 import IconAdd from '../icons/announcement_icons/IconAdd.vue';
+import { useNotification } from '@kyvg/vue3-notification';
+import { socket } from '../../../socket';
+
+const {notify} = useNotification()
+
+//Dialog
+const isConfirmationDialogVisible = ref(false)
+const confirmationDialogMode = ref('')
+const confirmationDialogTitle = ref('')
+const confirmationDialogContent = ref('')
 
 //Dropdown
 const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
 // Table Data
-const tableHeaders = ref(['ID', 'Announced To', 'Message', 'Enabled'])
-const tableItems = ref([
-    { ID: 1, 'Announced To': 'Registrar', Message: 'Example message 1', Enabled: 'True', selected: false },
-    { ID: 2, 'Announced To': 'Cashier', Message: 'Example message 2', Enabled: 'False', selected: false },
-    { ID: 3, 'Announced To': 'Registrar', Message: 'Example message 3', Enabled: 'True', selected: false },
-    { ID: 4, 'Announced To': 'Cashier', Message: 'Example message 4', Enabled: 'True', selected: false },
-    { ID: 5, 'Announced To': 'Faculty', Message: 'Example message 5', Enabled: 'True', selected: false },
-    { ID: 6, 'Announced To': 'Registrar', Message: 'Example message 6', Enabled: 'False', selected: false },
-    { ID: 7, 'Announced To': 'Cashier', Message: 'Example message 7', Enabled: 'False', selected: false },
-    { ID: 8, 'Announced To': 'Faculty', Message: 'Example message 8', Enabled: 'True', selected: false },
-    { ID: 9, 'Announced To': 'Registrar', Message: 'Example message 9', Enabled: 'False', selected: false },
-    { ID: 10, 'Announced To': 'Cashier', Message: 'Example message 10', Enabled: 'True', selected: false },
-    { ID: 11, 'Announced To': 'Faculty', Message: 'Example message 11', Enabled: 'False', selected: false },
-    { ID: 12, 'Announced To': 'Registrar', Message: 'Example message 12', Enabled: 'True', selected: false },
-    { ID: 13, 'Announced To': 'Cashier', Message: 'Example message 13', Enabled: 'False', selected: false },
-    { ID: 14, 'Announced To': 'Faculty', Message: 'Example message 14', Enabled: 'True', selected: false },
-    { ID: 15, 'Announced To': 'Registrar', Message: 'Example message 15', Enabled: 'False', selected: false },
-    { ID: 16, 'Announced To': 'Cashier', Message: 'Example message 16', Enabled: 'True', selected: false },
-    { ID: 17, 'Announced To': 'Faculty', Message: 'Example message 17', Enabled: 'False', selected: false },
-    { ID: 18, 'Announced To': 'Registrar', Message: 'Example message 18', Enabled: 'True', selected: false },
-    { ID: 19, 'Announced To': 'Cashier', Message: 'Example message 19', Enabled: 'True', selected: false },
-    { ID: 20, 'Announced To': 'Faculty', Message: 'Example message 20', Enabled: 'False', selected: false },
-    // Repeat pattern for remaining items up to 99
-]);
-
-for (let i = 21; i <= 99; i++) {
-    tableItems.value.push({
-        ID: i,
-        'Announced To': i % 3 === 0 ? 'Faculty' : i % 2 === 0 ? 'Cashier' : 'Registrar',
-        Message: `Example message ${i}`,
-        Enabled: i % 2 === 0 ? 'True' : 'False',
-        selected: false
-    });
-}
+const tableHeaders = ref(['Announced To', 'Message', 'Status', 'Disable At'])
+const tableItems = ref([]);
 
 //Add Announcement Dialogbox
 const isAnnouncementVisible = ref(false)
 const dialogMode = ref('create')
 
 //Selection in Table
-const showActionButton = ref(false)
-const isAllSelected = ref(false)
+const selectedItems = ref([])
+
+// Status Classes
+const statusClasses = ref({
+    Enabled: 'bg-green-400 text-black p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]' ,
+    Disabled: 'bg-red-600 text-white p-1 rounded w-16 h-auto flex items-center justify-center text-[.60rem]',
+});
 
 const handleSelectionChanged = (selectionStatus) => {
-    showActionButton.value = selectionStatus.anySelected;
-    isAllSelected.value = selectionStatus.allSelected;
+    selectedItems.value = selectionStatus.selectedItems
+    console.log(selectedItems.value)
 };
+
+const showDeleteDialog = async () => {
+    confirmationDialogMode.value = 'delete'
+    confirmationDialogTitle.value = 'Delete Announcement'
+    confirmationDialogContent.value = 'Do you want to delete all the selected announcement(s)?'
+    isConfirmationDialogVisible.value = true
+}
 
 const openDialog = (mode) => {
     dialogMode.value = mode;
     isAnnouncementVisible.value = true;
 };
 
+const handleClose = () => {
+    isAnnouncementVisible.value = false
+}
+
+const showNotification = (IsSuccess, text) => {
+    notify({
+        title: IsSuccess ? 'Success' : 'Error',
+        text: text,
+        type: IsSuccess ? 'success' : 'error'
+    })
+}
+
+const scheduleAnnouncement = (announcement, emit) => {
+    socket.emit(emit, announcement, (isScheduled) => {
+        if(isScheduled)
+            showNotification(true, 'Announcement has been scheduled for disabling')        
+    })
+}
+
+// Handle Delete Request
+const handleDelete = async () => {
+    const announcementIDs = selectedItems.value.map(item => item.announcementID)
+    if(announcementIDs.length > 0) {
+        const data = await deleteAnnouncement(announcementIDs)
+        if(!data) return
+        console.log(data)
+        if(data.deleted) {
+            scheduleAnnouncement(announcementIDs, 'deleteAnnouncement')
+            tableItems.value = await getAnnouncements()
+            showNotification(true, data.status)
+            selectedItems.value = selectedItems.value.filter(i=>!announcementIDs.includes(i.announcementID))
+        }
+        else {
+            showNotification(false, data.status)
+        }
+        isConfirmationDialogVisible.value = false
+    }
+}
+
+// Handle Update Request
+const handleUpdate = async (announcement, callback) => {
+    const announcementID = selectedItems.value[0].announcementID
+    if(announcementID && Object.entries(announcement).length > 0) {
+        const data = await updateAnnouncement(announcementID, announcement)
+        if(!data) return
+        console.log(data)
+        if(data.updated) {
+            announcement.announcementID = announcementID
+            scheduleAnnouncement(announcement, 'updateAnnouncement')
+            tableItems.value = await getAnnouncements()
+            showNotification(true, data.status)
+            selectedItems.value = []
+            callback()
+        }
+        else {
+            showNotification(false, data.status)
+        }
+    }
+}
+
+// Handle Add Request
+const handleAdd = async(announcement, callback) => {
+    if(announcement) {
+        const data = await createAnnouncement(announcement)
+        if(!data) return
+        console.log(data)
+        if(data.created) {
+            announcement.announcementID = data.insertID
+            showNotification(true, data.status)
+            //schedule announcement
+            scheduleAnnouncement(announcement, 'createAnnouncement')
+            // Refresh Items
+            tableItems.value = await getAnnouncements()
+            callback()
+        }
+        else {
+            showNotification(false, data.status)
+        }
+    }
+}
+
+// REQUEST CREATE Announcement
+const createAnnouncement = async(service) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        const request = `/api/announcement`
+        const response = await fetch(request, { 
+            method: 'POST', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(service)
+        })
+        const data = await response.json()
+        if(!response.ok){
+            showNotification(false, data.error)
+            return
+        }
+        return data
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+const getAnnouncements = async() => {
+    try{
+        const token = localStorage.getItem('jwt')
+        let request = '/api/announcement'
+        const response = await fetch(request, { 
+            method: 'GET', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        const data = await response.json()
+        if(!response.ok) return alert(`An error occured: ${data.error}`)
+        const announcements = data.announcements.map(a=> ({
+            announcementID: a.announcementID,
+            'Announced To': a.announcedTo,
+            'Disable At': a['Disable At'],
+            'Status': a.status,
+            'Message': a.message
+        }))
+        return announcements
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+// REQUEST UPDATE Announcement
+const updateAnnouncement = async(id, valuesToUpdate) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        const request = `/api/announcement/${id}`
+        const response = await fetch(request, { 
+            method: 'PATCH', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify(valuesToUpdate)
+        })
+        const data = await response.json()
+        if(!response.ok) {
+            showNotification(false, data.error)
+            return
+        }
+        return data
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+// REQUEST DELETE Announcement
+const deleteAnnouncement = async(announcementIDs) => {
+    try{
+        const token = localStorage.getItem('jwt')
+        const request = `/api/announcement`
+        const response = await fetch(request, { 
+            method: 'DELETE', 
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }, 
+            body: JSON.stringify({announcementIDs: announcementIDs})
+        })
+        const data = await response.json()
+        if(!response.ok) {
+            showNotification(false, data.error)
+            return
+        }
+        return data
+    }
+    catch(err){
+        alert(`An error occured: ${err}`)
+    }
+}
+
+
 // Pagination state
 const currentPage = ref(1);
-const itemsPerPage = ref(parseInt(selectedRows.value.split(' ')[0], 10));
-const totalItems = ref(tableItems.value.length);
+const itemsPerPage = computed(() => parseInt(selectedRows.value.split(' ')[0], 10));
+const totalItems = computed(() => tableItems.value.length);
 
 // Compute paginated items based on current page and items per page
 const paginatedItems = computed(() => {
@@ -178,6 +367,20 @@ const handlePageChange = (page) => {
     currentPage.value = page;
     // Fetch new data or update table based on new page
 };
+
+const onAnnouncementDisabled = (id) => {
+    const announcement = tableItems.value.find(i => i.announcementID == id)
+    announcement.Status = 'Disabled'
+}
+
+onMounted(async() => {
+    tableItems.value = await getAnnouncements()
+    socket.on('announcementDisabled', onAnnouncementDisabled)
+})
+
+onUnmounted(() => {
+    socket.off('announcementDisabled')
+})
 
 // Watcher for Dropdown Changes
 watch(selectedRows, (newValue) => {

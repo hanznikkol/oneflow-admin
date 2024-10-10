@@ -9,7 +9,7 @@
                     <th 
                         v-for= "(header, index) in headers" 
                         :key = "index" 
-                        :class= "index === 0 ? 'w-12 lg:w-20' : 'flex-1'"
+                        :class= "'flex-1'"
                         class=" text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap" 
                     >
                         {{ header }}
@@ -32,12 +32,22 @@
                     :class="getRowClass(item,index)"
                 >
                     <!-- Table Items -->
-                    <td v-for="(header, hIndex) in headers" :key="hIndex"
-                        :class= "hIndex === 0 ? 'w-12 lg:w-20' : 'flex-1'"
-                        class=" text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap" 
-                    >
-                        {{ item[header] }}
-                    </td>
+                     
+                    <template v-for="(header, hIndex) in headers" :key="hIndex">
+                        <!-- Special handling for the status column -->
+                        <td v-if="header === tableProps.statusColumn" class="flex-1 px-2 py-4"> 
+                            <span :class="tableProps.statusClasses[item[header]]">
+                                {{ item[header] }}
+                            </span>
+                        </td>
+                        <td 
+                        v-else
+                            :class= "'flex-1'"
+                            class=" text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap" 
+                        >
+                            {{ item[header] }}
+                        </td>
+                    </template>
                     <!-- Checkbox -->
                     <td class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
                        <CheckboxSelector
@@ -71,6 +81,16 @@ const tableProps = defineProps({
         type: Number,
         required: true,
         default: 10
+    },
+    statusColumn: {
+        type: String,
+        required: false,
+        default: 'Status'
+    },
+    statusClasses: {
+        type: Object,
+        required: false,
+        default: () => ({}),
     },
     items: {
         type: Array,
@@ -137,10 +157,10 @@ const toggleSelectItem = (index, isChecked) => {
 //Get the Selection Status
 const getSelectionStatus = () => {
     const totalItems = tableProps.items.length;
-    const selectedItems = tableProps.items.filter(item => item.selected).length;
+    const selectedItems = tableProps.items.filter(item => item.selected);
     return {
-        allSelected: totalItems > 0 && selectedItems === totalItems,
-        anySelected: selectedItems > 0
+        allSelected: totalItems > 0 && selectedItems.length === totalItems,
+        selectedItems: selectedItems
     };
 };
 </script>
