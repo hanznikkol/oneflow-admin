@@ -1,6 +1,7 @@
 import {createWebHistory, createRouter} from 'vue-router'
 
 //Login
+import AuthRole from './views/AuthRole.vue'
 import Login from './views/Login.vue'
 //Side Navigation
 import Dashboard from './views/Dashboard.vue'
@@ -18,6 +19,7 @@ import CounterPerformance from './components/statistics/tabviews/CounterPerforma
 import GraphReport from './components/statistics/tabviews/GraphReport.vue'
 
 const routes = [
+    {path: '/admin/sheesh', component: AuthRole},
     {path: '/admin/login', component: Login},
     {path: '/admin', component: Main, children: [
         {path: 'home', component: Dashboard },
