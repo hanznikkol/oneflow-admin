@@ -30,7 +30,7 @@ const props = defineProps({
 
 const getStatistics = async (counter, type, startDate, endDate) => {
     try {
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const response = await fetch(`/api/statistics?at=${counter}&type=${type}&start=${startDate}&end=${endDate}`, { 
             method: 'GET', 
             headers: {

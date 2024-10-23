@@ -1,6 +1,7 @@
 <template>
-    <div class="max-h-[30rem] lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
-        <table class="min-w-full bg-pure-white table-fixed">
+    <div :class="itemClass">
+        <div class="w-full h-full overflow-y-auto rounded-b-lg border border-gray">
+            <table class="min-w-full h-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
                 <tr>
@@ -51,6 +52,7 @@
             </tbody>
         </table>
     </div>
+    </div>
 </template>
 
 <script setup>
@@ -92,6 +94,13 @@ const headerChecked = ref(false)
 const handleViewClick = (item) => {
     emit('showFeedback', item);
 };
+
+const itemClass = computed(() => {
+    return tableProps.items.length > 6
+        ? 'lg:w-full lg:h-64 lg:flex-grow' // Set a specific height with overflow
+        : 'lg:w-full lg:flex-shrink';
+});
+
 
 const paginatedItems = computed(() => {
     const totalItems = tableProps.items.length;

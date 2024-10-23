@@ -10,6 +10,7 @@
             />
             <!-- PDF -->
             <ButtonContainer
+                @click="generatePDF"
                 bgColorClass = "bg-pdf-red hover:bg-[#C53A38]"
                 text="PDF"
                 textClass = "text-xs lg:text-sm font-bold text-white"
@@ -19,6 +20,7 @@
             />
             <!-- Excel -->
             <ButtonContainer
+                @click="exportToExcel"
                 bgColorClass = "bg-excel-green hover:bg-[#207848]"
                 text="Excel"
                 textClass = "text-xs lg:text-sm font-bold text-white"
@@ -70,12 +72,16 @@
         </div>
         
         <!-- Table and Graphs (Tab Layout) -->
-        <RouterView 
-            :search="searchQuery"
-            :current-page="currentPage" 
-            :items-per-page="itemsPerPage" 
-            @pageChanged="handlePageChange"
-        />
+        <div class="relative w-full flex flex-col h-full" ref="contentToPrint">
+            <RouterView 
+                :search="searchQuery"
+                :current-page="currentPage" 
+                :items-per-page="itemsPerPage" 
+                @update:data="updateData"
+                @pageChanged="handlePageChange"
+            /> 
+        </div>
+
     </div>
     
 </template>
@@ -84,7 +90,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
-
+import * as XLSX from 'xlsx';
 //Components
 import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 import TabLayout from './subcomponents/TabLayout.vue';
@@ -98,12 +104,24 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import moment from 'moment';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 //Changes the Header Options
 const route = useRoute();
 const router = useRouter();
 const isGraphReportActive = computed (() => {
     return route.path.includes('/statistics/graphreport');
 })
+
+const contentToPrint = ref()
+const data = ref([])
+const currStatistic = ref('Serving Time')
+
+const updateData = (updatedData, selectedStatistic) =>{
+    data.value = updatedData
+    currStatistic.value = selectedStatistic
+}
 
 //Props
 const props = defineProps({
@@ -144,7 +162,7 @@ const formatStartEndDate = (date) => {
 }
 
 const getCounters = async () => {
-    const token = localStorage.getItem('jwt')
+    const token = localStorage.getItem('jwtadmin')
     const response = await fetch(`/api/counters`, { 
         method: 'GET', 
         headers: {
@@ -157,6 +175,55 @@ const getCounters = async () => {
 
     const counters = data.counters.map(row=> ({label: row.Counter, type: row.adminType}))
     return counters
+}
+
+// PDF CONVERT
+const generatePDF = () => {
+    const doc = new jsPDF();
+
+    const formattedDate = formatStartEndDate(selectedDate.value)
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text(`${currStatistic.value} Report`, 20, 20);
+    doc.setFontSize(12)
+    doc.text(`${formattedDate[0]} to ${formattedDate[1]}`, 20, 28);
+
+    // Define the table columns
+    const columns = Object.keys(data.value[0])
+
+    // Map the tableData to the table rows
+    const rows = data.value.map(d => Object.values(d))
+
+    // Add the table to the PDF
+    console.log(columns, rows)
+    doc.autoTable({
+        head: [columns],  // Column headers
+        body: rows,       // Table data
+        startY: 36,
+        styles: {
+            fontSize: 8,   // Global font size for the table
+        },
+        headStyles: {
+            fontSize: 9,   // Font size for the header
+        },
+        bodyStyles: {
+            fontSize: 8,   // Font size for the body
+        }       // Y-position for the table
+    });
+
+    // Open the print dialog for PDF
+    doc.output('dataurlnewwindow');
+}
+
+// GENERATE EXCEL
+const exportToExcel = () => {
+  const worksheet = XLSX.utils.json_to_sheet(data.value);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  // Export the Excel file
+  XLSX.writeFile(workbook, `${currStatistic.value}-${formatStartEndDate(selectedDate.value)}.xlsx`);
 }
 
 onMounted(async() => {

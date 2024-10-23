@@ -19,7 +19,6 @@ import CounterPerformance from './components/statistics/tabviews/CounterPerforma
 import GraphReport from './components/statistics/tabviews/GraphReport.vue'
 
 const routes = [
-    {path: '/admin/sheesh', component: AuthRole},
     {path: '/admin/login', component: Login},
     {path: '/admin', component: Main, children: [
         {path: 'home', component: Dashboard },

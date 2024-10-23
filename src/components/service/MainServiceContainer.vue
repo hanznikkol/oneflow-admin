@@ -34,7 +34,7 @@
         </div>
 
         <!-- Table -->
-        <div class="w-full flex-grow">
+        <div class="relative w-full flex flex-col h-full">
             <TableService 
                 :headers="tableHeaders"
                 :items="paginatedItems"
@@ -208,7 +208,7 @@ const handleAdd = async(service, callback) => {
 
 const getServices = async() => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         let request = '/api/services'
         const response = await fetch(request, { 
             method: 'GET', 
@@ -235,7 +235,7 @@ const getServices = async() => {
 // REQUEST UPDATE PERSONNEL
 const updateService = async(id, valuesToUpdate) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/services/${id}`
         const response = await fetch(request, { 
             method: 'PATCH', 
@@ -265,7 +265,7 @@ const updateService = async(id, valuesToUpdate) => {
 // REQUEST CREATE PERSONNEL
 const createService = async(service) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/services`
         const response = await fetch(request, { 
             method: 'POST', 

@@ -2,16 +2,28 @@
     <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
         <div class="w-full h-auto flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
-            <div class="w-auto h-full">
+            <div class="w-[40%] items-center justify-start h-auto flex gap-4">
                 <DropdownBoxContainer
                     :options = "rowOptions"
                     v-model= "selectedRows"
                     size = "w-full lg:w-36 h-9"
                 />
+
+                
+            <VueDatePicker 
+                class="flex-1"
+                v-model = "selectedDate"
+                placeholder = "Select date"
+                :multi-calendars="{solo: true}"
+                :format = "dateFormat"
+                :clearable = "true"
+                :enable-time-picker="false"
+                range 
+            />
             </div>
         </div>
         <!-- Table -->
-        <div class="w-full h-full flex-1">
+        <div class="relative w-full flex flex-col h-full">
             <TableFeedback 
                 :headers="tableHeaders"
                 :items="paginatedItems"
@@ -46,7 +58,9 @@ import DropdownBoxContainer from '../main/subcomponents/DropdownBoxContainer.vue
 import Pagination from '../pagination/Pagination.vue';
 import TableFeedback from './subcomponents/TableFeedback.vue';
 import DialogBoxFeedback from '../dialogbox/DialogBoxFeedback.vue';
-
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import moment from 'moment';
 const rowOptions = ref(['10 rows', '20 rows', '50 rows', '100 rows'])
 const selectedRows = ref(rowOptions.value[0]);
 
@@ -62,7 +76,7 @@ const hideFeedbackDialog = () => {
     selectedFeedback.value = {}
 }
 
-const tableHeaders = ref(['Message', 'Date', 'Reaction', 'Phone', ' '])
+const tableHeaders = ref(['Message', 'Date', 'Reaction', ' '])
 const tableItems = ref([]);
 
 const currentPage = ref(1)
@@ -83,10 +97,13 @@ watch(selectedRows, (newRows) => {
     itemsPerPage.value = parseInt(newRows);
 });
 
-const getFeedbacks = async() => {
+const getFeedbacks = async(startDate, endDate) => {
     try{
-        const token = localStorage.getItem('jwt')
-        const request = `/api/feedbacks`
+        const token = localStorage.getItem('jwtadmin')
+        let request = `/api/feedbacks`
+        if(startDate && endDate) {
+            request += `?sd=${startDate}&ed=${endDate}`
+        }
         const response = await fetch(request, {
             method: 'GET',
             headers: {
@@ -103,9 +120,24 @@ const getFeedbacks = async() => {
     }
 }
 
+const selectedDate = ref('')
+const dateFormat = 'MMM. d yyyy';
+
+const formatStartEndDate = (date) => {
+    const startDate = moment(date[0]).format('YYYY-MM-DD')
+    const endDate = moment(date[1]).format('YYYY-MM-DD')
+    return [startDate, endDate]
+}
+
 onMounted(async () => {
     tableItems.value = await getFeedbacks()
     console.log(tableItems.value)
+})
+
+watch(() => selectedDate.value, async (newDate) => {
+    if(!newDate || newDate.length == 0) return
+    const formattedDate = formatStartEndDate(newDate)
+    tableItems.value = await getFeedbacks(formattedDate[0], formattedDate[1])
 })
 
 const totalItems = computed(() => tableItems.value.length);

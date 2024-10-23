@@ -12,19 +12,20 @@
             <h1 class="text-base md:text-lg font-bold">{{ headerText }}</h1>
         </div>  
         <!-- User Profile -->
-        <div class="p-2 w-12 h-12 md:w-14 md:h-14 flex justify-center items-center">
+        <!-- <div class="p-2 w-12 h-12 md:w-14 md:h-14 flex justify-center items-center"> -->
             <!-- Image Container -->
-            <div class="rounded-full bg-pure-white 0 w-full h-full focus:cursor-default">
+            <!-- <div class="rounded-full bg-pure-white 0 w-full h-full focus:cursor-default"> -->
                 <!-- Profile Image -->
-                <img class="object-cover w-full h-full rounded-full" src="/src/assets/userplaceholder.png" />
+                <!-- <img class="object-cover w-full h-full rounded-full" src="/src/assets/userProfile.png" />
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { state } from '../../../socket';
 
 const route = useRoute();
 
@@ -32,7 +33,7 @@ const headerText = computed(() => {
     // Define header texts for different routes
     switch (true) {
         case route.path === '/admin/home':
-            return 'Glad to see you here!';
+            return `Good day! ${state.adminInfo?.firstName} ${state.adminInfo?.lastName}`
         case route.path === '/admin/personnel':
             return 'Personnel';
         case route.path === '/admin/announcement':

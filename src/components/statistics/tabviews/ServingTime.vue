@@ -63,17 +63,18 @@ const itemList = ref([]);
 const filteredData = computed(() => {
   if (!props.search) return itemList.value;
 
-  return itemList.value.filter((item) => {
+  const filtered = itemList.value.filter((item) => {
     // Convert each item to a single string of all values and check if it includes the search query
     return Object.values(item).some(value =>
       value.toString().toLowerCase().includes(props.search.toLowerCase())
     );
   });
+  return filtered
 });
 
 const getStatistics = async(startDate, endDate) => {
     try {
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const response = await fetch(`/api/statistics?start=${startDate}&end=${endDate}&type=all-serving-time`, { 
             method: 'GET', 
             headers: {
@@ -98,7 +99,8 @@ const paginatedItems = computed(() => {
     }
     const start = (props.currentPage - 1) * props.itemsPerPage;
     const end = start + props.itemsPerPage;
-    return filteredData.value.slice(start, end);
+    const paginated = filteredData.value.slice(start, end);
+    return paginated 
 });
 
 const currentPage = ref(props.currentPage);
@@ -119,4 +121,9 @@ watch([() => props.startDate, () => props.endDate], async ([newStartDate, newEnd
     if(!newStartDate && !newEndDate) return
     itemList.value = await getStatistics(newStartDate, newEndDate)
 }, {immediate: true})
+
+watch(() => filteredData.value, (data) => {
+    emit('update:data', data, 'Serving Time')
+})
+
 </script>

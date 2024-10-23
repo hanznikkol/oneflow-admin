@@ -46,7 +46,7 @@
             </div>
         </div>
         <!-- Table -->
-        <div class="w-full">
+        <div class="relative w-full flex flex-col h-full">
             <TableAnnoucement 
                 :headers="tableHeaders"
                 :items="paginatedItems"
@@ -121,7 +121,7 @@ const rowOptions = ['10 rows', '20 rows', '50 rows', '100 rows']
 const selectedRows = ref(rowOptions[0]);
 
 // Table Data
-const tableHeaders = ref(['Announced To', 'Message', 'Status', 'Disable At'])
+const tableHeaders = ref(['Announced To', 'Message', 'Date', 'Status', 'Disable At'])
 const tableItems = ref([]);
 
 //Add Announcement Dialogbox
@@ -167,6 +167,7 @@ const showNotification = (IsSuccess, text) => {
 }
 
 const scheduleAnnouncement = (announcement, emit) => {
+    console.log('emitted')
     socket.emit(emit, announcement, (isScheduled) => {
         if(isScheduled)
             showNotification(true, 'Announcement has been scheduled for disabling')        
@@ -207,6 +208,7 @@ const handleUpdate = async (announcement, callback) => {
             showNotification(true, data.status)
             selectedItems.value = []
             callback()
+            handleClose()
         }
         else {
             showNotification(false, data.status)
@@ -236,9 +238,10 @@ const handleAdd = async(announcement, callback) => {
 }
 
 // REQUEST CREATE Announcement
-const createAnnouncement = async(service) => {
+const createAnnouncement = async(announcement) => {
     try{
-        const token = localStorage.getItem('jwt')
+        console.log(announcement)
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/announcement`
         const response = await fetch(request, { 
             method: 'POST', 
@@ -246,7 +249,7 @@ const createAnnouncement = async(service) => {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }, 
-            body: JSON.stringify(service)
+            body: JSON.stringify(announcement)
         })
         const data = await response.json()
         if(!response.ok){
@@ -262,7 +265,7 @@ const createAnnouncement = async(service) => {
 
 const getAnnouncements = async() => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         let request = '/api/announcement'
         const response = await fetch(request, { 
             method: 'GET', 
@@ -278,7 +281,8 @@ const getAnnouncements = async() => {
             'Announced To': a.announcedTo,
             'Disable At': a['Disable At'],
             'Status': a.status,
-            'Message': a.message
+            'Message': a.message,
+            'Date': a['Date']
         }))
         return announcements
     }
@@ -290,7 +294,7 @@ const getAnnouncements = async() => {
 // REQUEST UPDATE Announcement
 const updateAnnouncement = async(id, valuesToUpdate) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/announcement/${id}`
         const response = await fetch(request, { 
             method: 'PATCH', 
@@ -315,7 +319,7 @@ const updateAnnouncement = async(id, valuesToUpdate) => {
 // REQUEST DELETE Announcement
 const deleteAnnouncement = async(announcementIDs) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/announcement`
         const response = await fetch(request, { 
             method: 'DELETE', 

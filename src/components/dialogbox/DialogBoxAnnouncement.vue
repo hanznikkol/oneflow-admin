@@ -188,7 +188,7 @@ const getAnnouncementInfo = () => {
         announcedTo: currentItem['Announced To'].value,
         message: currentItem['Message'].value.trim(),
         status: currentItem.Status.value,
-        duration: currentItem['Disable At'].value
+        duration: currentItem['Disable At'].value || ''
     }
     return announcement
 }
@@ -277,7 +277,6 @@ watch(() => isDurationRequired.value, (bool) => {
 
 watch(() => selectedDisableOption.value, (selectedDisable) => {
     if(selectedDisable === 'Manual'){
-        currentItem['Disable At'].value = null
         selectedDate.value = null
     }
     else(selectedDisable === 'Scheduled')
@@ -285,6 +284,8 @@ watch(() => selectedDisableOption.value, (selectedDisable) => {
 })
 
 watch(() => selectedDate.value, (date) => {
-    currentItem['Disable At'].value = formatDate(date)
+    if(date) 
+        currentItem['Disable At'].value = formatDate(date)
+    else currentItem['Disable At'].value = null
 })
 </script>

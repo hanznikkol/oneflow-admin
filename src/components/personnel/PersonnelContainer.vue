@@ -25,7 +25,7 @@
             </div>
         </div>
         <!-- Table -->
-        <div class="w-full flex-grow">
+        <div class="relative w-full flex flex-col h-full">
             <TablePersonnel 
                 :headers="tableHeaders"
                 :items="paginatedItems"
@@ -287,7 +287,7 @@ const handlePageChange = (page) => {
 // REQUEST GET A PERSONNEL
 const getPersonnel = async(id) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         let request = `/api/personnel/${id}`
         const response = await fetch(request, { 
             method: 'GET', 
@@ -310,7 +310,7 @@ const getPersonnel = async(id) => {
 //REQUEST GET ALL PERSONNEL
 const getAllPersonnel = async(status) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         let request = `/api/personnel?s=${status}`
         const response = await fetch(request, { 
             method: 'GET', 
@@ -331,7 +331,7 @@ const getAllPersonnel = async(status) => {
 // REQUEST UPDATE PERSONNEL
 const updatePersonnel = async(id, valuesToUpdate) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/personnel/${id}`
         const response = await fetch(request, { 
             method: 'PATCH', 
@@ -361,7 +361,7 @@ const updatePersonnel = async(id, valuesToUpdate) => {
 // REQUEST CREATE PERSONNEL
 const createPersonnel = async(personnel) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/personnel`
         const response = await fetch(request, { 
             method: 'POST', 
@@ -391,7 +391,7 @@ const createPersonnel = async(personnel) => {
 // REQUEST DELETE PERSSONNEL
 const deletePersonnel = async(id) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/personnel/${id}`
         const response = await fetch(request, { 
             method: 'DELETE', 
@@ -413,7 +413,7 @@ const deletePersonnel = async(id) => {
 // REQUEST RESTORE PERSONNEL
 const restorePersonnel = async(id) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/personnel/${id}/restore`
         const response = await fetch(request, { 
             method: 'PATCH', 

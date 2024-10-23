@@ -1,6 +1,7 @@
 <template>
-    <div class="max-h-[26rem] overflow-y-auto rounded-b-lg border border-gray">
-        <table class="min-w-full bg-pure-white table-fixed">
+    <div :class="itemClass">
+        <div class="w-full h-full overflow-y-auto rounded-b-lg border border-gray">
+            <table class="min-w-full h-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
                 <tr class="flex items-center">
@@ -9,9 +10,9 @@
                         v-for="(header, index) in headers" 
                         :key="index" 
                         :class="index === 0 ? 'w-24 lg:w-40' : 'flex-1'"
-                        class="text-left text-[.58rem] py-4 px-2 cursor-default" 
+                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default" 
                     >
-                        {{ index === 0 ? 'Thumbnail' : header }}
+                        {{ header }}
                     </th>
                     <!-- Checkbox -->
                     <th class="w-20 text-center text-sm py-4 px-2 flex items-center justify-center">
@@ -32,20 +33,24 @@
                 >
                     <!-- Table Items -->
                     <td v-for="(header, hIndex) in headers" :key="hIndex"
+                        @mouseover="playVideo(index)" @mouseleave="pauseVideo(index)"
                         :class="hIndex === 0 ? 'w-24 lg:w-40' : 'flex-1'"
-                        class="text-left text-[.58rem] px-2 py-4 cursor-default" 
+                        class="text-left whitespace-nowrap max-w-sm overflow-hidden text-ellipsis w-[10%] text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default" 
                     >   
                         <!-- Show video thumbnail in the first column -->
-                        <template v-if="hIndex === 0">
+                        <template v-if="header === ''">
                            <!-- Change This to Img -->
-                           <div class="w-16 h-8 bg-label-gray"></div>
+                           <div class="w-28"><video ref="videoElements" class="w-full h-full" :src="item['Video']" muted></video></div>
                         </template>
                         <!-- Show Toggle Switch if the header is Show -->
-                        <template v-if="header === 'Show'">
-                            <ToggleSwitchContainer v-model="item.show" />
+                        <template v-else-if="header === 'Show'">
+                            <ToggleSwitchContainer v-model="item.Show" @click="emitUpdate(item.videoID, item.Show)" />
                         </template>
                         <!-- Default Item -->
-                        <template v-else>
+                        <template v-else
+                        :class= "'flex-1'"
+                        class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default"
+                        >
                             {{ item[header] }}
                         </template>
                     </td>
@@ -60,6 +65,7 @@
             </tbody>
 
         </table>
+    </div>
     </div>
 </template>
 
@@ -91,13 +97,39 @@ const tableProps = defineProps({
     }
 })
 
-const emit = defineEmits(['selection:changed']);
+const emit = defineEmits(['selection:changed', 'update']);
 const headerChecked = ref(false);
+
+const emitUpdate = (id, show) => {
+    emit('update', id, {show: show ? 'Y' : 'N'}, () => {})
+}
+
+const itemClass = computed(() => {
+    return tableProps.items.length > 3
+        ? 'lg:w-full lg:h-64 lg:flex-grow' // Set a specific height with overflow
+        : 'lg:w-full lg:flex-shrink';
+});
 
 const getRowClass = (item, index) => {
     return item.selected
         ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
         : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
+};
+
+const videoElements = ref([]); // This will hold references to all video elements
+
+const playVideo = (index) => {
+  const videoElement = videoElements.value[index];
+  if (videoElement) {
+    videoElement.play();
+  }
+};
+
+const pauseVideo = (index) => {
+  const videoElement = videoElements.value[index];
+  if (videoElement) {
+    videoElement.pause();
+  }
 };
 
 
@@ -139,13 +171,13 @@ const toggleSelectItem = (index, isChecked) => {
     }
 }
 
-// Get the Selection Status
+//Get the Selection Status
 const getSelectionStatus = () => {
     const totalItems = tableProps.items.length;
-    const selectedItems = tableProps.items.filter(item => item.selected).length;
+    const selectedItems = tableProps.items.filter(item => item.selected);
     return {
-        allSelected: totalItems > 0 && selectedItems === totalItems,
-        anySelected: selectedItems > 0
+        allSelected: totalItems > 0 && selectedItems.length === totalItems,
+        selectedItems: selectedItems
     };
 };
 </script>

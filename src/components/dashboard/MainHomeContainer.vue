@@ -203,7 +203,7 @@ const hideFeedbackDialog = () => {
 
 const getFeedbacks = async(date) => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         const request = `/api/feedbacks?sd=${date}`
         const response = await fetch(request, {
             method: 'GET',
@@ -228,7 +228,7 @@ onMounted(async ()=> {
 
 const getStatistics = async() => {
     try{
-        const token = localStorage.getItem('jwt')
+        const token = localStorage.getItem('jwtadmin')
         let request =  `/api/statistics?type=total-summary-report`
         const response = await fetch(request, { 
             method: 'GET', 

@@ -1,7 +1,7 @@
 <template>
-<div :class="itemClass">
-    <div class="max-h-[30rem] lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
-        <table class="min-w-full bg-pure-white table-fixed">
+    <div :class="itemClass">
+        <div class="w-full h-full overflow-y-auto rounded-b-lg border border-gray">
+            <table class="min-w-full h-full bg-pure-white table-fixed">
             <!-- Header -->
             <thead class="bg-accent">
                 <tr class="flex items-center">
@@ -43,7 +43,7 @@
                         <td 
                         v-else
                             :class= "'flex-1'"
-                            class=" text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap" 
+                            class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]"
                         >
                             {{ item[header] }}
                         </td>
@@ -58,9 +58,9 @@
                 </tr>
             </tbody>
 
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 </template>
 
 <script setup>

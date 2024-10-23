@@ -9,7 +9,6 @@
 
 <script setup>
 import ReactionContainer from '../../feedback/subcomponents/ReactionContainer.vue';
-
 const props = defineProps({
     feedback: {
         type: Object

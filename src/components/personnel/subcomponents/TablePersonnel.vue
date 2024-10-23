@@ -1,65 +1,67 @@
 <template>
-    <div class="lg:max-h-[25rem] xl:max-h-[27rem] 2xl:max-h-[30rem] overflow-y-auto rounded-b-lg border border-gray">
-        <table class="min-w-full bg-pure-white table-fixed">
-            <!-- Header -->
-            <thead class="bg-accent">
-                <tr>
-                    <!-- Table Headers -->
-                    <th 
-                        v-for="(header, index) in headers" 
-                        :key="index" 
-                        class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
-                    >
-                        {{ header }}
-                    </th>
-                </tr>
-            </thead>
+    <div :class="itemClass">
+        <div class="w-full h-full overflow-y-auto rounded-b-lg border border-gray">
+            <table class="min-w-full h-full bg-pure-white table-fixed">
+                <!-- Header -->
+                <thead class="bg-accent">
+                    <tr>
+                        <!-- Table Headers -->
+                        <th 
+                            v-for="(header, index) in headers" 
+                            :key="index" 
+                            class="text-left text-[.60rem] lg:text-[.70rem] py-4 px-2 cursor-default whitespace-nowrap w-1/6"
+                        >
+                            {{ header }}
+                        </th>
+                    </tr>
+                </thead>
 
-            <!-- Content -->
-            <tbody>
-                <!-- Table Row -->
-                <tr v-for="(item, index) in paginatedItems" :key="index" 
-                :class="getRowClass(item,index)"
-                >
-                    <!-- Table Items -->
-                    <template v-for="(header, hIndex) in headers" :key="hIndex"
+                <!-- Content -->
+                <tbody>
+                    <!-- Table Row -->
+                    <tr v-for="(item, index) in paginatedItems" :key="index" 
+                    :class="getRowClass(item,index)"
                     >
-                            <!-- Special handling for the status column -->
-                            <td v-if="header === tableProps.statusColumn" class="px-2 py-4"> 
-                                <span :class="tableProps.statusClasses[item[header]]">
-                                    {{ item[header] }}
-                                </span>
-                            </td>
-                            <td v-else-if="header === '' && (item.adminID != state.adminInfo?.adminID) && (item.permission != 'system')" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
-                                <ButtonContainer
-                                        v-if="item.Status === 'Deleted'"
-                                        text="Restore"
-                                        textClass="text-white text-xs"
-                                        sizeClass="w-full h-full"
-                                        buttonRadius="rounded-lg"
-                                        bgColorClass="bg-[#138FCD]"
-                                        @click="handleRestoreClick(item)"
-                                    />
+                        <!-- Table Items -->
+                        <template v-for="(header, hIndex) in headers" :key="hIndex"
+                        >
+                                <!-- Special handling for the status column -->
+                                <td v-if="header === tableProps.statusColumn" class="px-2 py-4"> 
+                                    <span :class="tableProps.statusClasses[item[header]]">
+                                        {{ item[header] }}
+                                    </span>
+                                </td>
+                                <td v-else-if="header === '' && (item.adminID != state.adminInfo?.adminID) && (item.permission != 'system')" class="w-16 h-14 lg:w-24 lg:h-16 text-center text-sm px-2 py-4 flex items-center justify-end ml-auto">
                                     <ButtonContainer
-                                        v-else
-                                        text="Edit"
-                                        textClass="text-white text-xs"
-                                        sizeClass="w-full h-full"
-                                        buttonRadius="rounded-lg"
-                                        bgColorClass="bg-[#138FCD]"
-                                        @click="handleEditClick(item)"
-                                    />
-                            </td>
+                                            v-if="item.Status === 'Deleted'"
+                                            text="Restore"
+                                            textClass="text-white text-xs"
+                                            sizeClass="w-full h-full"
+                                            buttonRadius="rounded-lg"
+                                            bgColorClass="bg-[#138FCD]"
+                                            @click="handleRestoreClick(item)"
+                                        />
+                                        <ButtonContainer
+                                            v-else
+                                            text="Edit"
+                                            textClass="text-white text-xs"
+                                            sizeClass="w-full h-full"
+                                            buttonRadius="rounded-lg"
+                                            bgColorClass="bg-[#138FCD]"
+                                            @click="handleEditClick(item)"
+                                        />
+                                </td>
 
-                            <td v-else class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]">
-                                {{ item[header] }}
-                            </td>
+                                <td v-else class="text-left text-[.60rem] lg:text-[.70rem] px-2 py-4 cursor-default whitespace-nowrap max-w-xs overflow-hidden text-ellipsis w-[15%]">
+                                    {{ item[header] }}
+                                </td>
+                            
+                        </template>
                         
-                    </template>
-                    
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -106,6 +108,12 @@ const getRowClass = (item, index) => {
         ? (index % 2 === 0 ? 'bg-light-accent' : 'bg-accent')
         : (index % 2 === 0 ? 'bg-pure-white' : 'bg-light-accent');
 };
+
+const itemClass = computed(() => {
+    return tableProps.items.length > 6
+        ? 'lg:w-full lg:h-64 lg:flex-grow' // Set a specific height with overflow
+        : 'lg:w-full lg:flex-shrink';
+});
 
 
 const handleEditClick = (item) => {

@@ -33,7 +33,7 @@ const route = useRoute()
 const router = useRouter()
 
 const promptLogin = () => {
-  localStorage.removeItem("jwt")
+  localStorage.removeItem("jwtadmin")
   router.push('/admin/login')
 }
 
@@ -46,7 +46,7 @@ onMounted( async () => {
 })
 
 const fetchAdminInfo = async () => {
-  const token = localStorage.getItem('jwt')
+  const token = localStorage.getItem('jwtadmin')
   if(!token) return router.push('/admin/login')
   const response = await fetch(`/api/admin-info`, { 
     method: 'GET', 

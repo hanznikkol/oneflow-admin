@@ -146,7 +146,7 @@ const isActive = (path) => {
 }
 
 const logOut = () => {
-    localStorage.removeItem('jwt')
+    localStorage.removeItem('jwtadmin')
     socket.disconnect()
     router.push('/admin/login')
 }

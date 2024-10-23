@@ -39,8 +39,6 @@
                     type = 'password'
                     :icon = "IconPassword"
                 />
-                <!-- Remember Me (Checkbox) -->
-                <RememberMe/>
             </div>
 
             <ButtonContainer
@@ -83,7 +81,7 @@ const login = async () => {
         const data = await response.json()
         if(!response.ok) return alert(`${data.error}`)
         
-        localStorage.setItem('jwt', data.token)
+        localStorage.setItem('jwtadmin', data.token)
         router.push('/admin')
     }
     catch(error) {

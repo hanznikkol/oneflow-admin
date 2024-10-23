@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 onMounted(() => {
-    const token = localStorage.getItem('jwt')
+    const token = localStorage.getItem('jwtadmin')
     if(token) router.push('/admin')
 })
 </script>
