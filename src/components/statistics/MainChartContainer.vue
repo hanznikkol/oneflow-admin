@@ -1,6 +1,6 @@
 <template>
     <!-- Top Container -->
-    <div class="w-full h-[10%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-lg">
+    <div class="w-full h-[10%] border border-gray flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-lg">
         <!-- Dropdown and Download Buttons -->
         <div class="w-full h-auto flex flex-row items-center gap-2">
             <DropdownBoxContainer
@@ -34,7 +34,7 @@
     <!-- Middle Container -->
     <div class="flex flex-1 w-full items-center justify-center flex-col">
         <!-- Header -->
-        <div class="rounded-t-lg bg-pure-white flex flex-col lg:flex-row flex-wrap gap-2 w-full items-center justify-between p-2">  
+        <div class="rounded-t-lg border-l border-r border-t border-gray bg-pure-white flex flex-col lg:flex-row flex-wrap gap-2 w-full items-center justify-between p-2">  
             <!-- Tab Layout -->
             <TabLayout />
             <!-- Header Controls -->

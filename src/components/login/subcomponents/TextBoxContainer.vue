@@ -21,6 +21,7 @@
 
 <script setup>
     import { ref } from 'vue';
+    const inputRef = ref(null)
 
 //Input Props
 const inputProps = defineProps({
@@ -50,6 +51,12 @@ const focusInput = () => {
         inputField.value.focus()
     }
 }
+
+defineExpose({
+  focus() {
+    inputField.value?.focus();
+  }
+});
 
 const updateValue = (event) => {
     emit('update:modelValue', event.target.value)

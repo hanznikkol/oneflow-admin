@@ -2,7 +2,7 @@
     <!-- Announcement Main Content -->
     <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
-        <div class="w-full h-[12%] flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
+        <div class="w-full h-[12%] border-r border-l border-t border-gray flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
             <div class="w-auto h-auto">
                 <DropdownBoxContainer
                     :options = "rowOptions"
@@ -59,7 +59,7 @@
     </div>
     
     <!-- Pagination -->
-    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+    <div class="bg-pure-white border border-gray w-full h-auto p-2 rounded-lg flex items-center">
         <Pagination 
             :itemsPerPage = "itemsPerPage"
             :currentPage = "currentPage"

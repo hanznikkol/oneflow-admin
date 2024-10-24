@@ -11,7 +11,7 @@
             - shadowClass
             - icons
         -->
-    <button :class="[
+    <button ref="buttonRef" :class="[
         'duration-100 active:scale-[1.05] flex justify-center items-center select-none',
         buttonProps.buttonRadius,
         buttonProps.textClass,
@@ -31,6 +31,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
+    const buttonRef = ref(null)
     const buttonProps  = defineProps({
         //Title Text
         text: {
@@ -71,6 +74,12 @@
         icon: {
             type: [Object, Function],
             default: null
+        }
+    })
+
+    defineExpose({
+        click() {
+            buttonRef.value?.click();
         }
     })
 </script>

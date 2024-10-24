@@ -30,6 +30,7 @@
                     v-model="email"
                     placeholder = "Email"
                     type = 'email'
+                    @keyup.enter="focusPassword"
                     :icon = 'IconEmail'
                 />
                 <!-- Password -->
@@ -37,6 +38,8 @@
                     v-model="password"
                     placeholder = "Password"
                     type = 'password'
+                    @keyup.enter="clickLogin"
+                    ref="passwordInput"
                     :icon = "IconPassword"
                 />
             </div>
@@ -44,6 +47,7 @@
             <ButtonContainer
                 @click="login"
                 text = "Login"
+                ref="btnLogin"
                 textClass = "text-lg text-black font-bold"
                 sizeClass = "w-full p-4"
             />
@@ -60,13 +64,23 @@ import ButtonContainer from '../main/subcomponents/ButtonContainer.vue';
 //Icons
 import IconEmail from '../icons/login_icons/IconEmail.vue';
 import IconPassword from '../icons/login_icons/IconPassword.vue';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const email = ref('')
 const password = ref('')
+const btnLogin = ref(null)
+const passwordInput = ref(null)
 
 const router = useRouter()
+
+const focusPassword = async () => {
+    passwordInput.value?.focus()
+}
+
+const clickLogin = async () => {
+    btnLogin.value?.click()
+}
 
 const login = async () => {
     const body = {email: email.value, password: password.value, permission: 'admin'}

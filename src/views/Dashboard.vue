@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full flex flex-col lg:flex-row bg-pure-white gap-2 p-2 rounded-lg">
+    <div class="w-full h-full flex flex-col lg:flex-row bg-pure-white gap-2 p-2 rounded-xl">
         <MainHomeContainer/>
     </div>
 </template>

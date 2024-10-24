@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full flex flex-col">
         <!-- Buttons -->
-        <div class="w-full h-auto flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
+        <div class="w-full border-r border-l border-t border-gray h-auto flex flex-col gap-2 md:gap-0 md:flex-row justify-between p-2 md:items-center bg-pure-white rounded-t-xl">
             <div class="w-[40%] items-center justify-start h-auto flex gap-4">
                 <DropdownBoxContainer
                     :options = "rowOptions"
@@ -35,7 +35,7 @@
     </div>
     
     <!-- Pagination -->
-    <div class="bg-pure-white w-full h-auto p-2 rounded-lg flex items-center">
+    <div class="bg-pure-white border border-gray w-full h-auto p-2 rounded-lg flex items-center">
         <Pagination 
             :itemsPerPage = "itemsPerPage"
             :currentPage = "currentPage"

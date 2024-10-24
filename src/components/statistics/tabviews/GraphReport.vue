@@ -1,6 +1,6 @@
 <template>
     <!-- Graph -->
-    <div class="bg-[#ffffff] relative w-full h-full lg:flex-[2] min-h-svh md:min-h-0 flex flex-col">
+    <div class="bg-[#ffffff] border-r border-l border-b border-gray rounded-b-lg relative w-full h-full lg:flex-[2] min-h-svh md:min-h-0 flex flex-col">
         <LineGraph :chartStatistics="chartStatistics"></LineGraph>
     </div>
 </template>
